@@ -28,66 +28,94 @@ setMethod(
 
 
 metmet <- function(datafile) {
+  
+  # Function: Combines a) p-values using Fisher methods weighted by N  and 
+  #           chi-squared distribution
+  #           b) Fold-change by weighted mean 
+  #           Calculates vote-counting for each compound
+  # Arguments: data obtained with data.read function
+  # Returns: data-frame with p-value combined, fold-change combined and
+  #          vote-counting for each compound
+  
   vote <- NULL
   
   up <- matrix()
   down <- matrix()
   equal <- matrix()
   
+  # Split data using trend variable
   if ("trend" %in% colnames(datafile)) {
-    #primer mirem si s'ha facilitat la direcció dels canvis
-    # split data in up and down
-    trend <- levels(as.factor(datafile$trend)) #convertim en factor
     
+    trend <- levels(as.factor(datafile$trend)) 
+    
+    # One table per time
     for (t in 1:length(trend)) {
-      #dividim les dades en up i down
+      
       met <- NULL
       
+      # Subset of data
       data.t <- datafile[datafile$trend == trend[t], ]
       
-      unid <- unique(data.t$id) # per cada compost en les dades
+      # Compound name as identifier
+      unid <- unique(data.t$id) 
       metres <- data.frame()
+      
+      # Search data for each compound
       for (i in 1:length(unid)) {
-        datacomp <-
-          data.t[data.t$id == unid[i], ] #agafem les dades per aquest compost
+        datacomp <- data.t[data.t$id == unid[i], ] 
+        
+        # Keep the identifier
         metres[i, "id"] <- unid[i]
         
-        #p-value
-        logp <-
-          log10(datacomp$pvalue) #calculem logaritme del p-value
-        ponder <-
-          logp * datacomp$N #ponderació logaritme(p-valor) * N de cada estudi
+        ## P-value
         
-        chi_sq <- (-2 / sum(datacomp$N)) * sum(ponder) # combinació de p-valors utilitizant el métode Fisher
-        degree <- 2 * nrow(datacomp) #graus de llibertat
-        chisq <-
-          pchisq(chi_sq, degree, lower.tail = F) #comparació dels p-valors amb una distribució chi-quadrat
-        metres[i, "pvalue combined"] <-
-          chisq #guardem els valors en una taula
+        logp <- log10(datacomp$pvalue) 
         
-        #fold-change
+        # P-value weigthed for study number of individuals
+        ponder <- logp * datacomp$N 
         
-        logfc <-
-          log2(datacomp$foldchange) #transformació logaritmica del fold-change
-        mean_fc <-
-          sum(logfc * datacomp$N) / sum(datacomp$N) #mitjana dels valors
-        metres[i, "foldchange combined"] <-
-          2 ^ mean_fc #treiem el logaritme
-        metres[i, "trend"] <- trend[t] #indiquem si és up o down
+        # Combine p-values using Fisher's method      
+        chi_sq <- (-2 / sum(datacomp$N)) * sum(ponder) 
         
-        # extra info
+        # Degrees of freedom
+        degree <- 2 * nrow(datacomp) 
         
+        # P-values comparison using Chi-squared distribution
+        chisq <- pchisq(chi_sq, degree, lower.tail = F) 
+        
+        # Save result obtained
+        metres[i, "pvalue combined"] <- chisq 
+        
+        ## Fold-change
+        
+        # Logarithmic transformation of fold-change
+        logfc <- log2(datacomp$foldchange) 
+        
+        # Wheigthed mean for combining values
+        mean_fc <- sum(logfc * datacomp$N) / sum(datacomp$N) 
+        
+        # Save result reversing logarithm
+        metres[i, "foldchange combined"] <- 2 ^ mean_fc 
+        
+        # Save trend of result
+        metres[i, "trend"] <- trend[t] 
+        
+        ## Extra information
+        
+        # Sum of total number of participants
         metres[i, "N total"] <- sum(datacomp$N)
-        metres[i, "Reference"] <-
-          paste(datacomp$ref, collapse = ";")
+        
+        # Save references
+        metres[i, "Reference"] <- paste(datacomp$ref, collapse = ";")
         
       }
       
+      # Keep all results for compounds
       met <- rbind(met, metres)
       
+      # Rename object using trend
       if (all(met$trend == "1" |
               tolower(met$trend) == "up")) {
-        #guardem la taula al nivell que correspongui
         up <- as.matrix(met)
       } else if (all(met$trend == "-1" |
                      tolower(met$trend) == "down")) {
@@ -98,81 +126,116 @@ metmet <- function(datafile) {
       
     }
     
-    #vote-counting
+    ## Vote-counting
     
-    comp <-
-      unique(datafile$id)  #calculem el vote-counting per cada compost
+    # Unique compound as identifier using all trends
+    comp <- unique(datafile$id)  
     
+    # Create a data.frame
     vote <- data.frame(id = comp)
     
     for (c in 1:length(comp)) {
-      data.c <-
-        datafile[datafile$id == comp[c],] #ara agafem les dades sense separa per up/down
       
+      # Subset data for each compound in all trends
+      data.c <- datafile[datafile$id == comp[c],] 
+      
+      # Initialize vote count
       votec <- 0
       
       for (d in 1:nrow(data.c)) {
+        
+        # If is found up will sum 1
         if ("up" %in% tolower(data.c[d, "trend"]) |
             "1" %in% data.c[d, "trend"]) {
-          #si es up sumem 1
           votec <- votec + 1
+          
+          # If found down will sum -1
         } else if ("down" %in% tolower(data.c[d, "trend"]) |
                    "-1" %in% data.c[d, "trend"]) {
-          #si es down sumem -1
           votec <- votec - 1
         }
+        
+      # Equal trend not make any change  
       }
       
+      # Save vote-counting obtained
       vote[vote$id == comp[c], "votes"] <- votec #guardem els vots
       
+      # Save number of articles of each compound
       vote[vote$id == comp[c], "articles"] <- nrow(data.c)
       
-      vote[vote$id == comp[c], "VC"] <-
-        votec / nrow(data.c) #dividim els vots pel total de articles reportant el compost
-      
+      # Vote-counting/number of articles
+      vote[vote$id == comp[c], "VC"] <- votec / nrow(data.c) 
     }
     
+    # If trend is not disclosed, all compounds considered as same trend
   } else {
-    # en cas que no donin trend considerem tots en la mateixa direcció
-    met <- NULL
-    data.t <- datafile
-    unid <- unique(data.t$id)
+    
+    met <- NULL 
+    
+    # Compound id as unique identifier
+    unid <- unique(datafile$id)
+    
     metres <- data.frame()
+    
+    # For each compound we subset data
     for (i in 1:length(unid)) {
-      datacomp <- data.t[data.t$id == unid[i], ]
+      
+      datacomp <- datafile[datafile$id == unid[i], ]
+      
+      # Save identification
       metres[i, "id"] <- unid[i]
       
-      #p-value
+      ## P-value
+      
+      # Logarithmic transformation of p-value
       logp <- log10(datacomp$pvalue)
+      
+      # P-value weigthed for study number of individuals
       ponder <- logp * datacomp$N
       
+      # Combine p-values using Fisher's method 
       chi_sq <- (-2 / sum(datacomp$N)) * sum(ponder)
+      
+      # Degrees of freedom
       degree <- 2 * nrow(datacomp)
+      
+      # P-values comparison using Chi-squared distribution
       chisq <- pchisq(chi_sq, degree, lower.tail = F)
-      metres[i, "pvalue combined"] <- -log10(chisq)
       
-      #fold-change
+      # Save result obtained
+      metres[i, "pvalue combined"] <- chisq
       
-      logfc <-
-        log2(datacomp$foldchange) #transformació logaritmica del fold-change
-      mean_fc <-
-        sum(logfc * datacomp$N) / sum(datacomp$N) #mitjana dels valors
-      metres[i, "foldchange combined"] <-
-        2 ^ mean_fc #treiem el logaritme
-      metres[i, "trend"] <- trend[t] #indiquem si és up o down
+      ## Fold-change
       
-      # extra info
+      # Logarithmic transformation of fold-change
+      logfc <- log2(datacomp$foldchange) 
       
+      # Wheigthed mean for combining values
+      mean_fc <- sum(logfc * datacomp$N) / sum(datacomp$N)
+      
+      # Save result reversing logarithm
+      metres[i, "foldchange combined"] <- 2 ^ mean_fc 
+      
+      # Extra information
+      
+      # Sum of total number of participants
       metres[i, "N total"] <- sum(datacomp$N)
+      
+      # Save references
       metres[i, "Reference"] <- paste(datacomp$ref, collapse = ";")
       
     }
+    
+    # Keep all results for compounds
     met <- rbind(met, metres)
     
+    # Rename object using trend
     equal <- as.matrix(met)
   }
   
-  
+  # Save results in S4 object
   mets <- new("METAtables", up, down, equal, as.matrix(vote))
+  
   return(mets)
 }

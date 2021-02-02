@@ -5,31 +5,44 @@ metaplot <- function(mets, method, cutoff) {
   library(ggplot2)
   library(plotly)
   
-  if (hasArg(cutoff)) { #busca l'argument de cutoff per guardar els valors
+  # Function: creates a volcano plot for data combined using metmet function
+  # Arguments: S4 METAtables object, cutoff for statistical significance (optional)
+  # Return: volcano plot
+  
+  # Search for cutoff argument
+  if (hasArg(cutoff)) { 
     cuts <- cutoff
     if (length(cuts) != 2) {
-      print("2 cut-off needed")
+      print("Two cut-off values needed")
     } else {
       cut_pval <- cuts[1]
       cut_fc <- cuts[2]
     }
+    
+    # If not cutoff argument convention values are established: 
   } else {
+    # Alpha < 0.05 
     cut_pval <- 0.05
+    
+    # Log(fold-change) = 1.5
+    
     cut_fc <- 2.83
   }
   
   
-  if (method == "alltogether") { #si volem el gràfic amb totes les dades de trend juntes
-    #preparem dades per al plot
+  # Graph using all trends together
+  if (method == "alltogether") { 
     
+    # Join all data in S4 object
     nms <- slotNames(mets)
     
     metall <- NULL
+    
     for (s in 1:3) {
       
       meta <- data.frame(slot(mets, nms[s]))
       
-      if(length(meta) == 1) {
+      if (length(meta) == 1) {
         next
       }
       
@@ -37,13 +50,16 @@ metaplot <- function(mets, method, cutoff) {
       
     }
     
+    # Format data needed
     metall$id <- as.character(metall$id)
     
-    metall$ppval <- -log10(as.numeric(as.character(metall$pvalue.combined))) #calculem el log del p-valor 
+    # Negative logarithm of p-value for plot
+    metall$ppval <- -log10(as.numeric(as.character(metall$pvalue.combined)))
     
-    metall$pfc <- log(as.numeric(as.character(metall$foldchange.combined)),2) #tornem a afegir el logaritme al fold-change
+    # Logarithm of fold-change
+    metall$pfc <- log(as.numeric(as.character(metall$foldchange.combined)),2) 
     
-    if (all(metall$trend != "NA")){ #arreglem els noms per a que es vegi bé
+    if (all(metall$trend != "NA")) { #arreglem els noms per a que es vegi bé
       metall$trend <- as.factor(metall$trend)
       
       for (i in 1:length(levels(metall$trend))) {
@@ -58,48 +74,82 @@ metaplot <- function(mets, method, cutoff) {
       
     }
     
-    # filtrem taula per veure els significatius
+    # Subset statistically significant values based on cutoff
     
-    hgdown <- metall[metall$pfc < -log(cut_fc, 2) & metall$ppval > -log10(cut_pval),]
-    hgup <- metall[metall$pfc > log(cut_fc, 2) & metall$ppval > -log10(cut_pval),]
-    hgmix <- metall[metall$ppval > -log10(cut_pval) & abs(metall$pfc) < log(cut_fc, 2),]
+    # Subset compounds with significant fold-change and p-value (down-regulated)
+    hgdown <- metall[metall$pfc < -log(cut_fc, 2) & 
+                       metall$ppval > -log10(cut_pval),]
     
+    # Subset compounds with significant fold-change and p-value (up-regulated)
+    hgup <- metall[metall$pfc > log(cut_fc, 2) & 
+                     metall$ppval > -log10(cut_pval),]
+    
+    # Subset compounds with significant p-value and NOT fold-change
+    hgmix <- metall[metall$ppval > -log10(cut_pval) & 
+                      abs(metall$pfc) < log(cut_fc, 2),]
+    
+    # Vote-counting and articles information
     cont <- data.frame(slot(mets, nms[4]))
+    
+    # Number of articles found
     cont$articles <- as.numeric(as.character(cont$articles))
+    
+    # Votes obtained
     cont$votes <- as.numeric(as.character(cont$votes))
+    
+    # Filter compounds found in more than 2 articles
     cont_id <- cont[cont$articles >= 2,]
     
     hgcont <- metall[metall$id %in% cont_id$id,]
     
+    # Range of logarithmic fold-change for plot aesthetics
     rx <- range(metall$pfc)
     
-    a <- list(x = metall$pfc[metall$pfc > log(cut_fc, 2)| metall$pfc < -log(cut_fc, 2)],
-              y = metall$ppval[metall$ppval > -log10(cut_pval)], 
-              text = ifelse((metall$pfc > log(cut_fc, 2) | metall$pfc < -log(cut_fc, 2)) & metall$ppval > -log10(cut_pval), metall$id, ''),
-              xref = "x",
-              yref = "y", 
-              showarrow = T,
-              arrowhead = 7,
-              arrowsize = .3, 
-              ax = 20, 
-              ay = -40)
+    # Volcano plot
     
-    #fem el volcano plot
-    
+    # Scatter plot for logarithmic fold-change vs. -logarithmic p-value
     d <- ggplot(metall, ggplot2::aes(pfc, ppval, label = id)) 
+    
     e <- d  + ggplot2::theme_minimal() + 
-      geom_point(color = "gray67") + #paletta color-blind-friendly
+      
+      # Color-blind friendly colors
+      geom_point(color = "gray67") + 
+      
+      # Colors for diferent statistical significant values
       geom_point(data = hgmix, aes(pfc, ppval), color = "#E69F00") + 
       geom_point(data = hgdown, aes(pfc, ppval), color = "#56B4E9") +
       geom_point(data = hgup, aes(pfc, ppval), color = "#009E73") +
       geom_point(data = hgcont, aes(pfc, ppval), shape = 8) +
-      xlab( "log2(Fold-change)") + ylab("-log10(p-value)") + ggtitle("CRC and advanced adenomas + pre-surgery vs control + post-surgery")+
+      
+      # Label compounds significant for fold-change and p-value
+      ggrepel::geom_text_repel(label = 
+                                 ifelse((metall$pfc > log(cut_fc, 2) | 
+                                           metall$pfc < -log(cut_fc, 2)) &
+                                                metall$ppval > -log10(cut_pval),
+                                              metall$id, ''), 
+                               size = 3.5, 
+                               fontface = "bold", 
+                               segment.size = 0.4, 
+                               point.padding = (unit(0.3, "lines")),
+                               box.padding = unit(0.3, "lines")) +
+      # Axis titles
+      xlab( "log2(Fold-change)") + ylab("-log10(p-value)") + labs(colour = "") +
+      
+      # X axis breaks
       scale_x_continuous(breaks = seq(round(-max(abs(rx)),0)-1, 
-                                      round(max(abs(rx)),0)+1, 1), limits = c(-max(abs(rx)), max(abs(rx)))) + labs (colour = "") +
-      geom_hline(yintercept = -log10(cut_pval), colour = "black", linetype = "dashed") + geom_vline(xintercept = c(log(cut_fc, 2), -log(cut_fc, 2)), colour = "black", linetype = "dashed") +
-      theme(legend.position = "bottom") 
-    f <- ggplotly(e) %>% layout(annotations = a)
-    print(f)
+                                      round(max(abs(rx)),0)+1, 1), 
+                         limits = c(-max(abs(rx)), max(abs(rx)))) + 
+      
+      # Cutoff marks
+      geom_hline(yintercept = -log10(cut_pval), 
+                 colour = "black", 
+                 linetype = "dashed") + 
+      geom_vline(xintercept = c(log(cut_fc, 2), -log(cut_fc, 2)),
+                 colour = "black", 
+                 linetype = "dashed") 
+    
+    # Show plot
+    print(e)
     
   } else if (method == "onebyone") { #si volem un plot per cada trend
     #preparem dades per al plot
@@ -176,17 +226,26 @@ metaplot <- function(mets, method, cutoff) {
   }
 }
 
-#Plot articles nº
+# Plot articles number
 
 voteplot <- function(mets) {
   library(ggplot2)
   library(plotly)
+  
+  # Function: create a bar-plot for the number of studies found on each compound
+  # Arguments: S4 METAtables object
+  # Return: Bar-plot
+  
+  # Subset vote-couting data
   data <- data.frame(mets@vote)
   
+  # Sort data decreasing
   data <- data[order(data$articles),]
   
-  ggplot(data, aes(id, articles)) + geom_bar(stat = "identity", fill=rgb(0.2,0.4,0.7,0.6) ) +
+  # Bar-plot
+  ggplot(data, aes(id, articles)) + 
+    geom_bar(stat = "identity", fill = rgb(0.2,0.4,0.7,0.6) ) +
     theme(legend.position = "none") + theme_minimal() + coord_flip() +
-    xlim(rev(levels(data$id))) #ara ordenat alfabéticament, millor per nº articles?
+    xlim(rev(levels(data$id))) 
 }
 
