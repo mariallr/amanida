@@ -44,71 +44,70 @@ metmet <- function(datafile) {
   equal <- matrix()
   
   # Split data using trend variable
-  if ("trend" %in% colnames(datafile)) {
     
-    trend <- levels(as.factor(datafile$trend)) 
+  trend <- levels(as.factor(datafile$trend)) 
     
-    # One table per time
-    for (t in 1:length(trend)) {
+  # One table per time
+  for (t in 1:length(trend)) {
       
-      met <- NULL
+    met <- NULL
       
-      # Subset of data
-      data.t <- datafile[datafile$trend == trend[t], ]
+    # Subset of data
+    data.t <- datafile[datafile$trend == trend[t], ]
       
-      # Compound name as identifier
-      unid <- unique(data.t$id) 
-      metres <- data.frame()
+    # Compound name as identifier
+    unid <- unique(data.t$id) 
+    metres <- data.frame()
       
-      # Search data for each compound
-      for (i in 1:length(unid)) {
-        datacomp <- data.t[data.t$id == unid[i], ] 
+    # Search data for each compound
+    for (i in 1:length(unid)) {
+       datacomp <- data.t[data.t$id == unid[i], ] 
         
-        # Keep the identifier
-        metres[i, "id"] <- unid[i]
+      # Keep the identifier
+      metres[i, "id"] <- unid[i]
         
-        ## P-value
+      ## P-value
         
-        logp <- log10(datacomp$pvalue) 
+      logp <- log10(datacomp$pvalue) 
         
-        # P-value weigthed for study number of individuals
-        ponder <- logp * datacomp$N 
+      # P-value weigthed for study number of individuals
+      ponder <- logp * datacomp$N 
         
-        # Combine p-values using Fisher's method      
-        chi_sq <- (-2 / sum(datacomp$N)) * sum(ponder) 
+      # Combine p-values using Fisher's method      
+      chi_sq <- (-2 / sum(datacomp$N)) * sum(ponder) 
         
-        # Degrees of freedom
-        degree <- 2 * nrow(datacomp) 
+      # Degrees of freedom
+      degree <- 2 * nrow(datacomp) 
         
-        # P-values comparison using Chi-squared distribution
-        chisq <- pchisq(chi_sq, degree, lower.tail = F) 
+      # P-values comparison using Chi-squared distribution
+      chisq <- pchisq(chi_sq, degree, lower.tail = F) 
         
-        # Save result obtained
-        metres[i, "pvalue combined"] <- chisq 
+      # Save result obtained
+      metres[i, "pvalue combined"] <- chisq 
         
-        ## Fold-change
+      ## Fold-change
         
-        # Logarithmic transformation of fold-change
-        logfc <- log2(datacomp$foldchange) 
+      # Logarithmic transformation of fold-change
+      logfc <- log2(datacomp$foldchange) 
         
-        # Wheigthed mean for combining values
-        mean_fc <- sum(logfc * datacomp$N) / sum(datacomp$N) 
+      # Wheigthed mean for combining values
+      mean_fc <- sum(logfc * datacomp$N) / sum(datacomp$N) 
         
-        # Save result reversing logarithm
-        metres[i, "foldchange combined"] <- 2 ^ mean_fc 
+      # Save result reversing logarithm
+      metres[i, "foldchange combined"] <- 2 ^ mean_fc 
         
-        # Save trend of result
-        metres[i, "trend"] <- trend[t] 
+      # Save trend of result
+      metres[i, "trend"] <- trend[t] 
         
-        ## Extra information
+      ## Extra information
         
-        # Sum of total number of participants
-        metres[i, "N total"] <- sum(datacomp$N)
+      # Sum of total number of participants
+      metres[i, "N total"] <- sum(datacomp$N)
         
-        # Save references
-        metres[i, "Reference"] <- paste(datacomp$ref, collapse = ";")
+      # Save references
+      metres[i, "Reference"] <- paste(datacomp$ref, collapse = ";")
         
-      }
+    }
       
       # Keep all results for compounds
       met <- rbind(met, metres)
@@ -168,72 +167,6 @@ metmet <- function(datafile) {
       vote[vote$id == comp[c], "VC"] <- votec / nrow(data.c) 
     }
     
-    # If trend is not disclosed, all compounds considered as same trend
-  } else {
-    
-    met <- NULL 
-    
-    # Compound id as unique identifier
-    unid <- unique(datafile$id)
-    
-    metres <- data.frame()
-    
-    # For each compound we subset data
-    for (i in 1:length(unid)) {
-      
-      datacomp <- datafile[datafile$id == unid[i], ]
-      
-      # Save identification
-      metres[i, "id"] <- unid[i]
-      
-      ## P-value
-      
-      # Logarithmic transformation of p-value
-      logp <- log10(datacomp$pvalue)
-      
-      # P-value weigthed for study number of individuals
-      ponder <- logp * datacomp$N
-      
-      # Combine p-values using Fisher's method 
-      chi_sq <- (-2 / sum(datacomp$N)) * sum(ponder)
-      
-      # Degrees of freedom
-      degree <- 2 * nrow(datacomp)
-      
-      # P-values comparison using Chi-squared distribution
-      chisq <- pchisq(chi_sq, degree, lower.tail = F)
-      
-      # Save result obtained
-      metres[i, "pvalue combined"] <- chisq
-      
-      ## Fold-change
-      
-      # Logarithmic transformation of fold-change
-      logfc <- log2(datacomp$foldchange) 
-      
-      # Wheigthed mean for combining values
-      mean_fc <- sum(logfc * datacomp$N) / sum(datacomp$N)
-      
-      # Save result reversing logarithm
-      metres[i, "foldchange combined"] <- 2 ^ mean_fc 
-      
-      # Extra information
-      
-      # Sum of total number of participants
-      metres[i, "N total"] <- sum(datacomp$N)
-      
-      # Save references
-      metres[i, "Reference"] <- paste(datacomp$ref, collapse = ";")
-      
-    }
-    
-    # Keep all results for compounds
-    met <- rbind(met, metres)
-    
-    # Rename object using trend
-    equal <- as.matrix(met)
-  }
-  
   # Save results in S4 object
   mets <- new("METAtables", up, down, equal, as.matrix(vote))
   

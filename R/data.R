@@ -31,16 +31,25 @@ data.read <- function(file, separator, coln) {
   # Select columns with data needed
   datafile <- datafile %>% select(all_of(coln)) 
   
+  # Rename columns
+  colnames(datafile) <- c("id", "pvalue", "foldchange", "N", "ref")
   
-  if (length(coln) == 6) { #hi ha l'opció d'afegir la direcció dels canvis o no
-    colnames(datafile) <- c("id", "pvalue", "foldchange", "N", "trend", "ref") #canviem el nom de les columnes
-  } else { 
-    colnames(datafile) <- c("id", "pvalue", "foldchange", "N", "ref")
-    if (length(datafile$foldchange[datafile$foldchange < 0])) { #si tenim valors positius i negatius podem extreure el trend
-      datafile[datafile$foldchange < 0, "trend"] <- -1 #valors negatius posem -1
-      datafile[datafile$foldchange > 0, "trend"] <- 1 #valors positius 1
-      datafile[datafile$foldchange == 0, "trend"] <- 0 #si no hi ha canvi 0
-    } 
+  # Add trend column
+  if (length(datafile$foldchange[datafile$foldchange < 0]) > 0) { 
+    
+    # Inverted fold-change for negative values 
+    datafile$foldchange[datafile$foldchange < 0] <- 
+      1 / abs(datafile$foldchange[datafile$foldchange < 0] )
+    
+    # Negative values
+    datafile[datafile$foldchange < 1, "trend"] <- -1 
+    
+    # Positive values
+    datafile[datafile$foldchange > 1, "trend"] <- 1 
+    
+    # No behaviour change  
+    datafile[datafile$foldchange == 1, "trend"] <- 0
+    
   }
   
   
