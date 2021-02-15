@@ -4,7 +4,7 @@
 VAR_NAMES <- c("id", "pvalue", "foldchange", "N", "ref")
 
 
-data.read <- function(file, separator, coln) {
+data.read <- function(file, coln, separator=NULL) {
   # Function: read data files
   # Arguments: filename, separator symbol, columns to import
   # Return: tibble table with data imported
