@@ -2,13 +2,21 @@
 
 data.read <- function(file, separator, coln) {
   
-  # Function: read data files
-  # Arguments: filename, separator symbol, columns to import
-  # Return: tibble table with data imported
-  
-  library(dplyr)
-  
-  # Search file extension
+  #' Import data
+  #' 
+  #'\code{data.read} imports the data and formats for metamet function
+  #'
+  #'Note that \code{data.read} skips rows with missing values or NA. 
+  #'
+  #'Formats compatible are csv, xlsx, xls or txt.
+  #' 
+  #' @param file path to file
+  #' @param separator the separator used on file
+  #' @param coln columns names to use
+  #' @return tibble table with data imported
+  #' @examples 
+  #' data.read(file, separator, coln)
+ 
   
   csv <- grep("\\.csv", file)
   excel <- grep("\\.xlsx|\\.xls", file)

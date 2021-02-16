@@ -1,13 +1,24 @@
 
 ## Volcano Plot
 
-metaplot <- function(mets, method, cutoff) {
+metaplot <- function(mets, cutoff) {
   library(ggplot2)
-  library(plotly)
   
-  # Function: creates a volcano plot for data combined using metmet function
-  # Arguments: S4 METAtables object, cutoff for statistical significance (optional)
-  # Return: volcano plot
+  #' Volcano plot of combined results 
+  #' 
+  #' \code{metaplot} returns a volcano plot of the combined results on each metabolite obtained by metmet function
+  #' 
+  #' Results are presented as -log10 for p-value and log2 for fold-change. 
+  #' Values over the cut off are labeled. If not cutoff is provided will be used alpha 0.05 for p-value and 1.5 for logarithmic fold-change.
+  #'  
+  #'  @param mets an S4 METAtable object
+  #'  @param cutoff values for p-value and fold-change significance
+  #'  
+  #'  @return plot of results
+  #'  
+  #'  @example 
+  #'  metaplot(res.met, c(0.01, 2))
+  #'  
   
   # Search for cutoff argument
   if (hasArg(cutoff)) { 
@@ -137,11 +148,18 @@ metaplot <- function(mets, method, cutoff) {
 
 voteplot <- function(mets) {
   library(ggplot2)
-  library(plotly)
   
-  # Function: create a bar-plot for the number of studies found on each compound
-  # Arguments: S4 METAtables object
-  # Return: Bar-plot
+  #' Bar-plot for compouends number of reports
+  #' 
+  #' \code{voteplot} creates a bar-plot showing the number of entries for each compound. 
+  #' 
+  #' Independently of the compound trend, the total number of entries on each compound are plotted.
+  #'  
+  #'  @params mets an S4 METAmet object obtained by \code{metmet}
+  #'  
+  #'  @return bar-plot of results
+  #'  @example 
+  #'  voteplot(res.met)
   
   # Subset vote-couting data
   data <- data.frame(mets@vote)

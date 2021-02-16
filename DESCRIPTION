@@ -1,0 +1,25 @@
+Package: croms
+Title: Combined results of metabolomics studies
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(given = "Maria",
+           family = "Llambrich",
+           role = c("aut", "cre"),
+           email = "maria.llambrich@urv.cat,
+           comment = c(ORCID = https://orcid.org/0000-0001-8418-0982)), 
+      person(given = "Eudald",
+           family = "Correig",
+           role = c("aut", "cre"),
+           email = "edudald@correig.net) )
+           
+Description: Statistical results combination of metabolomics studies using a meta-analysis approach. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites
+
+URL: https://github.com/mariallr/met
+License: `use_mit_license()`, `use_gpl3_license()` or friends to
+    pick a license
+Encoding: UTF-8
+LazyData: true
+Imports: dplyr, ggplot2, ggrepel
+Suggests:
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
