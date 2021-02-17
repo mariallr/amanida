@@ -11,6 +11,7 @@ data.read <- function(file, coln, separator=NULL) {
   
   library(dplyr)
   
+  # Get file type
   ext <- tools::file_ext(file)
   
   # Read file using appropiate extension
@@ -18,7 +19,7 @@ data.read <- function(file, coln, separator=NULL) {
     stopifnot("Please, specify a separator."=!is.null(separator))
     
     datafile <- readr::read_delim(file, delim = separator) %>%
-      # In some (specially spanish) locales, when the delim is ",", the decimal
+      # In some (specially spanish) locales, when the delimiter is ";", the decimal
       # point is ","; let's make sure here this is correct
       mutate(
         across(c("P-value", "Fold-change"), function(x) sub(",", ".", x, fixed = TRUE))
@@ -29,6 +30,7 @@ data.read <- function(file, coln, separator=NULL) {
     stop("Format not compatible; try csv, tsv, excel or txt. Aborting.")
   }
   
+
   datafile %>%
     # Select columns with data needed and rename
     select(all_of(coln)) %>%
