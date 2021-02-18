@@ -1,16 +1,25 @@
 ## Load data
 
-
-VAR_NAMES <- c("id", "pvalue", "foldchange", "N", "ref")
-
-
 data.read <- function(file, coln, separator=NULL) {
-  # Function: read data files
-  # Arguments: filename, separator symbol, columns to import
-  # Return: tibble table with data imported
   
-  library(dplyr)
+  #' Import data
+  #' 
+  #'\code{data.read} imports the data and formats for metamet function
+  #'
+  #'Note that \code{data.read} skips rows with missing values or NA. 
+  #'
+  #'Formats compatible are csv, xlsx, xls or txt.
+  #' 
+  #' @param file path to file
+  #' @param coln columns names to use
+  #' @param separator the separator used on file
+  #' @return tibble table with data imported
+  #' @examples 
+  #' data.read(file, separator, coln)
+ 
   
+  VAR_NAMES <- c("id", "pvalue", "foldchange", "N", "ref")
+
   # Get file type
   ext <- tools::file_ext(file)
   

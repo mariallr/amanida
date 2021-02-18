@@ -6,6 +6,13 @@ source("R/plots.R")
 ## Statistics
 
 # S4 object to save the data
+
+#' An S4 class to return results from metamet function
+#' @slot up results for up regulated metabolites
+#' @slot down results for down regulated metabolites
+#' @slot equal results for no trend provided or no change
+#' @slot vote vote-counting for metabolites
+#' 
 setClass("METAtables",
          slots = c(
            up = "matrix",
@@ -29,13 +36,24 @@ setMethod(
 
 metmet <- function(datafile) {
   
-  # Function: Combines a) p-values using Fisher methods weighted by N  and 
-  #           chi-squared distribution
-  #           b) Fold-change by weighted mean 
-  #           Calculates vote-counting for each compound
-  # Arguments: data obtained with data.read function
-  # Returns: data-frame with p-value combined, fold-change combined and
-  #          vote-counting for each compound
+  #' Combine statistical results and compute vote-counting
+  #' 
+  #' \code{metamet} Combines for the same entry or metabolite the statistical values of p-value and fold-change. Also is computed a vote-counting for each compound. 
+  #' 
+  #' Entries corresponding to metabolites are divided by trend and then combined as follows:
+  #' \itemize{
+  #'  \item P-values are combined using Fisher method weighted by N and chi-squared distribution
+  #'  \item Fold-change are combined by weighted mean
+  #' }
+  #' 
+  #' Vote-counting is computed without trend division. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.  
+  #' 
+  #' @param datafile data imported using data.read function
+  #' 
+  #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
+  #' 
+  #' @example 
+  #' res.met <- metmet(datafile)
   
   vote <- NULL
   
