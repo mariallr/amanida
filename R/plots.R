@@ -1,7 +1,7 @@
 
 ## Volcano Plot
 
-metaplot <- function(mets, cutoff) {
+metaplot <- function(mets, cutoff = NULL) {
   library(ggplot2)
   
   #' Volcano plot of combined results 
@@ -23,120 +23,94 @@ metaplot <- function(mets, cutoff) {
   # Search for cutoff argument
   if (hasArg(cutoff)) { 
     cuts <- cutoff
-    if (length(cuts) != 2) {
-      print("Two cut-off values needed")
-    } else {
-      cut_pval <- cuts[1]
-      cut_fc <- cuts[2]
-    }
     
+    if(length(cuts) != 2) {
+      stop( "Please indicate one cut-off for p-value and one for fold-change")
+    }
+    cut_pval <- -log10(cuts[1])
+    cut_fc <- log2(cuts[2])
+      
     # If not cutoff argument convention values are established: 
   } else {
     # Alpha < 0.05 
-    cut_pval <- 0.05
+    cut_pval <- -log10(0.05)
     
     # Log(fold-change) = 1.5
     
-    cut_fc <- 2.83
+    cut_fc <- log2(2.83)
   }
   
-    # Join all data in S4 object
-    nms <- slotNames(mets)
-    
-    metall <- NULL
-    
-    for (s in 1:3) {
+  
+  data <- as_tibble(mets@stat)
+  
+  data <- data %>% mutate(pval,
+                  # Format data needed
+                  pval = as.numeric(pval), 
+                  fc = as.numeric(fc),
+                  # Negative logarithm of p-value for plot              
+                  lpval = -log10(pval),
+                  # Logarithm of fold-change
+                  lfc = log2(fc)
+                  )
+  
       
-      meta <- data.frame(slot(mets, nms[s]))
-      
-      if (length(meta) == 1) {
-        next
-      }
-      
-      metall <- rbind(metall, meta)
-      
-    }
+    # Compounds with 2 or more reports
     
-    # Format data needed
-    metall$id <- as.character(metall$id)
+    cont <- as_tibble(mets@vote)
     
-    # Negative logarithm of p-value for plot
-    metall$ppval <- -log10(as.numeric(as.character(metall$pvalue.combined)))
-    
-    # Logarithm of fold-change
-    metall$pfc <- log(as.numeric(as.character(metall$foldchange.combined)),2) 
-    
-    # Subset statistically significant values based on cutoff
-    
-    # Subset compounds with significant fold-change and p-value (down-regulated)
-    hgdown <- metall[metall$pfc < -log(cut_fc, 2) & 
-                       metall$ppval > -log10(cut_pval),]
-    
-    # Subset compounds with significant fold-change and p-value (up-regulated)
-    hgup <- metall[metall$pfc > log(cut_fc, 2) & 
-                     metall$ppval > -log10(cut_pval),]
-    
-    # Subset compounds with significant p-value and NOT fold-change
-    hgmix <- metall[metall$ppval > -log10(cut_pval) & 
-                      abs(metall$pfc) < log(cut_fc, 2),]
-    
-    # Vote-counting and articles information
-    cont <- data.frame(slot(mets, nms[4]))
-    
-    # Number of articles found
-    cont$articles <- as.numeric(as.character(cont$articles))
-    
-    # Votes obtained
-    cont$votes <- as.numeric(as.character(cont$votes))
-    
-    # Filter compounds found in more than 2 articles
-    cont_id <- cont[cont$articles >= 2,]
-    
-    hgcont <- metall[metall$id %in% cont_id$id,]
-    
-    # Range of logarithmic fold-change for plot aesthetics
-    rx <- range(metall$pfc)
+    cont <- cont %>% mutate(articles,
+                            articles = as.numeric(articles)) %>% 
+      filter(articles >= 2)
     
     # Volcano plot
     
     # Scatter plot for logarithmic fold-change vs. -logarithmic p-value
-    d <- ggplot(metall, ggplot2::aes(pfc, ppval, label = id)) 
+    d <- ggplot(data, ggplot2::aes(lfc, lpval, label = id)) 
     
     e <- d  + ggplot2::theme_minimal() + 
       
       # Color-blind friendly colors
-      geom_point(color = "gray67") + 
+      geom_point(color = "gray67") +
       
       # Colors for diferent statistical significant values
-      geom_point(data = hgmix, aes(pfc, ppval), color = "#E69F00") + 
-      geom_point(data = hgdown, aes(pfc, ppval), color = "#56B4E9") +
-      geom_point(data = hgup, aes(pfc, ppval), color = "#009E73") +
-      geom_point(data = hgcont, aes(pfc, ppval), shape = 8) +
+      geom_point(data = data %>% 
+                   filter(lpval > cut_pval &
+                            abs(lfc) < cut_fc), 
+                 aes(lfc, lpval), color = "#E69F00") + 
+      geom_point(data = data %>% filter(lfc < -cut_fc & 
+                                          lpval > cut_pval), 
+                 aes(lfc, lpval), color = "#56B4E9") +
+      geom_point(data = data %>% filter(lfc > cut_fc & 
+                                          lpval > cut_pval),
+                 aes(lfc, lpval), color = "#009E73") +
+      geom_point(data = data %>% filter(id %in% cont$id), 
+                 aes(lfc, lpval), shape = 8) +
       
       # Label compounds significant for fold-change and p-value
       ggrepel::geom_text_repel(label = 
-                                 ifelse((metall$pfc > log(cut_fc, 2) | 
-                                           metall$pfc < -log(cut_fc, 2)) &
-                                                metall$ppval > -log10(cut_pval),
-                                              metall$id, ''), 
+                                  data %>% mutate(id = case_when(
+                                   (abs(lfc) < cut_fc & lpval < cut_pval) ~ "",
+                                   (abs(lfc) > cut_fc & lpval < cut_pval) ~ "",
+                                   (abs(lfc) < cut_fc & lpval > cut_pval) ~ "",
+                                   T ~ id)) %>% .$id,
                                size = 3.5, 
                                fontface = "bold", 
                                segment.size = 0.4, 
                                point.padding = (unit(0.3, "lines")),
-                               box.padding = unit(0.3, "lines")) +
+                               box.padding = unit(0.3, "lines")) + 
       # Axis titles
       xlab( "log2(Fold-change)") + ylab("-log10(p-value)") + labs(colour = "") +
       
       # X axis breaks
-      scale_x_continuous(breaks = seq(round(-max(abs(rx)),0) - 1, 
-                                      round(max(abs(rx)),0) + 1, 1), 
-                         limits = c(-max(abs(rx)), max(abs(rx)))) + 
+      scale_x_continuous(breaks = seq(round(-max(abs(data$lfc)),0) - 1, 
+                                      round(max(abs(data$lfc)),0) + 1, 1), 
+                         limits = c(-max(abs(data$lfc)), max(abs(data$lfc)))) + 
       
       # Cutoff marks
-      geom_hline(yintercept = -log10(cut_pval), 
+      geom_hline(yintercept = cut_pval, 
                  colour = "black", 
                  linetype = "dashed") + 
-      geom_vline(xintercept = c(log(cut_fc, 2), -log(cut_fc, 2)),
+      geom_vline(xintercept = c(cut_fc, -cut_fc),
                  colour = "black", 
                  linetype = "dashed") 
     
@@ -162,15 +136,15 @@ voteplot <- function(mets) {
   #'  voteplot(res.met)
   
   # Subset vote-couting data
-  data <- data.frame(mets@vote)
+  data <- as_tibble(mets@vote)
   
   # Sort data decreasing
-  data <- data[order(data$articles),]
+  data <- data %>% arrange(desc(articles))
   
   # Bar-plot
   ggplot(data, aes(id, articles)) + 
     geom_bar(stat = "identity", fill = rgb(0.2,0.4,0.7,0.6) ) +
-    theme(legend.position = "none") + theme_minimal() + coord_flip() +
-    xlim(rev(levels(data$id))) 
+    theme(legend.position = "none") + theme_classic() + coord_flip() +
+    xlim(data$id) + xlab("id") + ylab("Nº of articles")
 }
 
