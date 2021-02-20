@@ -48,14 +48,10 @@ metmet <- function(datafile) {
   #' @example 
   #' res.met <- metmet(datafile)
     
-    datafile <- datafile %>% 
-      mutate(logp = log10(pvalue))
-    
-    datafile <- datafile %>% 
-      mutate(logfc = log(foldchange))
-    
     # Statistics grouping by compound identifier and trend
     stat <- datafile %>% 
+      mutate(logp = log10(pvalue),
+             logfc = log(foldchange)) %>%
       group_by(id, trend) %>% 
       summarize(
       # Combine p-values using Fisher's method weighted by number of individuals
@@ -68,7 +64,8 @@ metmet <- function(datafile) {
       N_total = sum(N),
       # References
       reference = paste(ref, collapse = "; ")
-      )
+      ) %>%
+      select (c(id, trend, pval, fc, N_total, reference))
     
     
     ## Vote-counting per each compound id

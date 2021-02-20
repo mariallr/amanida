@@ -42,14 +42,7 @@ metaplot <- function(mets, cutoff = NULL) {
     cut_fc <- log2(2.83)
   }
   
-  data <- as_tibble(mets@stat) %>% 
-    mutate( 
-      # Format data needed
-      across(c(pval,fc), as.numeric),
-      # Negative logarithm of p-value for plot              
-      lpval = -log10(pval),
-      # Logarithm of fold-change
-      lfc = log2(fc))
+ 
   
   # Compounds with 2 or more reports
   
@@ -57,11 +50,21 @@ metaplot <- function(mets, cutoff = NULL) {
     mutate(articles = as.numeric(articles)) %>% 
     filter(articles >= 2)
   
+  cont_ids <- cont %>% pull(id)
+  
   # # Volcano plot
   
   # Scatter plot for logarithmic fold-change vs. -logarithmic p-value
   
-  data %>% mutate(sig = case_when(
+  as_tibble(mets@stat) %>% 
+    mutate( 
+      # Format data needed
+      across(c(pval,fc), as.numeric),
+      # Negative logarithm of p-value for plot              
+      lpval = -log10(pval),
+      # Logarithm of fold-change
+      lfc = log2(fc)) %>% 
+    mutate(sig = case_when(
     (lpval > cut_pval & abs(lfc) < cut_fc) ~ "sig_p",
     (lfc < -cut_fc & lpval > cut_pval) ~ "sig_down",
     (lfc > cut_fc & lpval > cut_pval) ~ "sig_up",
@@ -71,10 +74,11 @@ metaplot <- function(mets, cutoff = NULL) {
      sig == "no_sig" ~ "",
      T ~ id),
    reports = case_when(
-     id %in% cont$id ~ "y",
+     id %in% cont_ids ~ "y",
      T ~ "n" )) %>% 
     group_by(sig) %>% 
-    ggplot(aes(lfc, lpval, label = label, colour = sig)) +
+    {
+      ggplot(., aes(lfc, lpval, label = label, colour = sig)) +
     geom_point() + 
     theme_minimal() +
     ggrepel::geom_text_repel(size = 3.5, 
@@ -89,9 +93,9 @@ metaplot <- function(mets, cutoff = NULL) {
     labs(colour = "") +
     
     # X axis breaks
-    scale_x_continuous(breaks = seq(round(-max(abs(data$lfc)),0) - 1, 
-                                    round(max(abs(data$lfc)),0) + 1, 1), 
-                       limits = c(-max(abs(data$lfc)), max(abs(data$lfc)))) + 
+    scale_x_continuous(breaks = seq(round(-max(abs(.$lfc)),0) - 1, 
+                                    round(max(abs(.$lfc)),0) + 1, 1), 
+                       limits = c(-max(abs(.$lfc)), max(abs(.$lfc)))) + 
     
     # Cutoff marks
     geom_hline(yintercept = cut_pval, 
@@ -102,6 +106,7 @@ metaplot <- function(mets, cutoff = NULL) {
                linetype = "dashed") + 
     theme(legend.position = "none") +
     scale_color_manual(values = col_palette)
+    }
     
 }
 
@@ -126,7 +131,7 @@ voteplot <- function(mets) {
     mutate(
     articles = as.numeric(articles)) %>%
     ggplot(aes(reorder(id, -articles), articles)) + 
-    geom_bar(stat = "identity", fill = rgb(0.2,0.4,0.7,0.6) ) +
+    geom_bar(stat = "identity", fill = col_palette[1] ) +
     theme(legend.position = "none") + 
     theme_classic() + 
     coord_flip() +
