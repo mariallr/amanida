@@ -19,16 +19,18 @@ Authors@R:
   )
 Description: Statistical results combination of metabolomics studies using a meta-analysis approach. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites.
 URL: https://github.com/mariallr/met
-License: use_gpl_license(>= 3) 
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: magrittr (>= 1.5), 
   dplyr (>= 1.0.0), 
+  readr (>= 1.0.0),
+  readxl (>= 1.0.0),
   ggplot2 (>= 3.3.0), 
   ggrepel (>= 0.8.2), 
   methods
 Suggests:
     testthat
-Depends: R (>= 3.6.3)
+Depends: R (>= 3.6)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
