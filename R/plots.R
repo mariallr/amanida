@@ -1,8 +1,14 @@
 
-## Volcano Plot
+amanida_palette <- function() {
+  
+  #' Get nice colour-blind colours
+  #' 
+  #' @return vector of colours
+  #' 
+  
+  c("gray67","#56B4E9", "#E69F00", "#009E73")
+}
 
-# Color-blind friendly colors
-col_palette <- c("gray67","#56B4E9", "#E69F00", "#009E73")
 
 metaplot <- function(mets, cutoff = NULL) {
   
@@ -18,9 +24,8 @@ metaplot <- function(mets, cutoff = NULL) {
   #'  
   #'  @return plot of results
   #'  
-  #'  @example 
-  #'  metaplot(res.met, c(0.01, 2))
-  #'  
+  
+  col_palette <- amanida_palette()
   
   # Search for cutoff argument
   if (hasArg(cutoff)) { 
@@ -120,11 +125,13 @@ voteplot <- function(mets) {
   #' 
   #' Independently of the compound trend, the total number of entries on each compound are plotted.
   #'  
-  #'  @params mets an S4 METAmet object obtained by \code{metmet}
+  #' @param mets an S4 METAmet object obtained by \code{metmet}
   #'  
-  #'  @return bar-plot of results
-  #'  @example 
-  #'  voteplot(res.met)
+  #' @return bar-plot of results
+  #' @example 
+  #' voteplot(res.met)
+  
+  col_palette <- amanida_palette()
   
   # Subset vote-couting data
   as_tibble(mets@vote) %>% 
@@ -136,6 +143,6 @@ voteplot <- function(mets) {
     theme_classic() + 
     coord_flip() +
     xlab("id") + 
-    ylab("Nº of articles")
+    ylab("Number of articles")
 }
 
