@@ -1,12 +1,5 @@
 
-
-source("R/data.R")
-source("R/plots.R")
-
-## Statistics
-
-# S4 object to save the data
-
+#' S4 object to save the data
 #' An S4 class to return results from metamet function
 #' @slot stat results for statistics combining p-values and fold-changes
 #' @slot vote vote-counting for metabolites
@@ -45,8 +38,6 @@ metmet <- function(datafile) {
   #' 
   #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
   #' 
-  #' @example 
-  #' res.met <- metmet(datafile)
     
     # Statistics grouping by compound identifier and trend
     stat <- datafile %>% 

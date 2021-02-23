@@ -1,22 +1,20 @@
 
 #' Import data
 #' 
-#'\code{data.read} imports the data and formats for metamet function
+#' \code{data.read} imports the data and formats for metamet function
 #'
-#'Note that \code{data.read} skips rows with missing values or NA. 
+#' Note that \code{data.read} skips rows with missing values or NA. 
 #'
-#'Formats compatible are csv, xlsx, xls or txt.
+#' Formats compatible are csv, xlsx, xls or txt.
 #' 
 #' @param file path to file
 #' @param coln columns names to use
 #' @param separator the separator used on file
 #' @return tibble table with data imported
-#' @examples 
-#' 
-#' coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
-#' data.read("~/OneDrive - URV/metaanalysis_pack/dataset2.xlsx", coln)
 #' 
 #' @import dplyr
+#' @import readr
+#' @import readxl
 #' @importFrom magrittr %>%
 #' 
 #' @export

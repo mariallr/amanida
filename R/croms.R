@@ -3,7 +3,9 @@
 #' 
 #' @title croms
 #' 
-#'@author Maria Llambrich and Eudald Correig
+#' @name croms
+#' 
+#' @author Maria Llambrich and Eudald Correig
 #' 
 #' Statistical results combination of metabolomics studies using a meta-analysis approach. 
 #' \itemize{
@@ -16,7 +18,11 @@
 #' @import dplyr
 #' @import ggplot2
 #' @import ggrepel
+#' @import readr
+#' @import readxl
 #' @importFrom magrittr %>%
+#' @importFrom methods hasArg new
+#' @importFrom stats pchisq reorder
 #' 
 #' @docType package
 #' 

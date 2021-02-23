@@ -13,18 +13,12 @@ metaplot <- function(mets, cutoff = NULL) {
   #' Results are presented as -log10 for p-value and log2 for fold-change. 
   #' Values over the cut off are labeled. If not cutoff is provided will be used alpha 0.05 for p-value and 1.5 for logarithmic fold-change.
   #'  
-  #'  @param mets an S4 METAtable object
-  #'  @param cutoff values for p-value and fold-change significance
+  #' @param mets an S4 METAtable object
+  #' @param cutoff values for p-value and fold-change significance
   #'  
-  #'  @return plot of results
+  #' @return plot of results
   #'  
-  #'  @example 
-  #'  coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
-  #' datafile <- data.read("~/OneDrive - URV/metaanalysis_pack/dataset2.xlsx", coln)
-  #' res.met <- metmet(datafile)
-  #'  metaplot(res.met, c(0.01, 2))
-  #'  
-  #'  @import dplyr, ggplot2
+  #' @import dplyr ggplot2
   #' @importFrom magrittr %>%
   #' @export
   
@@ -47,8 +41,6 @@ metaplot <- function(mets, cutoff = NULL) {
     
     cut_fc <- log2(2.83)
   }
-  
- 
   
   # Compounds with 2 or more reports
   
@@ -145,6 +137,6 @@ voteplot <- function(mets) {
     theme_classic() + 
     coord_flip() +
     xlab("id") + 
-    ylab("Nº of articles")
+    ylab("Number of articles")
 }
 

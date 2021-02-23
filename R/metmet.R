@@ -1,6 +1,3 @@
-
-## Statistics
-
 #' Combine statistical results and compute vote-counting
 #' 
 #' \code{metamet} Combines for the same entry or metabolite the statistical values of p-value and fold-change. Also is computed a vote-counting for each compound. 
@@ -15,10 +12,6 @@
 #'   
 #' @param datafile data imported using data.read function
 #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
-#' @examples 
-#' coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
-#' datafile <- data.read("~/OneDrive - URV/metaanalysis_pack/dataset2.xlsx", coln)
-#' res.met <- metmet(datafile)
 #' 
 #' @import dplyr
 #' @importFrom magrittr %>%
