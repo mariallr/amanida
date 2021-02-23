@@ -24,9 +24,3 @@ Note that \code{data.read} skips rows with missing values or NA.
 
 Formats compatible are csv, xlsx, xls or txt.
 }
-\examples{
-
-coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
-data.read("~/OneDrive - URV/metaanalysis_pack/dataset2.xlsx", coln)
-
-}
