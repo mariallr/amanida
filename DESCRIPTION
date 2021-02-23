@@ -5,21 +5,24 @@ Authors@R:
     c(person(given = "Maria",
            family = "Llambrich",
            role = c("aut", "cre"),
-           email = "maria.llambrich@urv.cat,
-           comment = c(ORCID = https://orcid.org/0000-0001-8418-0982)), 
-      person(given = "Eudald",
+           email = "maria.llambrich@urv.cat",
+           comment = c(ORCID = "0000-0001-8418-0982")), 
+           person(given = "Eudald",
            family = "Correig",
            role = c("aut"),
-           email = "eudald.correig@urv.cat) )
-           
-Description: Statistical results combination of metabolomics studies using a meta-analysis approach. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites
-
+           email = "eudald.correig@urv.cat") )
+Description: Statistical results combination of metabolomics studies using a meta-analysis approach. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites.
 URL: https://github.com/mariallr/met
 License: use_gpl_license(>= 3) 
 Encoding: UTF-8
 LazyData: true
-Imports: dplyr (>= 1.0.2), ggplot2 (>= 3.3.2), ggrepel (>= 0.8.2)
+Imports: magrittr (>= 1.5), 
+  dplyr (>= 1.0.4), 
+  ggplot2 (>= 3.3.2), 
+  ggrepel (>= 0.8.2), 
+  methods
 Suggests:
+    testthat
 Depends: R (>= 3.6.3)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
