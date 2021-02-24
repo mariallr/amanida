@@ -19,11 +19,19 @@ metaplot <- function(mets, cutoff = NULL) {
   #' Results are presented as -log10 for p-value and log2 for fold-change. 
   #' Values over the cut off are labeled. If not cutoff is provided will be used alpha 0.05 for p-value and 1.5 for logarithmic fold-change.
   #'  
-  #'  @param mets an S4 METAtable object
-  #'  @param cutoff values for p-value and fold-change significance
+  #' @param mets an S4 METAtable object
+  #' @param cutoff values for p-value and fold-change significance
   #'  
-  #'  @return plot of results
+  #' @return plot of results
   #'  
+  #' @examples 
+  #' data("sample_data")
+  #' 
+  #' met <- metmet(sample_data)
+  #' metaplot(met)
+  #'
+  #' @export
+  #' 
   
   col_palette <- amanida_palette()
   
@@ -37,30 +45,24 @@ metaplot <- function(mets, cutoff = NULL) {
     cut_pval <- -log10(cuts[1])
     cut_fc <- log2(cuts[2])
       
-    # If not cutoff argument convention values are established: 
+  # If not cutoff argument convention values are established: 
   } else {
     # Alpha < 0.05 
     cut_pval <- -log10(0.05)
-    
     # Log(fold-change) = 1.5
-    
     cut_fc <- log2(2.83)
   }
   
- 
-  
   # Compounds with 2 or more reports
-  
   cont <- as_tibble(mets@vote) %>% 
     mutate(articles = as.numeric(articles)) %>% 
     filter(articles >= 2)
   
   cont_ids <- cont %>% pull(id)
   
-  # # Volcano plot
+  ## Volcano plot
   
   # Scatter plot for logarithmic fold-change vs. -logarithmic p-value
-  
   as_tibble(mets@stat) %>% 
     mutate( 
       # Format data needed
@@ -116,10 +118,9 @@ metaplot <- function(mets, cutoff = NULL) {
 }
 
 # Plot articles number
-
 voteplot <- function(mets) {
   
-  #' Bar-plot for compouends number of reports
+  #' Bar-plot for compounds number of reports
   #' 
   #' \code{voteplot} creates a bar-plot showing the number of entries for each compound. 
   #' 
@@ -128,8 +129,14 @@ voteplot <- function(mets) {
   #' @param mets an S4 METAmet object obtained by \code{metmet}
   #'  
   #' @return bar-plot of results
-  #' @example 
-  #' voteplot(res.met)
+  #' @examples 
+  #' data("sample_data")
+  #' 
+  #' met <- metmet(sample_data)
+  #' voteplot(met)
+  #' 
+  #' @export
+  #' 
   
   col_palette <- amanida_palette()
   
