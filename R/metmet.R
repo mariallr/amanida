@@ -13,6 +13,11 @@
 #' @param datafile data imported using data.read function
 #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
 #' 
+#' @examples
+#' data("sample_data")
+#' 
+#' metmet(sample_data)
+#' 
 #' @import dplyr
 #' 
 #' @export
@@ -50,9 +55,13 @@ metmet <- function(datafile) {
       VC = votec/articles
     )
     
+<<<<<<< HEAD
   # Save results in S4 object
   #mets <- initialize("METAtables", stat = stat,  vote = vote)
   new("METAtables", sta, vote)
+=======
+  # Save results in S4 object and return
+  METAtables(sta, vote)
+>>>>>>> 8fed8ba5f9efb80715983160f8e2e02bd46a8a06
   
-  return(mets)
 }
