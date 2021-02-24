@@ -72,7 +72,6 @@ metmet <- function(datafile) {
     )
     
   # Save results in S4 object
-  mets <- new("METAtables", as.matrix(stat), as.matrix(vote))
+  new("METAtables", as.matrix(stat), as.matrix(vote))
   
-  return(mets)
 }
