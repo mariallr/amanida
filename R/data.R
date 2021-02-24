@@ -4,7 +4,7 @@
 #'
 #' @format A data frame with 93 rows and 6 variables:
 #' \describe{
-#'   \item{Compound name}{Name of the compound under study}
+#'   \item{Compound Name}{Name of the compound under study}
 #'   \item{Behaviour}{UP, DOWN}
 #'   \item{N total}{Number of samples of the compound}
 #'   \item{P-value}{P-value}

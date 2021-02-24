@@ -20,14 +20,3 @@
 METAtables <- function(sta, vote) {
   .METAtables(stat = as_tibble(sta), vote = as_tibble(vote))
 }
-
-
-#setMethod(
-#  f = "show",
-#  signature = "METAtables",
-#  definition = function(object) {
-#    cat("An object of class", class(object), "\n", sep = "")
-#    invisible(NULL)
-#  }
-#)
-

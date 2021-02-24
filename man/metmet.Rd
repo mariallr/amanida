@@ -38,3 +38,9 @@ Entries corresponding to metabolites are divided by trend and then combined as f
 
 Vote-counting is computed without trend division. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
 }
+\examples{
+data("sample_data")
+
+metmet(sample_data)
+
+}

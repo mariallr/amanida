@@ -24,6 +24,12 @@ metaplot <- function(mets, cutoff = NULL) {
   #'  
   #'  @return plot of results
   #'  
+  #' @example 
+  #' data("sample_data")
+  #' 
+  #' met <- metmet(sample_data)
+  #' metaplot(met)
+  #'  
   
   col_palette <- amanida_palette()
   
@@ -128,8 +134,11 @@ voteplot <- function(mets) {
   #' @param mets an S4 METAmet object obtained by \code{metmet}
   #'  
   #' @return bar-plot of results
-  #' @example 
-  #' voteplot(res.met)
+  #' @examples 
+  #' data("sample_data")
+  #' 
+  #' met <- metmet(sample_data)
+  #' voteplot(met)
   
   col_palette <- amanida_palette()
   

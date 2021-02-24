@@ -13,6 +13,11 @@
 #' @param datafile data imported using data.read function
 #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
 #' 
+#' @examples
+#' data("sample_data")
+#' 
+#' metmet(sample_data)
+#' 
 #' @import dplyr
 #' 
 #' @export

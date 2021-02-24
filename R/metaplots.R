@@ -18,6 +18,12 @@ metaplot <- function(mets, cutoff = NULL) {
   #'  
   #' @return plot of results
   #'  
+  #' @examples 
+  #' data("sample_data")
+  #' 
+  #' met <- metmet(sample_data)
+  #' metaplot(met)
+  #' 
   #' @import dplyr ggplot2
   #' @export
   

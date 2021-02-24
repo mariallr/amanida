@@ -18,7 +18,7 @@
 #' 
 #' @examples
 #' coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
-#' input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+#' input_file <- system.file("extdata", "dataset2.csv", package = "croms")
 #' datafile <- data.read(input_file, coln, separator=";")
 #' 
 #' @export

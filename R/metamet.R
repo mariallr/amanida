@@ -38,7 +38,11 @@ metmet <- function(datafile) {
   #' 
   #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
   #' 
-    
+  #' @examples
+  #' data("sample_data")
+  #' 
+  #' metmet(sample_data)
+  #'
     # Statistics grouping by compound identifier and trend
     stat <- datafile %>% 
       mutate(logp = log10(pvalue),
