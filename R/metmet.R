@@ -52,7 +52,7 @@ metmet <- function(datafile) {
     
   # Save results in S4 object
   #mets <- initialize("METAtables", stat = stat,  vote = vote)
-  mets <- METAtables(sta, vote)
+  new("METAtables", sta, vote)
   
   return(mets)
 }
