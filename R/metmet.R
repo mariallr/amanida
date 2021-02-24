@@ -55,9 +55,7 @@ metmet <- function(datafile) {
       VC = votec/articles
     )
     
-  # Save results in S4 object
-  #mets <- initialize("METAtables", stat = stat,  vote = vote)
-  mets <- METAtables(sta, vote)
+  # Save results in S4 object and return
+  METAtables(sta, vote)
   
-  return(mets)
 }

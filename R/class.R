@@ -1,6 +1,3 @@
-
-# S4 object to save the data
-
 #' An S4 class to return results from metamet function
 #' @slot stat results for statistics combining p-values and fold-changes
 #' @slot vote vote-counting for metabolites

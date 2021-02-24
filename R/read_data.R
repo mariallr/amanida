@@ -46,7 +46,6 @@ data.read <- function(file, coln, separator=NULL) {
     stop("Format not compatible; try csv, tsv, excel or txt. Aborting.")
   }
   
-
   datafile %>%
     # Select columns with data needed and rename
     select(all_of(coln)) %>%

@@ -7,12 +7,12 @@
 \format{
 A data frame with 93 rows and 6 variables:
 \describe{
-\item{Compound Name}{Name of the compound under study}
-\item{Behaviour}{UP, DOWN}
-\item{N total}{Number of samples of the compound}
-\item{P-value}{P-value}
-\item{Fold-change}{Fold-change}
-\item{References}{References}
+\item{id}{Name of the compound under study}
+\item{pvalue}{P-value}
+\item{foldchange}{Fold-change}
+\item{N}{Number of samples of the compound}
+\item{ref}{References}
+\item{trend}{Trend: 1 (up), -1 (down) or 0 (none)}
 }
 }
 \usage{
