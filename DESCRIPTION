@@ -23,6 +23,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
+  tibble (>= 3.0.0),
   dplyr (>= 1.0.0), 
   readr (>= 1.0.0),
   readxl (>= 1.0.0),
