@@ -15,6 +15,7 @@
 #' @import dplyr
 #' @import readr
 #' @import readxl
+#' @importFrom magrittr %>%
 #' 
 #' @examples
 #' coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
@@ -38,7 +39,7 @@ data.read <- function(file, coln, separator=NULL) {
       # In some (specially spanish) locales, when the delimiter is ";", the decimal
       # point is ","; let's make sure here this is correct
       mutate(
-        across(c("P-value", "Fold-change"), function(x) sub(",", ".", x, fixed = TRUE))
+        across(coln[2:3], function(x) sub(",", ".", x, fixed = TRUE))
       )
   } else if (ext %in% c("xlsx", "xls")) {
     datafile <- readxl::read_excel(file)
@@ -69,4 +70,3 @@ data.read <- function(file, coln, separator=NULL) {
     )
   
 }
-

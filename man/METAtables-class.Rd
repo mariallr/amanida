@@ -3,7 +3,7 @@
 \docType{class}
 \name{METAtables-class}
 \alias{METAtables-class}
-\alias{.METAtables}
+\alias{METAtables}
 \title{An S4 class to return results from metamet function}
 \description{
 An S4 class to return results from metamet function

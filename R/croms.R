@@ -22,6 +22,7 @@
 #' @import readxl
 #' @importFrom methods hasArg new
 #' @importFrom stats pchisq reorder
+#' @importFrom magrittr %>%
 #' 
 #' @docType package
 #' 

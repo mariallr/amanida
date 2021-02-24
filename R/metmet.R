@@ -41,7 +41,8 @@ metmet <- function(datafile) {
       # References
       reference = paste(ref, collapse = "; ")
       ) %>%
-      select(c(id, trend, pval, fc, N_total, reference))
+      select(c(id, trend, pval, fc, N_total, reference)) %>%
+      ungroup()
     
     ## Vote-counting per each compound id
     vote <- datafile %>% 
@@ -56,5 +57,5 @@ metmet <- function(datafile) {
     )
     
   # Save results in S4 object and return
-  new("METAtables", sta, vote)
-
+  METAtables(stat=sta, vote=vote)
+}
