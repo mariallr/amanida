@@ -15,7 +15,6 @@
 #' @import dplyr
 #' @import readr
 #' @import readxl
-#' @importFrom magrittr %>%
 #' 
 #' @export
 

@@ -19,7 +19,6 @@ metaplot <- function(mets, cutoff = NULL) {
   #' @return plot of results
   #'  
   #' @import dplyr ggplot2
-  #' @importFrom magrittr %>%
   #' @export
   
   # Search for cutoff argument

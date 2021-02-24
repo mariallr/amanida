@@ -20,7 +20,6 @@
 #' @import ggrepel
 #' @import readr
 #' @import readxl
-#' @importFrom magrittr %>%
 #' @importFrom methods hasArg new
 #' @importFrom stats pchisq reorder
 #' 

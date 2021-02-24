@@ -14,7 +14,6 @@
 #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
 #' 
 #' @import dplyr
-#' @importFrom magrittr %>%
 #' 
 #' @export
 
