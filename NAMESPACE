@@ -3,7 +3,6 @@
 export(data.read)
 export(metaplot)
 export(metmet)
-export(voteplot)
 exportClasses(METAtables)
 import(dplyr)
 import(ggplot2)

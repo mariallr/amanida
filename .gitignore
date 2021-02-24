@@ -6,4 +6,5 @@
 *.xlsx
 *.docx
 *.Rproj
+data
 .Rbuildignore
