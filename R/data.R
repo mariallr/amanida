@@ -1,22 +1,24 @@
-## Load data
+
+#' Import data
+#' 
+#' \code{data.read} imports the data and formats for metamet function
+#'
+#' Note that \code{data.read} skips rows with missing values or NA. 
+#'
+#' Formats compatible are csv, xlsx, xls or txt.
+#' 
+#' @param file path to file
+#' @param coln columns names to use
+#' @param separator the separator used on file
+#' @return tibble table with data imported
+#' 
+#' @import dplyr
+#' @import readr
+#' @import readxl
+#' 
+#' @export
 
 data.read <- function(file, coln, separator=NULL) {
-  
-  #' Import data
-  #' 
-  #'\code{data.read} imports the data and formats for metamet function
-  #'
-  #'Note that \code{data.read} skips rows with missing values or NA. 
-  #'
-  #'Formats compatible are csv, xlsx, xls or txt.
-  #' 
-  #' @param file path to file
-  #' @param coln columns names to use
-  #' @param separator the separator used on file
-  #' @return tibble table with data imported
-  #' @examples 
-  #' data.read(file, separator, coln)
- 
   
   VAR_NAMES <- c("id", "pvalue", "foldchange", "N", "ref")
 
@@ -63,3 +65,4 @@ data.read <- function(file, coln, separator=NULL) {
     )
   
 }
+

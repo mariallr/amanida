@@ -1,25 +1,37 @@
 Package: croms
-Title: Combined results of metabolomics studies
+Title: Combined Results Of Metabolomics Studies
 Version: 0.0.0.9000
 Authors@R: 
-    c(person(given = "Maria",
-           family = "Llambrich",
-           role = c("aut", "cre"),
-           email = "maria.llambrich@urv.cat,
-           comment = c(ORCID = https://orcid.org/0000-0001-8418-0982)), 
-      person(given = "Eudald",
-           family = "Correig",
-           role = c("aut"),
-           email = "eudald.correig@urv.cat) )
-           
-Description: Statistical results combination of metabolomics studies using a meta-analysis approach. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites
-
+  c(
+    person(
+      given = "Maria",
+      family = "Llambrich",
+      role = c("aut", "cre"),
+      email = "maria.llambrich@urv.cat",
+      comment = c(ORCID = "0000-0001-8418-0982")
+    ),
+    person(
+      given = "Eudald",
+      family = "Correig",
+      role = c("aut"),
+      email = "eudald.correig@urv.cat"
+    )
+  )
+Description: Statistical results combination of metabolomics studies using a meta-analysis approach. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites.
 URL: https://github.com/mariallr/met
-License: use_gpl_license(>= 3) 
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: dplyr (>= 1.0.2), ggplot2 (>= 3.3.2), ggrepel (>= 0.8.2)
+Imports:
+  tibble (>= 3.0.0),
+  dplyr (>= 1.0.0), 
+  readr (>= 1.0.0),
+  readxl (>= 1.0.0),
+  ggplot2 (>= 3.3.0), 
+  ggrepel (>= 0.8.2), 
+  methods
 Suggests:
-Depends: R (>= 3.6.3)
+    testthat
+Depends: R (>= 3.6)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1

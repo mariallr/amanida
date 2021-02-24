@@ -1,14 +1,8 @@
 
-amanida_palette <- function() {
-  
-  #' Get nice colour-blind colours
-  #' 
-  #' @return vector of colours
-  #' 
-  
-  c("gray67","#56B4E9", "#E69F00", "#009E73")
-}
+## Volcano Plot
 
+# Color-blind friendly colors
+col_palette <- c("gray67","#56B4E9", "#E69F00", "#009E73")
 
 metaplot <- function(mets, cutoff = NULL) {
   
@@ -19,13 +13,13 @@ metaplot <- function(mets, cutoff = NULL) {
   #' Results are presented as -log10 for p-value and log2 for fold-change. 
   #' Values over the cut off are labeled. If not cutoff is provided will be used alpha 0.05 for p-value and 1.5 for logarithmic fold-change.
   #'  
-  #'  @param mets an S4 METAtable object
-  #'  @param cutoff values for p-value and fold-change significance
+  #' @param mets an S4 METAtable object
+  #' @param cutoff values for p-value and fold-change significance
   #'  
-  #'  @return plot of results
+  #' @return plot of results
   #'  
-  
-  col_palette <- amanida_palette()
+  #' @import dplyr ggplot2
+  #' @export
   
   # Search for cutoff argument
   if (hasArg(cutoff)) { 
@@ -46,8 +40,6 @@ metaplot <- function(mets, cutoff = NULL) {
     
     cut_fc <- log2(2.83)
   }
-  
- 
   
   # Compounds with 2 or more reports
   
@@ -125,13 +117,14 @@ voteplot <- function(mets) {
   #' 
   #' Independently of the compound trend, the total number of entries on each compound are plotted.
   #'  
-  #' @param mets an S4 METAmet object obtained by \code{metmet}
+  #'  @params mets an S4 METAmet object obtained by \code{metmet}
   #'  
-  #' @return bar-plot of results
-  #' @example 
-  #' voteplot(res.met)
-  
-  col_palette <- amanida_palette()
+  #'  @return bar-plot of results
+  #'  @example 
+  #'  coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
+  #' datafile <- data.read("~/OneDrive - URV/metaanalysis_pack/dataset2.xlsx", coln)
+  #' res.met <- metmet(datafile)
+  #'  voteplot(res.met)
   
   # Subset vote-couting data
   as_tibble(mets@vote) %>% 

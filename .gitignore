@@ -7,3 +7,4 @@
 *.docx
 *.Rproj
 data
+.Rbuildignore
