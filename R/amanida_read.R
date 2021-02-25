@@ -1,9 +1,9 @@
 
 #' Import data
 #' 
-#' \code{data.read} imports the data and formats for metamet function
+#' \code{amanida_read} imports the data and formats for metamet function
 #'
-#' Note that \code{data.read} skips rows with missing values or NA. 
+#' Note that \code{amanida_read} skips rows with missing values or NA. 
 #'
 #' Formats compatible are csv, xlsx, xls or txt.
 #' 
@@ -19,12 +19,12 @@
 #' 
 #' @examples
 #' coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
-#' input_file <- system.file("extdata", "dataset2.csv", package = "croms")
-#' datafile <- data.read(input_file, coln, separator=";")
+#' input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+#' datafile <- amanida_read(input_file, coln, separator=";")
 #' 
 #' @export
 
-data.read <- function(file, coln, separator=NULL) {
+amanida_read <- function(file, coln, separator=NULL) {
   
   VAR_NAMES <- c("id", "pvalue", "foldchange", "N", "ref")
 
@@ -48,6 +48,8 @@ data.read <- function(file, coln, separator=NULL) {
   }
   
   datafile %>%
+    # Only complete cases
+    filter(complete.cases(.)) %>%
     # Select columns with data needed and rename
     select(all_of(coln)) %>%
     rename_with(.cols = everything(), .fn = ~ VAR_NAMES) %>%
