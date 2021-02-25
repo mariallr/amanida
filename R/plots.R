@@ -9,7 +9,6 @@ amanida_palette <- function() {
   c("#F4A460", "#87CEEB", "#CD5C5C", "#A9A9A9", "#FFEFD5")
 }
 
-
 volcano_plot <- function(mets, cutoff = NULL) {
   
   #' Volcano plot of combined results 
@@ -60,6 +59,17 @@ volcano_plot <- function(mets, cutoff = NULL) {
   
   cont_ids <- cont %>% pull(id)
   
+  # Function for labels
+  case_character_type <- function(lfc, lpval) {
+    case_when(
+      (lfc < -cut_fc & lpval > cut_pval) ~ paste("p-value < ", 10^-cut_pval, 
+                                                 "& fold-change < ", -2^cut_fc),
+      (lpval > cut_pval & abs(lfc) < cut_fc) ~ paste("p-value < ", 10^-cut_pval),
+      (lfc > cut_fc & lpval > cut_pval) ~ paste("p-value <", 10^-cut_pval, 
+                                                "& fold-change >", 2^cut_fc),
+      T ~ "under cut-offs"
+    )}
+  
   ## Volcano plot
   
   # Scatter plot for logarithmic fold-change vs. -logarithmic p-value
@@ -71,13 +81,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
       lpval = -log10(pval),
       # Logarithm of fold-change
       lfc = log2(fc)) %>% 
-    mutate(sig = case_when(
-    (lfc < -cut_fc & lpval > cut_pval) ~ paste("p-value < ", 10^-cut_pval, 
-                                               "& fold-change < ", -2^cut_fc),
-    (lpval > cut_pval & abs(lfc) < cut_fc) ~ paste("p-value < ", 10^-cut_pval),
-    (lfc > cut_fc & lpval > cut_pval) ~ paste("p-value <", 10^-cut_pval, 
-                                              "& fold-change >", 2^cut_fc),
-    T ~ "under cut-offs"),
+    mutate(sig = case_character_type(lfc, lpval),
    label = case_when(
      sig == paste("p-value < ", 10^-cut_pval) ~ "",
      sig == "under cut-offs" ~ "",
