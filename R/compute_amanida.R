@@ -1,6 +1,6 @@
 #' Combine statistical results and compute vote-counting
 #' 
-#' \code{metamet} Combines for the same entry or metabolite the statistical values of p-value and fold-change. Also is computed a vote-counting for each compound. 
+#' \code{compute_amanida} Combines for the same entry or metabolite the statistical values of p-value and fold-change. Also is computed a vote-counting for each compound. 
 #' 
 #' Entries corresponding to metabolites are divided by trend and then combined as follows:
 #' \itemize{
@@ -16,13 +16,13 @@
 #' @examples
 #' data("sample_data")
 #' 
-#' metmet(sample_data)
+#' compute_amanida(sample_data)
 #' 
 #' @import dplyr
 #' 
 #' @export
 
-metmet <- function(datafile) {
+compute_amanida <- function(datafile) {
 
     # Statistics grouping by compound identifier and trend
     sta <- datafile %>% 

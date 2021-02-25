@@ -1,13 +1,13 @@
 
-#' croms: A package for Combining results of metabolomics studies
+#' amanida: A package for Adapted Meta-Analysis with non-integral data
 #' 
-#' @title croms
+#' @title amanida
 #' 
-#' @name croms
+#' @name amanida
 #' 
 #' @author Maria Llambrich and Eudald Correig
 #' 
-#' Statistical results combination of metabolomics studies using a meta-analysis approach. 
+#' Adaptation of results combination for meta-analysis using only significance and effect size. 
 #' \itemize{
 #'  \item P-values and fold-change are combined to obtain a global significance on each metabolite.
 #'  \item Produces a volcano plot summarizing the relevant results from meta-analysis.

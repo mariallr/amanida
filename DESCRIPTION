@@ -1,5 +1,5 @@
-Package: croms
-Title: Combined Results Of Metabolomics Studies
+Package: amanida
+Title: Adapted Meta-Analysis for Non-Integral Data
 Version: 0.0.0.9000
 Authors@R: 
   c(
@@ -17,7 +17,7 @@ Authors@R:
       email = "eudald.correig@urv.cat"
     )
   )
-Description: Statistical results combination of metabolomics studies using a meta-analysis approach. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites.
+Description: Adapted combination of results for meta-analysis using significance and effect size only. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites.
 URL: https://github.com/mariallr/met
 License: GPL-3
 Encoding: UTF-8
@@ -30,7 +30,7 @@ Imports:
   readxl (>= 1.0.0),
   ggplot2 (>= 3.3.0), 
   ggrepel (>= 0.8.2), 
-  methods
+  methods (>= 3.6.0)
 Suggests:
     testthat
 Depends: R (>= 3.6)
