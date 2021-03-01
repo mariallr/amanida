@@ -5,7 +5,7 @@
 
 ## Description
 
-`Amanida` package contains a collection of functions for computing a meta-analysis in R only using significance and effect size. Without the need of error or variance more studies can be included in the analysis. Results are shown in a volcano plot, where the significance and effect size cut off are selected by the user. 
+`Amanida` package contains a collection of functions for computing a meta-analysis in R only using significance and effect size. Without the need of error or variance more studies can be included in the analysis. Results are shown in a volcano plot, where the significance and effect size cut off are selected by the user. Also it is calculated vote-counting for each compound. 
 
 ## Documentation
 
