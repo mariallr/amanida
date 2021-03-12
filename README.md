@@ -16,7 +16,7 @@ The following computations are included:
 
 * Trend division: values are divided in tables to mantain the trend, up-regulated (fold-change > 1) and down-regulated (fold-change < 1).
 * P-value combination: Fisher's method weigthed by number of participants on the study. 
-* Fold-change combination: logarithmic transformation for average with weighting by number of participants. 
+* Fold-change combination: logarithmic transformation for average with weigthing by number of participants. 
 * Compound vote-counting: votes are +1 for up-regulation, -1 for down-regulation and 0 if no trend. The total votes are divided by the number of reports. 
 
 The following plots are included to visualize the results: 
@@ -26,7 +26,7 @@ The following plots are included to visualize the results:
 
 ## Installation
 
-### Beta/Github release:
+#### Beta/Github release:
 
 Installation using R package devtools:
 
@@ -35,11 +35,58 @@ install.packages("devtools")
 devtools::install_github("mariallr/amanida")
 ```
 
-### CRAN:
+#### CRAN:
 
 ```r
 install.packages("amanida")
 ```
+
+## Usage
+
+You can use `Amanida` package in RStudio or R. After installation (explained before) follow this steps: 
+
+**1. Load package in your script:**
+
+````r
+library(amanida)
+````
+
+**2. Read your data: `amanida_read` **
+
+Supported files are csv, xls/xlsx and txt. 
+
+````r
+coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
+input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+datafile <- amanida_read(input_file, coln, separator=";")
+````
+
+**3. Perform adapted meta-analysis: `compute_amanida`**
+
+````r
+amanida_result <- compute_amanida(datafile)
+````
+
+In this step you will obtain an S4 object with two tables:
+
+* adapted meta-analysis acces by `amanida_result@stat`
+* vote-counting acces by `amanida_results@vote`
+
+
+#### Plots
+
+**Graphical visualization for adapted meta-analysis results: `volcano_plot` **
+
+````r
+volcano_plot(amanida_result, cut-off = c(0.05,4))
+````
+
+**Graphical visualization of compounds abundance: `vote_plot` **
+
+````r
+vote_plot(amanida_result)
+````
+
 
 ## Examples
 
@@ -52,5 +99,5 @@ data("sample_data")
 The dataset consits in a short list of compounds extracted from *Comprehensive signature of colorectal cancer volatilome and metabolome: A systematic review and meta-analysis.* Mallafré et al. 2021 Article in revision
 
 
-Please fill an issue if you have any question or problem!
+Please fill an issue if you have any question or problem :)
 
