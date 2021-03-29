@@ -3,6 +3,7 @@
 #' @slot vote vote-counting for metabolites
 #' 
 #' @import tibble
+#' @importFrom methods callNextMethod
 #' 
 #' @export
 
