@@ -54,8 +54,8 @@ volcano_plot <- function(mets, cutoff = NULL) {
   
   # Compounds with 2 or more reports
   cont <- as_tibble(mets@vote) %>% 
-    mutate(articles = as.numeric(articles)) %>% 
-    filter(articles >= 2)
+    mutate(articles = as.numeric('articles')) %>% 
+    filter('articles' >= 2)
   
   cont_ids <- cont %>% pull(id)
   
@@ -76,12 +76,12 @@ volcano_plot <- function(mets, cutoff = NULL) {
   as_tibble(mets@stat) %>% 
     mutate( 
       # Format data needed
-      across(c(pval,fc), as.numeric),
+      across(c('pval','fc'), as.numeric),
       # Negative logarithm of p-value for plot              
-      lpval = -log10(pval),
+      lpval = -log10('pval'),
       # Logarithm of fold-change
-      lfc = log2(fc)) %>% 
-    mutate(sig = case_character_type(lfc, lpval),
+      lfc = log2('fc')) %>% 
+    mutate(sig = case_character_type('lfc', 'lpval'),
    label = case_when(
      sig == paste("p-value < ", 10^-cut_pval) ~ "",
      sig == "under cut-offs" ~ "",
@@ -89,9 +89,9 @@ volcano_plot <- function(mets, cutoff = NULL) {
    reports = case_when(
      id %in% cont_ids ~ "> 1 report",
      T ~ "single report" )) %>% 
-    group_by(sig) %>% 
+    group_by('sig') %>% 
     {
-      ggplot(., aes(lfc, lpval, label = label, colour = sig)) +
+      ggplot(.data, aes('lfc', 'lpval', label = 'label', colour = 'sig')) +
     geom_point(aes(shape = .$reports)) + 
     scale_shape_manual(values = c(8, 16), name = "") +
     theme_minimal() +
@@ -153,8 +153,8 @@ vote_plot <- function(mets) {
   # Subset vote-couting data
   as_tibble(mets@vote) %>% 
     mutate(
-    articles = as.numeric(articles)) %>%
-    ggplot(aes(reorder(id, -articles), articles, fill = articles)) + 
+    articles = as.numeric('articles')) %>%
+    ggplot(aes(reorder('id', -'articles'), 'articles', fill = 'articles')) + 
     geom_bar(stat = "identity", show.legend = FALSE) +
     scale_fill_gradient(low = col_palette[5], high = col_palette[3]) +
     theme(legend.position = "none") +
