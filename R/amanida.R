@@ -5,7 +5,7 @@
 #' 
 #' @name amanida
 #' 
-#' @author Maria Llambrich and Eudald Correig
+#' @author Maria Llambrich, Eudald Correig and Raquel Cumeras
 #' 
 #' Adaptation of results combination for meta-analysis using only significance and effect size. 
 #' \itemize{

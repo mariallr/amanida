@@ -23,37 +23,41 @@
 #' @export
 
 compute_amanida <- function(datafile) {
+  
+  pvalue = NULL; foldchange = NULL; trend = NULL; N = NULL; logp = NULL; 
+  chisq = NULL; logfc = NULL; ref = NULL; pval = NULL; fc = NULL; N_total = NULL;
+  reference = NULL; votec = NULL; articles = NULL;
 
     # Statistics grouping by compound identifier and trend
     sta <- datafile %>% 
-      mutate(logp = log10('pvalue'),
-             logfc = log('foldchange')) %>%
-      group_by(id, trend) %>% 
+      mutate(logp = log10(`pvalue`),
+             logfc = log(`foldchange`)) %>%
+      group_by(`id`, `trend`) %>% 
       summarize(
       # Combine p-values using Fisher's method weighted by number of individuals
-      chisq = (-2/sum(N))*sum('logp' * 'N'),
+      chisq = (-2/sum(`N`))*sum(`logp` * `N`),
       # P-values comparison using Chi-squared distribution
-      pval = pchisq('chisq', 2*n(), lower.tail = F),
+      pval = pchisq(`chisq`, 2*n(), lower.tail = F),
       # Wheigthed mean for combining fold-change values
-      fc = 2^(sum('logfc' * 'N') / sum('N')),
+      fc = 2^(sum(`logfc` * `N`) / sum(`N`)),
       # Sum of total individuals
-      N_total = sum('N'),
+      N_total = sum(`N`),
       # References
-      reference = paste('ref', collapse = "; ")
+      reference = paste(`ref`, collapse = "; ")
       ) %>%
-      select(c('id', 'trend', 'pval', 'fc', 'N_total', 'reference')) %>%
+      select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`)) %>%
       ungroup()
     
     ## Vote-counting per each compound id
     vote <- datafile %>% 
-      group_by('id') %>% 
+      group_by(`id`) %>% 
       summarize(
       # Votes per compound
-      votec = sum('trend'),
+      votec = sum(`trend`),
       # Number of reports
       articles = n(),
       # Vote-counting
-      VC = 'votec'/'articles'
+      VC = `votec`/`articles`
     )
     
   # Save results in S4 object and return

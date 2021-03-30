@@ -15,6 +15,12 @@ Authors@R:
       family = "Correig",
       role = c("aut"),
       email = "eudald.correig@urv.cat"
+    ),
+    person(
+      given = "Raquel",
+      family = "Cumeras",
+      role = c("aut"),
+      email = "raquel.cumeras@urv.cat"
     )
   )
 Description: Adapted combination of results for meta-analysis using significance and effect size only. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites.
