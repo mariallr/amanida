@@ -16,6 +16,8 @@
 #' @import readr
 #' @import readxl
 #' @importFrom magrittr %>%
+#' @importFrom stats complete.cases
+#' @importFrom rlang .data
 #' 
 #' @examples
 #' coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
@@ -25,8 +27,9 @@
 #' @export
 
 amanida_read <- function(file, coln, separator=NULL) {
+  . = NULL; foldchange = NULL; pvalue = NULL; N = NULL; 
   
-  VAR_NAMES <- c("id", "pvalue", "foldchange", "N", "ref")
+  VAR_NAMES <- c('id', 'pvalue', 'foldchange', 'N', 'ref')
 
   # Get file type
   ext <- tools::file_ext(file)
@@ -55,18 +58,18 @@ amanida_read <- function(file, coln, separator=NULL) {
     rename_with(.cols = everything(), .fn = ~ VAR_NAMES) %>%
     mutate(
       # Make sure numeric things are numeric
-      foldchange = as.numeric(foldchange),
-      pvalue = as.numeric(pvalue),
-      N = as.integer(N),
+      `foldchange` = as.numeric(`foldchange`),
+      `pvalue` = as.numeric(`pvalue`),
+      `N` = as.integer(`N`),
       # Inverted fold-change for negative values
-      foldchange = case_when(
-        foldchange < 0 ~ 1 / abs(foldchange),
+      `foldchange` = case_when(
+        `foldchange` < 0 ~ 1 / abs(`foldchange`),
         T ~ foldchange
         ),
       # Add trend column
       trend = case_when(
-        foldchange < 1 ~ -1,
-        foldchange == 1 ~ 0,
+        `foldchange` < 1 ~ -1,
+        `foldchange` == 1 ~ 0,
         T ~ 1
         )
     )
