@@ -2,21 +2,21 @@
 % Please edit documentation in R/plots.R
 \name{vote_plot}
 \alias{vote_plot}
-\title{Bar-plot for compounds number of reports}
+\title{Bar-plot for compounds vote-counting}
 \usage{
 vote_plot(mets)
 }
 \arguments{
-\item{mets}{an S4 METAmet object obtained by \code{metmet}}
+\item{mets}{an S4 METAmet object obtained by \code{compute_amanida}}
 }
 \value{
-a ggplot bar-plot showing the number of articles per compound
+a ggplot bar-plot showing the vote-count per compound
 }
 \description{
-\code{vote_plot} creates a bar-plot showing the number of entries for each compound.
+\code{vote_plot} creates a bar-plot showing the vote-count for each compound.
 }
 \details{
-Independently of the compound trend, the total number of entries on each compound are plotted.
+Vote-couting is the sum of number of reports up-regulated and the substraction of reports down-regulated.
 }
 \examples{
 data("sample_data")

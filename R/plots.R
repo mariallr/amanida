@@ -57,8 +57,8 @@ volcano_plot <- function(mets, cutoff = NULL) {
   
   # Compounds with 2 or more reports
   cont <- as_tibble(mets@vote) %>% 
-    mutate(articles = as.numeric(`articles`)) %>% 
-    filter(`articles` >= 2)
+    mutate(articles = as.numeric(articles)) %>% 
+    filter(articles >= 2)
   
   cont_ids <- cont %>% pull(id)
   
@@ -79,12 +79,12 @@ volcano_plot <- function(mets, cutoff = NULL) {
   as_tibble(mets@stat) %>% 
     mutate( 
       # Format data needed
-      across(c(`pval`,`fc`), as.numeric),
+      across(c(pval,fc), as.numeric),
       # Negative logarithm of p-value for plot              
-      lpval = -log10(`pval`),
+      lpval = -log10(pval),
       # Logarithm of fold-change
-      lfc = log2(`fc`)) %>% 
-    mutate(sig = case_character_type(`lfc`, `lpval`),
+      lfc = log2(fc)) %>% 
+    mutate(sig = case_character_type(lfc, lpval),
    label = case_when(
      sig == paste("p-value < ", 10^-cut_pval) ~ "",
      sig == "under cut-offs" ~ "",
@@ -94,7 +94,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
      T ~ "single report" )) %>% 
     group_by('sig') %>% 
     {
-      ggplot(., aes(`lfc`, `lpval`, label = `label`, colour = `sig`)) +
+      ggplot(., aes(lfc, lpval, label = label, colour = sig)) +
     geom_point(aes(shape = .$reports), size = 2.5) + 
     scale_shape_manual(values = c(8, 16), name = "") +
     theme_minimal() +
@@ -122,12 +122,11 @@ volcano_plot <- function(mets, cutoff = NULL) {
                colour = "black", 
                linetype = "dashed") + 
     theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5),
-          legend.text=element_text(size=12)) +
-    guides(col = guide_legend(nrow=2, byrow = T)) + 
-    guides(shape = guide_legend(nrow=2, byrow = T)) +
+          legend.text = element_text(size = 12)) +
+    guides(col = guide_legend(nrow = 2, byrow = T)) + 
+    guides(shape = guide_legend(nrow = 2, byrow = T)) +
     scale_color_manual(values = col_palette) +
-    ggtitle("#"Volcano plot of adapated meta-analysis results"")
-      
+    ggtitle("Volcano plot of adapated meta-analysis results")
     }
     
 }
@@ -153,16 +152,16 @@ vote_plot <- function(mets) {
   #' @export
   #' 
   
-  votec = NULL;
+  votec = NULL; . = NULL;
   
   col_palette <- amanida_palette()
   
   # Subset vote-couting data
   as_tibble(mets@vote) %>% 
     mutate(
-    votec = as.numeric(`votec`)) %>%
+    votec = as.numeric(votec)) %>%
     {
-    ggplot(., aes(reorder(`id`, `votec`), `votec`, fill = `votec`)) + 
+    ggplot(., aes(reorder(id, votec), votec, fill = votec)) + 
     geom_bar(stat = "identity", show.legend = FALSE, width = .5) +
     scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
     theme(legend.position = "none") +
@@ -171,45 +170,44 @@ vote_plot <- function(mets) {
     xlab("id") + 
     ylab("Vote-counting") +
     ggtitle("Vote count plot")
-      #+ 
-    #scale_y_discrete(expand = c(0,0))
     }
 }
 
 # Plot for range
 range_plot <- function(mets) {
-  
+
   #' Plot for compounds divergence in reports
-  #' 
-  #' \code{range_plot} creates a dot-plot showing the number of entries for each compound and the vote count obtained. 
-  #' 
-  #' Independently of the compound trend, the total number of entries on each compound are plotted and also the vote count obtained. In case of negative vote-count, number of reports is converted to negative to not showing divergences.  
-  #'  
+  #'
+  #' \code{range_plot} creates a dot-plot showing the number of entries for each compound and the vote count obtained.
+  #'
+  #' Independently of the compound trend, the total number of entries on each compound are plotted and also the vote count obtained. In case of negative vote-count, number of reports is converted to negative to not showing divergences.
+  #'
   #' @param mets an S4 METAmet object obtained by \code{compute_amanida}
-  #'  
+  #'
   #' @return a ggplot dot-plot showing the number of articles per compound and the vote count
-  #' @examples 
+  #' @examples
   #' data("sample_data")
-  #' 
+  #'
   #' result <- compute_amanida(sample_data)
   #' range_plot(result)
-  #' 
+  #'
   #' @export
-  #' 
-  
-  articles = NULL;articles_m = NULL;
-  
+  #'
+
+  articles = NULL;articles_m = NULL; votec = NULL; . = NULL; mes = NULL;
+  val = NULL; start = NULL; end = NULL; value = NULL;
+
   col_palette <- amanida_palette()
-  
+
   # Subset vote-couting data
-  as_tibble(mets@vote) %>% 
+  as_tibble(mets@vote) %>%
     mutate(
-      'Vote count' = as.numeric(`votec`),
-      articles = as.numeric(`articles`),
+      'Vote count' = as.numeric(votec),
+      articles = as.numeric(articles),
       'Nº of reports' = case_when(
         votec < 0 ~ articles*(-1),
         T ~ articles)
-      ) %>% 
+      ) %>%
     select(id, 'Nº of reports', 'Vote count') %>% {
         ggplot() +
           geom_segment(data = gather(. ,mes, val, -id) %>%
@@ -223,17 +221,18 @@ range_plot <- function(mets) {
                        top_n(-1) %>%
                        slice(1) %>%
                        ungroup(),
-                     aes(x = min(val)-0.25, xend = val, y = id, yend = id),
+                     aes(x = min(val) - 0.25, xend = val, y = id, yend = id),
                      color = "gray80", size = 0.5, linetype = "dotted") +
-          geom_point(data = gather(. ,mes, value, -id),
-                     aes(value, id, color = mes), size = 1.5) + 
+          geom_point(data = gather(., mes, value, -id),
+                     aes(value, id, color = mes), size = 1.5) +
         theme_classic() +
         theme(legend.position = "bottom", legend.title = element_blank()) +
         scale_colour_manual(values = c(col_palette[1], col_palette[2])) +
-        xlab("") + 
+        xlab("") +
         ylab("ID") +
-        ggtitle("Range plot") + 
-        scale_x_continuous(limits = c(min(.$'Nº of reports')-0.25, max(.$'Nº of reports')+0.25),
+        ggtitle("Range plot") +
+        scale_x_continuous(limits = c(min(.$'Nº of reports') - 0.25, 
+                                      max(.$'Nº of reports') + 0.25),
                            expand = c(0,0))
       }
 }
@@ -243,23 +242,22 @@ explore_plot <- function(data) {
   
   #' Plot for compounds divergence in reports
   #' 
-  #' \code{piramid_plot} creates a dot-plot showing the number of entries for each compound and the vote count obtained. 
+  #' \code{explore_plot} creates a bar-plot showing the votes divided in up-regulated and down-regulated and the global result for each compound. 
   #' 
-  #' Independently of the compound trend, the total number of entries on each compound are plotted and also the vote count obtained. In case of negative vote-count, number of reports is converted to negative to not showing divergences.  
+  #' Sum of votes divided by trend are plotted, then is obtained the total result by compound summing both trends.  
   #'  
-  #' @param mets an S4 METAmet object obtained by \code{compute_amanida}
+  #' @param data an tibble obtained by \code{amanida_read}
   #'  
-  #' @return a ggplot dot-plot showing the number of articles per compound and the vote count
+  #' @return a ggplot bar-plot showing the sum of votes for each compound divided by the trend
   #' @examples 
   #' data("sample_data")
   #' 
-  #' data <- amanida_read(sample_data)
-  #' explore_plot(data)
+  #' explore_plot(sample_data)
   #' 
   #' @export
   #' 
-  
-  articles = NULL;articles_m = NULL;
+
+  trend = NULL; trend_l = NULL; N = NULL; vc = NULL; . = NULL; cont = NULL;
   
   col_palette <- amanida_palette()
   
@@ -282,26 +280,25 @@ explore_plot <- function(data) {
     {
       ggplot(., mapping = aes(x = ifelse(test = trend_l == "upregulated",
                                          yes = cont, no = -cont),
-                    y = reorder(id, -vc))) +
+                    y = reorder(id, -vc), fill = trend_l)) +
         geom_bar(aes(x = ifelse(test = trend_l == "upregulated",
-                                yes = cont, no = -cont), 
-                     colour = .$trend_l), stat = "identity",
-                     position = "identity", alpha = .3, fill = "white") +
-        geom_bar(aes(x = ifelse(test = trend_l == "upregulated",
-                                yes = abs(vc), no = -abs(vc))),
-                 stat = "identity",
-                 position = "identity", alpha = .3, fill = col_palette[4]) +
-        scale_x_continuous(labels = abs, limits = max(abs(.$cont)) *c(-1,1) * 1.1) +
-        scale_color_manual(values = c(col_palette[2:3])) +
+                                yes = cont, no = -cont)), stat = "identity",
+                    alpha = .3) +
+        scale_fill_manual(values = col_palette[2:3]) +
+        geom_segment(aes(x = 0, xend = ifelse(test = trend_l == "upregulated",
+                                              yes = abs(vc), no = -abs(vc)), 
+                     y = id, yend = id, color = trend_l),
+                     size = 0.3, alpha = 0.9, 
+                     arrow = arrow(length = unit(0.2, "cm"))) +
+        scale_x_continuous(labels = abs, limits = max(abs(.$cont)) * c(-1,1) * 1.1) +
+        scale_color_manual(values = c(col_palette[2], col_palette[3])) +
         theme_minimal() +
         xlab("Counts by trend") + 
         ylab("ID") +
+        labs(fill = "Vote-count by trend") +
         ggtitle("Explore plot") +
-        theme(legend.position = "bottom", legend.title = element_blank(),
-              panel.grid.major = element_blank(), 
-              panel.grid.minor = element_blank()) 
+        theme(legend.position = "bottom") 
     }
-  
 }
 
 

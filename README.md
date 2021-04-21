@@ -22,7 +22,9 @@ The following computations are included:
 The following plots are included to visualize the results: 
 
 * Volcano plot of meta-analysis results: showing compounds labels for over the selected cut-off. 
-* Bar plot of compound abundance
+* Bar plot of vote-counting results.
+* Range plot combining vote-counting results and number of reports by compound.
+* Bar plot of reports divided by trend with the total vote-counting.
 
 ## Installation
 
@@ -53,7 +55,12 @@ library(amanida)
 
 **2. Read your data: `amanida_read`**
 
-Supported files are csv, xls/xlsx and txt. 
+Supported files are csv, xls/xlsx and txt. The file need at minimum the following columns:
+* Id: compound name or unique identification
+* P-value
+* Fold-change
+* N: number of individuals in the study
+* Reference: bibliographic reference of the results
 
 ```r
 coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
@@ -81,10 +88,22 @@ In this step you will obtain an S4 object with two tables:
 volcano_plot(amanida_result, cutoff = c(0.05,4))
 ```
 
-**Graphical visualization of compounds abundance: `vote_plot`**
+**Graphical visualization of compounds vote-counting: `vote_plot`**
 
 ```r
 vote_plot(amanida_result)
+```
+
+**Graphical visualization of compounds vote-counting combined with number of reports: `range_plot`**
+
+```r
+range_plot(amanida_result)
+```
+
+**Graphical visualization of compounds vote-counting and reports divided trend: `explore_plot`**
+
+```r
+explore_plot(sample_data)
 ```
 
 
@@ -96,7 +115,7 @@ There is an example dataset installed, to run examples please load:
 data("sample_data")
 ```
 
-The dataset consits in a short list of compounds extracted from *Comprehensive signature of colorectal cancer volatilome and metabolome: A systematic review and meta-analysis.* Mallafré et al. 2021 Article in revision.
+The dataset consits in a short list of compounds extracted from *Comprehensive volatilome and metabolome signatures of colorectal cancer in urine: A systematic review and meta-analysis.* Mallafré et al. 2021 Article in revision.
 
 
 Please fill an issue if you have any question or problem :)
