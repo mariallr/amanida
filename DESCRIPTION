@@ -1,6 +1,6 @@
 Package: amanida
 Title: Adapted Meta-Analysis for Non-Integral Data
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: 
   c(
     person(
@@ -37,7 +37,8 @@ Imports:
   ggplot2 (>= 3.3.0), 
   ggrepel (>= 0.8.2), 
   methods (>= 3.6.0),
-  stats (>= 3.6.0)
+  stats (>= 3.6.0), 
+  tidyr (>= 1.1.0)
 Suggests:
     testthat
 Depends: R (>= 3.6)

@@ -17,7 +17,6 @@
 #' @import readxl
 #' @importFrom magrittr %>%
 #' @importFrom stats complete.cases
-#' @importFrom rlang .data
 #' 
 #' @examples
 #' coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
