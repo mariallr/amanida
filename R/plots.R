@@ -95,7 +95,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
     group_by('sig') %>% 
     {
       ggplot(., aes(`lfc`, `lpval`, label = `label`, colour = `sig`)) +
-    geom_point(aes(shape = .$reports)) + 
+    geom_point(aes(shape = .$reports), size = 2.5) + 
     scale_shape_manual(values = c(8, 16), name = "") +
     theme_minimal() +
     ggrepel::geom_text_repel(size = 3.5, 
@@ -121,27 +121,29 @@ volcano_plot <- function(mets, cutoff = NULL) {
     geom_vline(xintercept = c(cut_fc, -cut_fc),
                colour = "black", 
                linetype = "dashed") + 
-    theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5)) +
+    theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5),
+          legend.text=element_text(size=12)) +
     guides(col = guide_legend(nrow=2, byrow = T)) + 
     guides(shape = guide_legend(nrow=2, byrow = T)) +
     scale_color_manual(values = col_palette) +
-    ggtitle("Volcano plot of adapated meta-analysis results")
+    ggtitle("#"Volcano plot of adapated meta-analysis results"")
+      
     }
     
 }
 
-# Plot articles number
+# Plot for vote-counting
 vote_plot <- function(mets) {
   
-  #' Bar-plot for compounds number of reports
+  #' Bar-plot for compounds vote-counting
   #' 
-  #' \code{vote_plot} creates a bar-plot showing the number of entries for each compound. 
+  #' \code{vote_plot} creates a bar-plot showing the vote-count for each compound. 
   #' 
-  #' Independently of the compound trend, the total number of entries on each compound are plotted.
+  #' Vote-couting is the sum of number of reports up-regulated and the substraction of reports down-regulated. 
   #'  
-  #' @param mets an S4 METAmet object obtained by \code{metmet}
+  #' @param mets an S4 METAmet object obtained by \code{compute_amanida}
   #'  
-  #' @return a ggplot bar-plot showing the number of articles per compound
+  #' @return a ggplot bar-plot showing the vote-count per compound
   #' @examples 
   #' data("sample_data")
   #' 
@@ -151,22 +153,155 @@ vote_plot <- function(mets) {
   #' @export
   #' 
   
-  articles = NULL;
+  votec = NULL;
   
   col_palette <- amanida_palette()
   
   # Subset vote-couting data
   as_tibble(mets@vote) %>% 
     mutate(
-    articles = as.numeric(`articles`)) %>%
-    ggplot(aes(reorder(`id`, -`articles`), `articles`, fill = `articles`)) + 
-    geom_bar(stat = "identity", show.legend = FALSE) +
-    scale_fill_gradient(low = col_palette[5], high = col_palette[3]) +
+    votec = as.numeric(`votec`)) %>%
+    {
+    ggplot(., aes(reorder(`id`, `votec`), `votec`, fill = `votec`)) + 
+    geom_bar(stat = "identity", show.legend = FALSE, width = .5) +
+    scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
     theme(legend.position = "none") +
     theme_classic() + 
     coord_flip() +
     xlab("id") + 
-    ylab("Number of articles") +
-    ggtitle("Number of references per compound")
-    
+    ylab("Vote-counting") +
+    ggtitle("Vote count plot")
+      #+ 
+    #scale_y_discrete(expand = c(0,0))
+    }
 }
+
+# Plot for range
+range_plot <- function(mets) {
+  
+  #' Plot for compounds divergence in reports
+  #' 
+  #' \code{range_plot} creates a dot-plot showing the number of entries for each compound and the vote count obtained. 
+  #' 
+  #' Independently of the compound trend, the total number of entries on each compound are plotted and also the vote count obtained. In case of negative vote-count, number of reports is converted to negative to not showing divergences.  
+  #'  
+  #' @param mets an S4 METAmet object obtained by \code{compute_amanida}
+  #'  
+  #' @return a ggplot dot-plot showing the number of articles per compound and the vote count
+  #' @examples 
+  #' data("sample_data")
+  #' 
+  #' result <- compute_amanida(sample_data)
+  #' range_plot(result)
+  #' 
+  #' @export
+  #' 
+  
+  articles = NULL;articles_m = NULL;
+  
+  col_palette <- amanida_palette()
+  
+  # Subset vote-couting data
+  as_tibble(mets@vote) %>% 
+    mutate(
+      'Vote count' = as.numeric(`votec`),
+      articles = as.numeric(`articles`),
+      'Nº of reports' = case_when(
+        votec < 0 ~ articles*(-1),
+        T ~ articles)
+      ) %>% 
+    select(id, 'Nº of reports', 'Vote count') %>% {
+        ggplot() +
+          geom_segment(data = gather(. ,mes, val, -id) %>%
+                         group_by(id) %>%
+                         summarise(start = range(val)[1], end = range(val)[2]) %>%
+                         ungroup(),
+                       aes(x = start, xend = end, y = id, yend = id),
+                       color = "gray80", size = 1)  +
+        geom_segment(data = gather(. ,mes, val, -id) %>%
+                       group_by(id) %>%
+                       top_n(-1) %>%
+                       slice(1) %>%
+                       ungroup(),
+                     aes(x = min(val)-0.25, xend = val, y = id, yend = id),
+                     color = "gray80", size = 0.5, linetype = "dotted") +
+          geom_point(data = gather(. ,mes, value, -id),
+                     aes(value, id, color = mes), size = 1.5) + 
+        theme_classic() +
+        theme(legend.position = "bottom", legend.title = element_blank()) +
+        scale_colour_manual(values = c(col_palette[1], col_palette[2])) +
+        xlab("") + 
+        ylab("ID") +
+        ggtitle("Range plot") + 
+        scale_x_continuous(limits = c(min(.$'Nº of reports')-0.25, max(.$'Nº of reports')+0.25),
+                           expand = c(0,0))
+      }
+}
+
+# Piramid plot
+explore_plot <- function(data) {
+  
+  #' Plot for compounds divergence in reports
+  #' 
+  #' \code{piramid_plot} creates a dot-plot showing the number of entries for each compound and the vote count obtained. 
+  #' 
+  #' Independently of the compound trend, the total number of entries on each compound are plotted and also the vote count obtained. In case of negative vote-count, number of reports is converted to negative to not showing divergences.  
+  #'  
+  #' @param mets an S4 METAmet object obtained by \code{compute_amanida}
+  #'  
+  #' @return a ggplot dot-plot showing the number of articles per compound and the vote count
+  #' @examples 
+  #' data("sample_data")
+  #' 
+  #' data <- amanida_read(sample_data)
+  #' explore_plot(data)
+  #' 
+  #' @export
+  #' 
+  
+  articles = NULL;articles_m = NULL;
+  
+  col_palette <- amanida_palette()
+  
+  # Prepare data for plot
+  
+  data %>%
+    mutate(
+      trend_l = case_when(
+        trend == -1 ~ "downregulated", 
+        T ~ "upregulated"
+      )
+    ) %>% group_by(id) %>% 
+    mutate(vc = sum(trend)) %>%
+    group_by(id, trend_l) %>%
+    summarise(
+      cont = n(),
+      total_N = sum(N),
+      vc = unique(vc)
+      ) %>% 
+    {
+      ggplot(., mapping = aes(x = ifelse(test = trend_l == "upregulated",
+                                         yes = cont, no = -cont),
+                    y = reorder(id, -vc))) +
+        geom_bar(aes(x = ifelse(test = trend_l == "upregulated",
+                                yes = cont, no = -cont), 
+                     colour = .$trend_l), stat = "identity",
+                     position = "identity", alpha = .3, fill = "white") +
+        geom_bar(aes(x = ifelse(test = trend_l == "upregulated",
+                                yes = abs(vc), no = -abs(vc))),
+                 stat = "identity",
+                 position = "identity", alpha = .3, fill = col_palette[4]) +
+        scale_x_continuous(labels = abs, limits = max(abs(.$cont)) *c(-1,1) * 1.1) +
+        scale_color_manual(values = c(col_palette[2:3])) +
+        theme_minimal() +
+        xlab("Counts by trend") + 
+        ylab("ID") +
+        ggtitle("Explore plot") +
+        theme(legend.position = "bottom", legend.title = element_blank(),
+              panel.grid.major = element_blank(), 
+              panel.grid.minor = element_blank()) 
+    }
+  
+}
+
+
