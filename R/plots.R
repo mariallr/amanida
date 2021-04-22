@@ -208,13 +208,15 @@ range_plot <- function(mets) {
         votec < 0 ~ articles*(-1),
         T ~ articles)
       ) %>%
-    select(id, 'Nº of reports', 'Vote count') %>% {
+    select(id, 'Nº of reports', 'Vote count') %>% 
+    
+    {
         ggplot() +
           geom_segment(data = gather(. ,mes, val, -id) %>%
                          group_by(id) %>%
                          summarise(start = range(val)[1], end = range(val)[2]) %>%
                          ungroup(),
-                       aes(x = start, xend = end, y = id, yend = id),
+                       aes(x = start, xend = end, y = reorder(id, start), yend = reorder(id, start)),
                        color = "gray80", size = 1)  +
         geom_segment(data = gather(. ,mes, val, -id) %>%
                        group_by(id) %>%
@@ -229,7 +231,7 @@ range_plot <- function(mets) {
         theme(legend.position = "bottom", legend.title = element_blank()) +
         scale_colour_manual(values = c(col_palette[1], col_palette[2])) +
         xlab("") +
-        ylab("ID") +
+        ylab("Identifier") +
         ggtitle("Range plot") +
         scale_x_continuous(limits = c(min(.$'Nº of reports') - 0.25, 
                                       max(.$'Nº of reports') + 0.25),
@@ -257,7 +259,8 @@ explore_plot <- function(data) {
   #' @export
   #' 
 
-  trend = NULL; trend_l = NULL; N = NULL; vc = NULL; . = NULL; cont = NULL;
+  trend = NULL; trend_l = NULL; N = NULL; vc = NULL; . = NULL; 
+  cont = NULL; lab = NULL;
   
   col_palette <- amanida_palette()
   
@@ -266,8 +269,8 @@ explore_plot <- function(data) {
   data %>%
     mutate(
       trend_l = case_when(
-        trend == -1 ~ "downregulated", 
-        T ~ "upregulated"
+        trend == -1 ~ "Down-regulated", 
+        T ~ "Up-regulated"
       )
     ) %>% group_by(id) %>% 
     mutate(vc = sum(trend)) %>%
@@ -275,29 +278,35 @@ explore_plot <- function(data) {
     summarise(
       cont = n(),
       total_N = sum(N),
-      vc = unique(vc)
-      ) %>% 
+      vc = unique(vc),
+      lab = c("Vote-counting")
+    ) %>% 
+    mutate(cont = case_when(
+      trend_l == "Down-regulated" ~ cont*-1,
+      T ~ cont*1
+    )) %>%
     {
-      ggplot(., mapping = aes(x = ifelse(test = trend_l == "upregulated",
-                                         yes = cont, no = -cont),
-                    y = reorder(id, -vc), fill = trend_l)) +
-        geom_bar(aes(x = ifelse(test = trend_l == "upregulated",
-                                yes = cont, no = -cont)), stat = "identity",
-                    alpha = .3) +
+      ggplot(., mapping = aes(x = cont,
+                              y = reorder(id, -vc), fill = trend_l)) +
+        geom_bar(aes(x = ifelse(test = trend_l == "Up-regulated",
+                                yes = cont, no = cont)), stat = "identity",
+                 alpha = .3) +
         scale_fill_manual(values = col_palette[2:3]) +
-        geom_segment(aes(x = 0, xend = ifelse(test = trend_l == "upregulated",
-                                              yes = abs(vc), no = -abs(vc)), 
-                     y = id, yend = id, color = trend_l),
-                     size = 0.3, alpha = 0.9, 
-                     arrow = arrow(length = unit(0.2, "cm"))) +
+        geom_segment(aes(x = 0, xend = vc, 
+                         y = id, yend = id, linetype = lab),
+                     size = 0.4, alpha = 0.9, 
+                     arrow = arrow(length = unit(0.1, "cm")), 
+                     lineend = "round", linejoin = "round") +
         scale_x_continuous(labels = abs, limits = max(abs(.$cont)) * c(-1,1) * 1.1) +
         scale_color_manual(values = c(col_palette[2], col_palette[3])) +
         theme_minimal() +
         xlab("Counts by trend") + 
-        ylab("ID") +
-        labs(fill = "Vote-count by trend") +
+        ylab("Identifier") +
+        labs(fill = "Counts by trend") +
         ggtitle("Explore plot") +
-        theme(legend.position = "bottom") 
+        theme(legend.position = "bottom", legend.title = element_blank()) +
+        guides(col = guide_legend(nrow = 2, byrow = T)) + 
+        guides(shape = guide_legend(nrow = 2, byrow = T)) 
     }
 }
 

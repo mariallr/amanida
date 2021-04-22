@@ -31,7 +31,7 @@ compute_amanida <- function(datafile) {
     # Statistics grouping by compound identifier and trend
     sta <- datafile %>% 
       mutate(logp = log10(`pvalue`),
-             logfc = log(`foldchange`)) %>%
+             logfc = log2(`foldchange`)) %>%
       group_by(`id`, `trend`) %>% 
       summarize(
       # Combine p-values using Fisher's method weighted by number of individuals
