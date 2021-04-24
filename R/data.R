@@ -2,7 +2,7 @@
 #'
 #' A dataset containing results from meta-analysis of metabolomic studies
 #'
-#' @format A data frame with 93 rows and 6 variables:
+#' @format A data frame with 143 rows and 6 variables:
 #' \describe{
 #'   \item{id}{Name of the compound under study}
 #'   \item{pvalue}{P-value}

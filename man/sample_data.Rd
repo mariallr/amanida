@@ -5,7 +5,7 @@
 \alias{sample_data}
 \title{Example input data for the amanida function}
 \format{
-A data frame with 93 rows and 6 variables:
+A data frame with 143 rows and 6 variables:
 \describe{
 \item{id}{Name of the compound under study}
 \item{pvalue}{P-value}

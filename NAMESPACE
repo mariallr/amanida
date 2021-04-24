@@ -3,7 +3,6 @@
 export(amanida_read)
 export(compute_amanida)
 export(explore_plot)
-export(range_plot)
 export(volcano_plot)
 export(vote_plot)
 exportClasses(METAtables)
