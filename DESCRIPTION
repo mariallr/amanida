@@ -1,6 +1,6 @@
 Package: amanida
 Title: Adapted Meta-Analysis for Non-Integral Data
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: 
   c(
     person(

@@ -23,7 +23,6 @@ The following plots are included to visualize the results:
 
 * Volcano plot of meta-analysis results: showing compounds labels for over the selected cut-off. 
 * Bar plot of vote-counting results.
-* Range plot combining vote-counting results and number of reports by compound.
 * Bar plot of reports divided by trend with the total vote-counting.
 
 ## Installation
@@ -92,12 +91,6 @@ volcano_plot(amanida_result, cutoff = c(0.05,4))
 
 ```r
 vote_plot(amanida_result)
-```
-
-**Graphical visualization of compounds vote-counting combined with number of reports: `range_plot`**
-
-```r
-range_plot(amanida_result)
 ```
 
 **Graphical visualization of compounds vote-counting and reports divided trend: `explore_plot`**

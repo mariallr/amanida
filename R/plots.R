@@ -173,71 +173,6 @@ vote_plot <- function(mets) {
     }
 }
 
-# Plot for range
-range_plot <- function(mets) {
-
-  #' Plot for compounds divergence in reports
-  #'
-  #' \code{range_plot} creates a dot-plot showing the number of entries for each compound and the vote count obtained.
-  #'
-  #' Independently of the compound trend, the total number of entries on each compound are plotted and also the vote count obtained. In case of negative vote-count, number of reports is converted to negative to not showing divergences.
-  #'
-  #' @param mets an S4 METAmet object obtained by \code{compute_amanida}
-  #'
-  #' @return a ggplot dot-plot showing the number of articles per compound and the vote count
-  #' @examples
-  #' data("sample_data")
-  #'
-  #' result <- compute_amanida(sample_data)
-  #' range_plot(result)
-  #'
-  #' @export
-  #'
-
-  articles = NULL;articles_m = NULL; votec = NULL; . = NULL; mes = NULL;
-  val = NULL; start = NULL; end = NULL; value = NULL;
-
-  col_palette <- amanida_palette()
-
-  # Subset vote-couting data
-  as_tibble(mets@vote) %>%
-    mutate(
-      'Vote count' = as.numeric(votec),
-      articles = as.numeric(articles),
-      'Nº of reports' = case_when(
-        votec < 0 ~ articles*(-1),
-        T ~ articles)
-      ) %>%
-    select(id, 'Nº of reports', 'Vote count') %>% 
-    
-    {
-        ggplot() +
-          geom_segment(data = gather(. ,mes, val, -id) %>%
-                         group_by(id) %>%
-                         summarise(start = range(val)[1], end = range(val)[2]) %>%
-                         ungroup(),
-                       aes(x = start, xend = end, y = reorder(id, start), yend = reorder(id, start)),
-                       color = "gray80", size = 1)  +
-        geom_segment(data = gather(. ,mes, val, -id) %>%
-                       group_by(id) %>%
-                       top_n(-1) %>%
-                       slice(1) %>%
-                       ungroup(),
-                     aes(x = min(val) - 0.25, xend = val, y = id, yend = id),
-                     color = "gray80", size = 0.5, linetype = "dotted") +
-          geom_point(data = gather(., mes, value, -id),
-                     aes(value, id, color = mes), size = 1.5) +
-        theme_classic() +
-        theme(legend.position = "bottom", legend.title = element_blank()) +
-        scale_colour_manual(values = c(col_palette[1], col_palette[2])) +
-        xlab("") +
-        ylab("Identifier") +
-        ggtitle("Range plot") +
-        scale_x_continuous(limits = c(min(.$'Nº of reports') - 0.25, 
-                                      max(.$'Nº of reports') + 0.25),
-                           expand = c(0,0))
-      }
-}
 
 # Piramid plot
 explore_plot <- function(data) {
@@ -287,7 +222,7 @@ explore_plot <- function(data) {
     )) %>%
     {
       ggplot(., mapping = aes(x = cont,
-                              y = reorder(id, -vc), fill = trend_l)) +
+                              y = reorder(id, vc), fill = trend_l)) +
         geom_bar(aes(x = ifelse(test = trend_l == "Up-regulated",
                                 yes = cont, no = cont)), stat = "identity",
                  alpha = .3) +
@@ -297,7 +232,7 @@ explore_plot <- function(data) {
                      size = 0.4, alpha = 0.9, 
                      arrow = arrow(length = unit(0.1, "cm")), 
                      lineend = "round", linejoin = "round") +
-        scale_x_continuous(labels = abs, limits = max(abs(.$cont)) * c(-1,1) * 1.1) +
+        scale_x_continuous(labels = abs, limits = max(abs(.$cont)) * c(-1,1) * 1.01) +
         scale_color_manual(values = c(col_palette[2], col_palette[3])) +
         theme_minimal() +
         xlab("Counts by trend") + 
