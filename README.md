@@ -23,7 +23,7 @@ The following plots are included to visualize the results:
 
 * Volcano plot of meta-analysis results: showing compounds labels for over the selected cut-off. 
 * Bar plot of vote-counting results.
-* Bar plot of reports divided by trend with the total vote-counting.
+* Bar plot of reports divided by trend including the total vote-counting.
 
 ## Installation
 
@@ -54,7 +54,7 @@ library(amanida)
 
 **2. Read your data: `amanida_read`**
 
-Supported files are csv, xls/xlsx and txt. The file need at minimum the following columns:
+Supported files are csv, xls/xlsx and txt. The file need in this order the following columns:
 * Id: compound name or unique identification
 * P-value
 * Fold-change
