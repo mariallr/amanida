@@ -4,10 +4,19 @@
 \alias{explore_plot}
 \title{Plot for compounds divergence in reports}
 \usage{
-explore_plot(data)
+explore_plot(data, type = "all", counts = NULL)
 }
 \arguments{
 \item{data}{an tibble obtained by \code{amanida_read}}
+
+\item{type}{select the type of data to plot. Options are:
+\itemize{
+\item "all": all data will be displayed
+\item "sub": only data over counts value will be displayed. Need counts value.
+\item "mix": will display data over count value and elements with reports in both trends.Need counts value.
+}}
+
+\item{counts}{value of vote-counting cut-off. Will be only displayed data over the cut-off.}
 }
 \value{
 a ggplot bar-plot showing the sum of votes for each compound divided by the trend
@@ -19,7 +28,7 @@ a ggplot bar-plot showing the sum of votes for each compound divided by the tren
 Sum of votes divided by trend are plotted, then is obtained the total result by compound summing both trends.
 }
 \examples{
-data("sample_data")
+data("sample_data", type = "mix", counts = 1)
 
 explore_plot(sample_data)
 
