@@ -4,7 +4,7 @@
 \alias{amanida_vote}
 \title{Semi-quantitative meta-analysis}
 \usage{
-amanida_vote(datafile)
+amanida_vote(data)
 }
 \arguments{
 \item{data}{datafile data imported using amanida_read function}
@@ -23,8 +23,7 @@ Formats compatible are csv, xlsx, xls or txt.
 \examples{
 coln = c("Compound Name", "Behaviour", "References")
 input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
-
-data_votes <- amanida_read(input_file, coln, separator = ";")
+data_votes <- amanida_read(input_file, mode = "qual", coln, separator = ";")
 
 vote_result <- amanida_vote(data_votes)
 
