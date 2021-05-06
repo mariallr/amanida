@@ -132,7 +132,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
 }
 
 # Plot for vote-counting
-vote_plot <- function(mets) {
+vote_plot <- function(mets, counts = NULL) {
   
   #' Bar-plot for compounds vote-counting
   #' 
@@ -141,6 +141,7 @@ vote_plot <- function(mets) {
   #' Vote-couting is the sum of number of reports up-regulated and the substraction of reports down-regulated. 
   #'  
   #' @param mets an S4 METAmet object obtained by \code{compute_amanida}
+  #' @param counts value of vote-counting cut-off. Will be only displayed data over the cut-off.
   #'  
   #' @return a ggplot bar-plot showing the vote-count per compound
   #' @examples 
@@ -152,16 +153,27 @@ vote_plot <- function(mets) {
   #' @export
   #' 
   
-  votec = NULL; . = NULL;
+  votes = NULL; . = NULL;
   
   col_palette <- amanida_palette()
+  
+  if (hasArg(counts)) { 
+    cuts <- counts
+    
+    if (length(counts) != 1) {
+      stop( "Please indicate one cut-off only")
+    }
+  } else {
+    cuts <- 1
+  }
   
   # Subset vote-couting data
   as_tibble(mets@vote) %>% 
     mutate(
-    votec = as.numeric(votec)) %>%
+    votes = as.numeric(votes)) %>%
+    filter (abs(votes) >= cuts) %>%
     {
-    ggplot(., aes(reorder(id, votec), votec, fill = votec)) + 
+    ggplot(., aes(reorder(id, votes), votes, fill = votes)) + 
     geom_bar(stat = "identity", show.legend = FALSE, width = .5) +
     scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
     theme(legend.position = "none") +
