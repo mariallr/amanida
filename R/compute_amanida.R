@@ -10,7 +10,7 @@
 #' 
 #' Vote-counting is computed without trend division. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
 #'   
-#' @param datafile data imported using data.read function
+#' @param datafile data imported using amanida_read function
 #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
 #' 
 #' @examples
@@ -26,7 +26,7 @@ compute_amanida <- function(datafile) {
   
   pvalue = NULL; foldchange = NULL; trend = NULL; N = NULL; logp = NULL; 
   chisq = NULL; logfc = NULL; ref = NULL; pval = NULL; fc = NULL; N_total = NULL;
-  reference = NULL; votec = NULL; articles = NULL;
+  reference = NULL; votes = NULL; articles = NULL; vote_counting = NULL;
 
     # Statistics grouping by compound identifier and trend
     sta <- datafile %>% 
@@ -53,11 +53,11 @@ compute_amanida <- function(datafile) {
       group_by(`id`) %>% 
       summarize(
       # Votes per compound
-      votec = sum(`trend`),
+      votes = sum(`trend`),
       # Number of reports
       articles = n(),
       # Vote-counting
-      VC = `votec`/`articles`
+      vote_counting = `votes`/`articles`
     )
     
   # Save results in S4 object and return

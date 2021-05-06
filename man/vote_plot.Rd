@@ -4,10 +4,12 @@
 \alias{vote_plot}
 \title{Bar-plot for compounds vote-counting}
 \usage{
-vote_plot(mets)
+vote_plot(mets, counts = NULL)
 }
 \arguments{
 \item{mets}{an S4 METAmet object obtained by \code{compute_amanida}}
+
+\item{counts}{value of vote-counting cut-off. Will be only displayed data over the cut-off.}
 }
 \value{
 a ggplot bar-plot showing the vote-count per compound
