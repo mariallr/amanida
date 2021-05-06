@@ -1,13 +1,13 @@
 
-#' Import data
+#' Semi-quantitative meta-analysis
 #' 
-#' \code{amanida_vote} performs vote-counting on data
+#' \code{amanida_vote} performs vote-counting on qualitative data
 #'
 #' Note that \code{amanida_vote} skips rows with missing values or NA. 
 #'
 #' Formats compatible are csv, xlsx, xls or txt.
 #' 
-#' @param file datafile data imported using amanida_read function
+#' @param data datafile data imported using amanida_read function
 #' @return METAtable S4 object with vote-counting for each compound on @slot vote
 #' 
 #' @import dplyr
@@ -23,7 +23,6 @@
 #' @export
 #' 
 
-
 amanida_vote <- function(datafile) {
     . = NULL; votes = NULL; articles = NULL; vote_counting = NULL;
   
@@ -37,12 +36,10 @@ amanida_vote <- function(datafile) {
       # Vote-counting
       vote_counting = votes/articles
       )
-  sta = tibble()
+ 
+   sta = tibble()
   
   # Save results in S4 object and return
   METAtables(stat=sta, vote=vote)
 
 }
-
-#' 
-#' 

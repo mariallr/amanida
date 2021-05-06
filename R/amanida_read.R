@@ -3,11 +3,16 @@
 #' 
 #' \code{amanida_read} imports the data and formats for metamet function
 #'
-#' Note that \code{amanida_read} skips rows with missing values or NA. 
+#' Note that \code{amanida_read} skips rows with missing values or NA.
 #'
 #' Formats compatible are csv, xlsx, xls or txt.
 #' 
 #' @param file path to file
+#' @param mode indicate if data will be quantitative or qualitative. Options are:
+#' \itemize{
+#'   \item "quan" for quantitative meta-analysis using p-value and fold-change
+#'   \item "qual" for qualitative meta-analysis using trend label
+#'   }
 #' @param coln columns names to use
 #' @param separator the separator used on file
 #' @return tibble table with data imported
@@ -21,11 +26,11 @@
 #' @examples
 #' coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
 #' input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
-#' datafile <- amanida_read(input_file, coln, separator=";")
+#' datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 #' 
 #' @export
 
-amanida_read <- function(file, coln, separator=NULL) {
+amanida_read <- function(file, mode, coln, separator=NULL) {
   . = NULL; foldchange = NULL; pvalue = NULL; N = NULL; 
   
   VAR_NAMES <- c('id', 'pvalue', 'foldchange', 'N', 'ref')
@@ -49,7 +54,7 @@ amanida_read <- function(file, coln, separator=NULL) {
     stop("Format not compatible; try csv, tsv, excel or txt. Aborting.")
   }
   
-  if (length(coln) >= 4) {
+  if (mode == "quan") {
     datafile %>%
       # Select columns with data needed
       select(all_of(coln)) %>%
@@ -73,7 +78,7 @@ amanida_read <- function(file, coln, separator=NULL) {
           T ~ 1
         )
       )
-  } else {
+  } else if (mode == "qual") {
     VAR_NAMES <- c('id', 'trend', 'ref')
     
     datafile %>%
@@ -86,5 +91,7 @@ amanida_read <- function(file, coln, separator=NULL) {
         tolower(trend) == "down" ~ -1,
         T ~ 1
       ))
+  } else {
+    stop("Please, indicate mode: 'quant' for quantitative and 'qual' for qualitative")
   }
 }

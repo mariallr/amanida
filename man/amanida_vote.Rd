@@ -2,18 +2,18 @@
 % Please edit documentation in R/amanida_vote.R
 \name{amanida_vote}
 \alias{amanida_vote}
-\title{Import data}
+\title{Semi-quantitative meta-analysis}
 \usage{
 amanida_vote(datafile)
 }
 \arguments{
-\item{file}{datafile data imported using amanida_read function}
+\item{data}{datafile data imported using amanida_read function}
 }
 \value{
 METAtable S4 object with vote-counting for each compound on @slot vote
 }
 \description{
-\code{amanida_vote} performs vote-counting on data
+\code{amanida_vote} performs vote-counting on qualitative data
 }
 \details{
 Note that \code{amanida_vote} skips rows with missing values or NA.
