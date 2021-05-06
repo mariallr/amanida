@@ -175,7 +175,7 @@ vote_plot <- function(mets) {
 
 
 # Piramid plot
-explore_plot <- function(data) {
+explore_plot <- function(data, type = "all", counts = NULL) {
   
   #' Plot for compounds divergence in reports
   #' 
@@ -184,10 +184,17 @@ explore_plot <- function(data) {
   #' Sum of votes divided by trend are plotted, then is obtained the total result by compound summing both trends.  
   #'  
   #' @param data an tibble obtained by \code{amanida_read}
+  #' @param type select the type of data to plot. Options are: 
+  #' \itemize{
+  #'    \item "all": all data will be displayed
+  #'    \item "sub": only data over counts value will be displayed. Need counts value.
+  #'    \item "mix": will display data over count value and elements with reports in both trends.Need counts value.
+  #'    }
+  #' @param counts value of vote-counting cut-off. Will be only displayed data over the cut-off.  
   #'  
   #' @return a ggplot bar-plot showing the sum of votes for each compound divided by the trend
   #' @examples 
-  #' data("sample_data")
+  #' data("sample_data", type = "mix", counts = 1)
   #' 
   #' explore_plot(sample_data)
   #' 
@@ -199,27 +206,86 @@ explore_plot <- function(data) {
   
   col_palette <- amanida_palette()
   
+  if (hasArg(counts)) { 
+    cuts <- counts
+    
+    if (length(counts) != 1) {
+      stop( "Please indicate one cut-off only")
+    }
+  } else {
+    cuts <- 1
+  }
+  
+  if (type == "all") {
+    dt <- data %>%
+      mutate(
+        trend_l = case_when(
+          trend == -1 ~ "Down-regulated", 
+          T ~ "Up-regulated"
+        )
+      ) %>% group_by(id) %>% 
+      mutate(vc = sum(trend)) %>%
+      group_by(id, trend_l) %>%
+      summarise(
+        cont = n(),
+        total_N = sum(N),
+        vc = unique(vc),
+        lab = c("Vote-counting")
+      ) %>% 
+      mutate(cont = case_when(
+        trend_l == "Down-regulated" ~ cont*-1,
+        T ~ cont*1
+      ))
+    
+  } else if (type == "sub") {
+    dt <- data %>%
+      mutate(
+        trend_l = case_when(
+          trend == -1 ~ "Down-regulated", 
+          T ~ "Up-regulated"
+        )
+      ) %>% group_by(id) %>% 
+      mutate(vc = sum(trend)) %>%
+      group_by(id, trend_l) %>%
+      summarise(
+        cont = n(),
+        total_N = sum(N),
+        vc = unique(vc),
+        lab = c("Vote-counting")
+      ) %>% 
+      mutate(cont = case_when(
+        trend_l == "Down-regulated" ~ cont*-1,
+        T ~ cont*1
+      )) %>%
+      filter(vc > cuts | vc < -1*cuts)
+    
+  } else if (type == "mix") {
+    dt <- data %>%
+      mutate(
+        trend_l = case_when(
+          trend == -1 ~ "Down-regulated", 
+          T ~ "Up-regulated"
+        )
+      ) %>% group_by(id) %>% 
+      mutate(vc = sum(trend)) %>%
+      group_by(id, trend_l) %>%
+      summarise(
+        cont = n(),
+        total_N = sum(N),
+        vc = unique(vc),
+        lab = c("Vote-counting")
+      ) %>% 
+      mutate(cont = case_when(
+        trend_l == "Down-regulated" ~ cont*-1,
+        T ~ cont*1
+      )) %>%
+      filter(vc > cuts | vc < -1*cuts |
+               vc != cont)
+  }
+  
   # Prepare data for plot
   
-  data %>%
-    mutate(
-      trend_l = case_when(
-        trend == -1 ~ "Down-regulated", 
-        T ~ "Up-regulated"
-      )
-    ) %>% group_by(id) %>% 
-    mutate(vc = sum(trend)) %>%
-    group_by(id, trend_l) %>%
-    summarise(
-      cont = n(),
-      total_N = sum(N),
-      vc = unique(vc),
-      lab = c("Vote-counting")
-    ) %>% 
-    mutate(cont = case_when(
-      trend_l == "Down-regulated" ~ cont*-1,
-      T ~ cont*1
-    )) %>%
+  dt %>%
     {
       ggplot(., mapping = aes(x = cont,
                               y = reorder(id, vc), fill = trend_l)) +
