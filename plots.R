@@ -1,0 +1,324 @@
+
+amanida_palette <- function() {
+  
+  #' Get nice colour-blind colours
+  #' 
+  #' @return vector of colours
+  #' 
+  
+  c("#F4A460", "#87CEEB", "#CD5C5C", "#A9A9A9", "#FFEFD5")
+}
+
+volcano_plot <- function(mets, cutoff = NULL) {
+  
+  #' Volcano plot of combined results 
+  #' 
+  #' \code{volcano_plot} returns a volcano plot of the combined results on each metabolite obtained by metmet function
+  #' 
+  #' Results are presented as -log10 for p-value and log2 for fold-change. 
+  #' Values over the cut off are labeled. If not cutoff is provided will be used alpha 0.05 for p-value and 1.5 for logarithmic fold-change.
+  #'  
+  #' @param mets an S4 METAtable object
+  #' @param cutoff values for p-value and fold-change significance
+  #'  
+  #' @return plot of results
+  #'  
+  #' @examples 
+  #' data("sample_data")
+  #' 
+  #' amanida_result <- compute_amanida(sample_data)
+  #' volcano_plot(amanida_result)
+  #'
+  #' @export
+  #' 
+  
+  articles = NULL; pval = NULL; fc = NULL; lfc = NULL; lpval = NULL; . = NULL; 
+  label = NULL; sig = NULL;
+  
+  col_palette <- amanida_palette()
+  
+  # Search for cutoff argument
+  if (hasArg(cutoff)) { 
+    cuts <- cutoff
+    
+    if (length(cuts) != 2) {
+      stop( "Please indicate one cut-off for p-value and one for fold-change")
+    }
+    cut_pval <- -log10(cuts[1])
+    cut_fc <- log2(cuts[2])
+      
+  # If not cutoff argument convention values are established: 
+  } else {
+    # Alpha < 0.05 
+    cut_pval <- -log10(0.05)
+    # Log(fold-change) = 1.5
+    cut_fc <- log2(2.83)
+  }
+  
+  # Compounds with 2 or more reports
+  cont <- as_tibble(mets@vote) %>% 
+    mutate(articles = as.numeric(articles)) %>% 
+    filter(articles >= 2)
+  
+  cont_ids <- cont %>% pull(id)
+  
+  # Function for labels
+  case_character_type <- function(lfc, lpval) {
+    case_when(
+      (lfc < -cut_fc & lpval > cut_pval) ~ paste("p-value < ", 10^-cut_pval, 
+                                                 "& fold-change < ", -2^cut_fc),
+      (lpval > cut_pval & abs(lfc) < cut_fc) ~ paste("p-value < ", 10^-cut_pval),
+      (lfc > cut_fc & lpval > cut_pval) ~ paste("p-value <", 10^-cut_pval, 
+                                                "& fold-change >", 2^cut_fc),
+      T ~ "under cut-offs"
+    )}
+  
+  ## Volcano plot
+  
+  # Scatter plot for logarithmic fold-change vs. -logarithmic p-value
+  as_tibble(mets@stat) %>% 
+    mutate( 
+      # Format data needed
+      across(c(pval,fc), as.numeric),
+      # Negative logarithm of p-value for plot              
+      lpval = -log10(pval),
+      # Logarithm of fold-change
+      lfc = log2(fc)) %>% 
+    mutate(sig = case_character_type(lfc, lpval),
+   label = case_when(
+     sig == paste("p-value < ", 10^-cut_pval) ~ "",
+     sig == "under cut-offs" ~ "",
+     T ~ id),
+   reports = case_when(
+     id %in% cont_ids ~ "> 1 report",
+     T ~ "single report" )) %>% 
+    group_by('sig') %>% 
+    {
+      ggplot(., aes(lfc, lpval, label = label, colour = sig)) +
+    geom_point(aes(shape = .$reports), size = 2.5) + 
+    scale_shape_manual(values = c(8, 16), name = "") +
+    theme_minimal() +
+    ggrepel::geom_text_repel(size = 3.5, 
+                             fontface = "bold", 
+                             segment.size = 0.4, 
+                             point.padding = (unit(0.3, "lines")),
+                             box.padding = unit(0.3, "lines"),
+                             colour = "black") + 
+    # Axis titles
+    xlab( "log2(Fold-change)") + 
+    ylab("-log10(p-value)") + 
+    labs(colour = "") +
+    
+    # X axis breaks
+    scale_x_continuous(breaks = seq(round(-max(abs(.$lfc)),0) - 1, 
+                                    round(max(abs(.$lfc)),0) + 1, 1), 
+                       limits = c(-max(abs(.$lfc)), max(abs(.$lfc)))) + 
+    
+    # Cutoff marks
+    geom_hline(yintercept = cut_pval, 
+               colour = "black", 
+               linetype = "dashed") + 
+    geom_vline(xintercept = c(cut_fc, -cut_fc),
+               colour = "black", 
+               linetype = "dashed") + 
+    theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5),
+          legend.text = element_text(size = 12)) +
+    guides(col = guide_legend(nrow = 2, byrow = T)) + 
+    guides(shape = guide_legend(nrow = 2, byrow = T)) +
+    scale_color_manual(values = col_palette) +
+    ggtitle("Volcano plot of adapated meta-analysis results")
+    }
+    
+}
+
+# Plot for vote-counting
+vote_plot <- function(mets, counts = NULL) {
+  
+  #' Bar-plot for compounds vote-counting
+  #' 
+  #' \code{vote_plot} creates a bar-plot showing the vote-count for each compound. 
+  #' 
+  #' Vote-couting is the sum of number of reports up-regulated and the substraction of reports down-regulated. 
+  #'  
+  #' @param mets an S4 METAmet object obtained by \code{compute_amanida} or \code{amanida_vote}.
+  #' @param counts value of vote-counting cut-off. Will be only displayed data over the cut-off.
+  #'  
+  #' @return a ggplot bar-plot showing the vote-count per compound
+  #' @examples 
+  #' data("sample_data")
+  #' 
+  #' result <- compute_amanida(sample_data)
+  #' vote_plot(result)
+  #' 
+  #' @export
+  #' 
+  
+  votes = NULL; . = NULL;
+  
+  col_palette <- amanida_palette()
+  
+  if (hasArg(counts)) { 
+    cuts <- counts
+    
+    if (length(counts) != 1) {
+      stop( "Please indicate one cut-off only")
+    }
+  } else {
+    cuts <- 1
+  }
+  
+  # Subset vote-couting data
+  as_tibble(mets@vote) %>% 
+    mutate(
+    votes = as.numeric(votes)) %>%
+    filter (abs(votes) >= cuts) %>%
+    {
+    ggplot(., aes(reorder(id, votes), votes, fill = votes)) + 
+    geom_bar(stat = "identity", show.legend = FALSE, width = .5) +
+    scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
+    theme(legend.position = "none") +
+    theme_classic() + 
+    coord_flip() +
+    xlab("id") + 
+    ylab("Vote-counting") +
+    ggtitle("Vote count plot")
+    }
+}
+
+
+# Piramid plot
+explore_plot <- function(data, type = "all", counts = NULL) {
+  
+  #' Plot for compounds divergence in reports
+  #' 
+  #' \code{explore_plot} creates a bar-plot showing the votes divided in up-regulated and down-regulated and the global result for each compound. 
+  #' 
+  #' Sum of votes divided by trend are plotted, then is obtained the total result by compound summing both trends.  
+  #'  
+  #' @param data an tibble obtained by \code{amanida_read}
+  #' @param type select the subset of data to plot. Options are: 
+  #' \itemize{
+  #'    \item "all": all data will be displayed
+  #'    \item "sub": only data over counts value will be displayed. Need counts value.
+  #'    \item "mix": will display data over count value and elements with reports in both trends.Need counts value.
+  #'    }
+  #' @param counts value of vote-counting cut-off. Will be only displayed data over the cut-off.  
+  #'  
+  #' @return a ggplot bar-plot showing the sum of votes for each compound divided by the trend
+  #' @examples 
+  #' data("sample_data", type = "mix", counts = 1)
+  #' 
+  #' explore_plot(sample_data)
+  #' 
+  #' @export
+  #' 
+
+  trend = NULL; trend_l = NULL; N = NULL; vc = NULL; . = NULL; 
+  cont = NULL; lab = NULL;
+  
+  col_palette <- amanida_palette()
+  
+  if (hasArg(counts)) { 
+    cuts <- counts
+    
+    if (length(cuts) != 1) {
+      stop( "Please indicate one cut-off")
+    }
+  } 
+  
+  if (type == "all") {
+    dt <- data %>%
+      mutate(
+        trend_l = case_when(
+          trend == -1 ~ "Down-regulated", 
+          T ~ "Up-regulated"
+        )
+      ) %>% group_by(id) %>% 
+      mutate(vc = sum(trend)) %>%
+      group_by(id, trend_l) %>%
+      summarise(
+        cont = n(),
+        total_N = sum(N),
+        vc = unique(vc),
+        lab = c("Vote-counting")
+      ) %>% 
+      mutate(cont = case_when(
+        trend_l == "Down-regulated" ~ cont*-1,
+        T ~ cont*1
+      ))
+    
+  } else if (type == "sub") {
+    dt <- data %>%
+      mutate(
+        trend_l = case_when(
+          trend == -1 ~ "Down-regulated", 
+          T ~ "Up-regulated"
+        )
+      ) %>% group_by(id) %>% 
+      mutate(vc = sum(trend)) %>%
+      group_by(id, trend_l) %>%
+      summarise(
+        cont = n(),
+        total_N = sum(N),
+        vc = unique(vc),
+        lab = c("Vote-counting")
+      ) %>% 
+      mutate(cont = case_when(
+        trend_l == "Down-regulated" ~ cont*-1,
+        T ~ cont*1
+      )) %>%
+      filter(vc > cuts | vc < -1*cuts)
+    
+  } else if (type == "mix") {
+    dt <- data %>%
+      mutate(
+        trend_l = case_when(
+          trend == -1 ~ "Down-regulated", 
+          T ~ "Up-regulated"
+        )
+      ) %>% group_by(id) %>% 
+      mutate(vc = sum(trend)) %>%
+      group_by(id, trend_l) %>%
+      summarise(
+        cont = n(),
+        total_N = sum(N),
+        vc = unique(vc),
+        lab = c("Vote-counting")
+      ) %>% 
+      mutate(cont = case_when(
+        trend_l == "Down-regulated" ~ cont*-1,
+        T ~ cont*1
+      )) %>%
+      filter(vc > cuts | vc < -1*cuts |
+               vc != cont)
+  }
+  
+  # Prepare data for plot
+  
+  dt %>%
+    {
+      ggplot(., mapping = aes(x = cont,
+                              y = reorder(id, vc), fill = trend_l)) +
+        geom_bar(aes(x = ifelse(test = trend_l == "Up-regulated",
+                                yes = cont, no = cont)), stat = "identity",
+                 alpha = .3) +
+        scale_fill_manual(values = col_palette[2:3]) +
+        geom_segment(aes(x = 0, xend = vc, 
+                         y = id, yend = id, linetype = lab),
+                     size = 0.4, alpha = 0.9, 
+                     arrow = arrow(length = unit(0.1, "cm")), 
+                     lineend = "round", linejoin = "round") +
+        scale_x_continuous(labels = abs, limits = max(abs(.$cont)) * c(-1,1) * 1.01) +
+        scale_color_manual(values = c(col_palette[2], col_palette[3])) +
+        theme_minimal() +
+        xlab("Counts by trend") + 
+        ylab("Identifier") +
+        labs(fill = "Counts by trend") +
+        ggtitle("Explore plot") +
+        theme(legend.position = "bottom", legend.title = element_blank()) +
+        guides(col = guide_legend(nrow = 2, byrow = T)) + 
+        guides(shape = guide_legend(nrow = 2, byrow = T)) 
+    }
+}
+
+
