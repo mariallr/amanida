@@ -58,7 +58,7 @@ Supported files are csv, xls/xlsx and txt.
 
 For quantitative meta-analysis include the following parameters:
 
-* mode = "quan"
+* Indicate mode = "quan"
 * coln: vector containing the column names, which need to be in this order:
   * Id: compound name or unique identification
   * P-value
@@ -72,12 +72,12 @@ input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
 datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 ```
 
-For quanlitative meta-analysis include the following parameters:
+For qualitative meta-analysis include the following parameters:
 
-* mode = "qual"
+* Indicate mode = "qual"
 * coln: vector containing the column names, which need to be in this order:
   * Id: compound name or unique identification
-  * Trend
+  * Trend: can be up-regulated or down-regulated
   * Reference: bibliographic reference of the results
 
 ```r
@@ -109,7 +109,7 @@ data_votes <- amanida_read(input_file, mode = "qual", coln, separator = ";")
 vote_result <- amanida_vote(data_votes)
 ```
 
-In this step you will obtain an S4 object with two tables:
+In this step you will obtain an S4 object with one table:
 
 * vote-counting acces by `vote_results@vote`
 
@@ -133,8 +133,8 @@ vote_plot(amanida_result)
 
 Data can be shown in three types:
 * type = "all": show all data
-* type = "sub": subset the data by a cut-off parameter indicated by the counts parameter 
-* type = "mix": subset the data by a cut-off parameter indicated by the counts parameter and show compounds with discrepancies (reports up-regulated and down-regulated)
+* type = "sub": subset the data by a cut-off value indicated by the counts parameter 
+* type = "mix": subset the data by a cut-off value indicated by the counts parameter and show compounds with discrepancies (reports up-regulated and down-regulated)
 
 ```r
 explore_plot(sample_data, type = "mix", counts = 1)
