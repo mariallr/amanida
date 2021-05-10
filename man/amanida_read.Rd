@@ -23,7 +23,8 @@ amanida_read(file, mode, coln, separator = NULL)
 tibble table with data imported
 }
 \description{
-\code{amanida_read} imports the data and formats for metamet function
+\code{amanida_read} imports the data and formats for \code{compute_amanida}
+or \code{amanida_vote} functions
 }
 \details{
 Note that \code{amanida_read} skips rows with missing values or NA.

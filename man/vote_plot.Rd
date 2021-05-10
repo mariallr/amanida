@@ -7,7 +7,7 @@
 vote_plot(mets, counts = NULL)
 }
 \arguments{
-\item{mets}{an S4 METAmet object obtained by \code{compute_amanida}}
+\item{mets}{an S4 METAmet object obtained by \code{compute_amanida} or \code{amanida_vote}.}
 
 \item{counts}{value of vote-counting cut-off. Will be only displayed data over the cut-off.}
 }

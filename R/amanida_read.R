@@ -1,7 +1,8 @@
 
 #' Import data
 #' 
-#' \code{amanida_read} imports the data and formats for metamet function
+#' \code{amanida_read} imports the data and formats for \code{compute_amanida} 
+#' or \code{amanida_vote} functions
 #'
 #' Note that \code{amanida_read} skips rows with missing values or NA.
 #'
@@ -92,6 +93,6 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
         T ~ 1
       ))
   } else {
-    stop("Please, indicate mode: 'quant' for quantitative and 'qual' for qualitative")
+    stop("Please, indicate mode: 'quan' for quantitative and 'qual' for qualitative")
   }
 }

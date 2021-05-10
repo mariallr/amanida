@@ -9,7 +9,7 @@ explore_plot(data, type = "all", counts = NULL)
 \arguments{
 \item{data}{an tibble obtained by \code{amanida_read}}
 
-\item{type}{select the type of data to plot. Options are:
+\item{type}{select the subset of data to plot. Options are:
 \itemize{
 \item "all": all data will be displayed
 \item "sub": only data over counts value will be displayed. Need counts value.
