@@ -98,12 +98,13 @@ volcano_plot <- function(mets, cutoff = NULL) {
     geom_point(aes(shape = .$reports), size = 2.5) + 
     scale_shape_manual(values = c(8, 16), name = "") +
     theme_minimal() +
-    ggrepel::geom_text_repel(size = 3.5, 
-                             fontface = "bold", 
-                             segment.size = 0.4, 
+    ggrepel::geom_text_repel(size = 3.5,
+                             fontface = "bold",
+                             segment.size = 0.4,
                              point.padding = (unit(0.3, "lines")),
                              box.padding = unit(0.3, "lines"),
-                             colour = "black") + 
+                             colour = "black",
+                             max.overlaps = 50) +
     # Axis titles
     xlab( "log2(Fold-change)") + 
     ylab("-log10(p-value)") + 
@@ -140,7 +141,7 @@ vote_plot <- function(mets, counts = NULL) {
   #' 
   #' Vote-couting is the sum of number of reports up-regulated and the substraction of reports down-regulated. 
   #'  
-  #' @param mets an S4 METAmet object obtained by \code{compute_amanida}
+  #' @param mets an S4 METAmet object obtained by \code{compute_amanida} or \code{amanida_vote}.
   #' @param counts value of vote-counting cut-off. Will be only displayed data over the cut-off.
   #'  
   #' @return a ggplot bar-plot showing the vote-count per compound
@@ -196,7 +197,7 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   #' Sum of votes divided by trend are plotted, then is obtained the total result by compound summing both trends.  
   #'  
   #' @param data an tibble obtained by \code{amanida_read}
-  #' @param type select the type of data to plot. Options are: 
+  #' @param type select the subset of data to plot. Options are: 
   #' \itemize{
   #'    \item "all": all data will be displayed
   #'    \item "sub": only data over counts value will be displayed. Need counts value.
@@ -221,12 +222,10 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   if (hasArg(counts)) { 
     cuts <- counts
     
-    if (length(counts) != 1) {
-      stop( "Please indicate one cut-off only")
+    if (length(cuts) != 1) {
+      stop( "Please indicate one cut-off")
     }
-  } else {
-    cuts <- 1
-  }
+  } 
   
   if (type == "all") {
     dt <- data %>%
