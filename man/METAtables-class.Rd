@@ -4,9 +4,9 @@
 \name{METAtables-class}
 \alias{METAtables-class}
 \alias{METAtables}
-\title{An S4 class to return results from metamet function}
+\title{An S4 class to return results from \code{compute_amanida} or \code{amanida_vote} function}
 \description{
-An S4 class to return results from metamet function
+An S4 class to return results from \code{compute_amanida} or \code{amanida_vote} function
 }
 \section{Slots}{
 

@@ -1,6 +1,6 @@
 Package: amanida
-Title: Adapted Meta-Analysis for Non-Integral Data
-Version: 0.0.7
+Title: Meta-Analysis for Non-Integral Data
+Version: 0.0.8
 Authors@R: 
   c(
     person(
@@ -23,7 +23,7 @@ Authors@R:
       email = "raquel.cumeras@urv.cat"
     )
   )
-Description: Adapted combination of results for meta-analysis using significance and effect size only. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites.
+Description: Combination of results for meta-analysis using significance and effect size only. P-values and fold-change are combined to obtain a global significance on each metabolite. Produces a volcano plot summarising the relevant results from meta-analysis. Vote-counting reports for metabolites. And explore plot to detect discrepancies between studies at a first glance. 
 URL: https://github.com/mariallr/amanida
 License: GPL-3
 Encoding: UTF-8
@@ -35,7 +35,7 @@ Imports:
   readr (>= 1.0.0),
   readxl (>= 1.0.0),
   ggplot2 (>= 3.3.0), 
-  ggrepel (>= 0.8.2), 
+  ggrepel (>= 0.9.0), 
   methods (>= 3.6.0),
   stats (>= 3.6.0), 
   tidyr (>= 1.1.0)

@@ -7,7 +7,7 @@
 volcano_plot(mets, cutoff = NULL)
 }
 \arguments{
-\item{mets}{an S4 METAtable object}
+\item{mets}{an S4 METAtables object}
 
 \item{cutoff}{values for p-value and fold-change significance}
 }
@@ -15,7 +15,7 @@ volcano_plot(mets, cutoff = NULL)
 plot of results
 }
 \description{
-\code{volcano_plot} returns a volcano plot of the combined results on each metabolite obtained by metmet function
+\code{volcano_plot} returns a volcano plot of the combined results on each metabolite obtained by \code{compute_amanida} function
 }
 \details{
 Results are presented as -log10 for p-value and log2 for fold-change.

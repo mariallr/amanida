@@ -1,13 +1,13 @@
 
-# amanida: a R package for adapted meta-analysis with non-integral data
+# amanida: a R package for meta-analysis with non-integral data
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/) 
 
 ## Description
 
-`Amanida` package contains a collection of functions for computing an adapted meta-analysis in R only using significance and effect size. It covers the lack of data provided on metabolomic studies, where is rare to have error or variance disclosed. With this adaptation, only using p-value and fold-change, global significance and effect size for compounds or metabolites are obtained. 
+`Amanida` package contains a collection of functions for computing a meta-analysis in R only using significance and effect size. It covers the lack of data provided on metabolomic studies, where is rare to have error or variance disclosed. With this adaptation, only using p-value and fold-change, global significance and effect size for compounds or metabolites are obtained. 
 
-Furthermore, `Amanida` also computes semi-quantitative meta-analysis performing a vote-counting for compounds, including the option of only using identifier and trend labels.  
+Furthermore, `Amanida` also computes quanlitative meta-analysis performing a vote-counting for compounds, including the option of only using identifier and trend labels.  
 
 
 ## Documentation
@@ -22,7 +22,7 @@ The following computations are included:
 The following plots are included to visualize the results: 
 
 * Volcano plot of meta-analysis results: showing compounds labels for over the selected cut-off. 
-* Bar plot of vote-counting results.
+* Bar plot of qualitative results.
 * Bar plot of reports divided by trend including the total vote-counting.
 
 ## Installation
@@ -98,7 +98,7 @@ In this step you will obtain an S4 object with two tables:
 * adapted meta-analysis acces by `amanida_result@stat`
 * vote-counting acces by `amanida_results@vote`
 
-**4. Perform semi-quantitative meta-analysis: `amanida_vote`**
+**4. Perform quanlitative meta-analysis: `amanida_vote`**
 
 
 ```r
