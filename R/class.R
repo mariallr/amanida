@@ -1,4 +1,4 @@
-#' An S4 class to return results from metamet function
+#' An S4 class to return results from \code{compute_amanida} or \code{amanida_vote} function
 #' @slot stat results for statistics combining p-values and fold-changes
 #' @slot vote vote-counting for metabolites
 #' 

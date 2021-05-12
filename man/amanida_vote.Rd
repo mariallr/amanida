@@ -2,20 +2,22 @@
 % Please edit documentation in R/amanida_vote.R
 \name{amanida_vote}
 \alias{amanida_vote}
-\title{Semi-quantitative meta-analysis}
+\title{Quanlitative meta-analysis}
 \usage{
 amanida_vote(data)
 }
 \arguments{
-\item{data}{datafile data imported using amanida_read function}
+\item{data}{data imported using amanida_read function}
 }
 \value{
 METAtable S4 object with vote-counting for each compound on @slot vote
 }
 \description{
-\code{amanida_vote} performs vote-counting on qualitative data
+\code{amanida_vote} performs vote-counting on qualitative data.
 }
 \details{
+Vote-counting is computed without trend division. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
+
 Note that \code{amanida_vote} skips rows with missing values or NA.
 
 Formats compatible are csv, xlsx, xls or txt.

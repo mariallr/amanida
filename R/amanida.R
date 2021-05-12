@@ -1,5 +1,5 @@
 
-#' amanida: A package for Adapted Meta-Analysis with non-integral data
+#' amanida: A package for Meta-Analysis with non-integral data
 #' 
 #' @title amanida
 #' 
@@ -7,12 +7,13 @@
 #' 
 #' @author Maria Llambrich, Eudald Correig and Raquel Cumeras
 #' 
-#' Adaptation of results combination for meta-analysis using only significance and effect size. 
+#' Results combination for meta-analysis using only significance and effect size. 
 #' \itemize{
 #'  \item P-values and fold-change are combined to obtain a global significance on each metabolite.
 #'  \item Produces a volcano plot summarizing the relevant results from meta-analysis.
-#'  \item Vote-counting reports for metabolites
-#'  \item Graphical representation of vote-counting
+#'  \item Qualitative meta-analysis for metabolites
+#'  \item Graphical representation of qualitative analysis by bar plot
+#'  \item Trend explore plot to detect discrepancies between studies at a first glance
 #' }
 #' 
 #' 

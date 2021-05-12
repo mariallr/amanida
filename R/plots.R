@@ -13,12 +13,12 @@ volcano_plot <- function(mets, cutoff = NULL) {
   
   #' Volcano plot of combined results 
   #' 
-  #' \code{volcano_plot} returns a volcano plot of the combined results on each metabolite obtained by metmet function
+  #' \code{volcano_plot} returns a volcano plot of the combined results on each metabolite obtained by \code{compute_amanida} function
   #' 
   #' Results are presented as -log10 for p-value and log2 for fold-change. 
   #' Values over the cut off are labeled. If not cutoff is provided will be used alpha 0.05 for p-value and 1.5 for logarithmic fold-change.
   #'  
-  #' @param mets an S4 METAtable object
+  #' @param mets an S4 METAtables object
   #' @param cutoff values for p-value and fold-change significance
   #'  
   #' @return plot of results
@@ -104,7 +104,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
                              point.padding = (unit(0.3, "lines")),
                              box.padding = unit(0.3, "lines"),
                              colour = "black",
-                             max.overlaps = 50) +
+                             max.overlaps = Inf) +
     # Axis titles
     xlab( "log2(Fold-change)") + 
     ylab("-log10(p-value)") + 
@@ -141,7 +141,7 @@ vote_plot <- function(mets, counts = NULL) {
   #' 
   #' Vote-couting is the sum of number of reports up-regulated and the substraction of reports down-regulated. 
   #'  
-  #' @param mets an S4 METAmet object obtained by \code{compute_amanida} or \code{amanida_vote}.
+  #' @param mets an S4 METAtables object obtained by \code{compute_amanida} or \code{amanida_vote}.
   #' @param counts value of vote-counting cut-off. Will be only displayed data over the cut-off.
   #'  
   #' @return a ggplot bar-plot showing the vote-count per compound
@@ -175,14 +175,30 @@ vote_plot <- function(mets, counts = NULL) {
     filter (abs(votes) >= cuts) %>%
     {
     ggplot(., aes(reorder(id, votes), votes, fill = votes)) + 
-    geom_bar(stat = "identity", show.legend = FALSE, width = .5) +
+    geom_bar(stat = "identity", show.legend = F, width = .5
+             ) +
+    geom_text(aes(label = reorder(id, votes)), vjust = 0.2, size = 1.5, 
+              hjust = ifelse(test = .$votes > 0, yes = 0, no = 1)) +
     scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
-    theme(legend.position = "none") +
-    theme_classic() + 
+    theme_light() + 
+    theme(axis.text.y = element_blank(),
+          axis.text.x = element_text(size = 8),
+          axis.title = element_text(size = 8),
+          axis.ticks.y = element_blank(), 
+          plot.title = element_text(size = 10), 
+          panel.grid.minor = element_blank(),
+          panel.grid.major.y = element_blank(), 
+          panel.border = element_blank(), 
+          panel.grid.major.x = element_line(linetype = "dashed")) +
     coord_flip() +
-    xlab("id") + 
     ylab("Vote-counting") +
-    ggtitle("Vote count plot")
+    xlab('')+
+    ggtitle("Total vote count of compounds behaviour") +
+    scale_y_continuous(expand = c(0.6, 0), 
+                       breaks = seq(min(.$votes), max(.$votes), by = 1),
+                       limits = c(min(.$votes) - 1,
+                                  max(.$votes) + 1)
+                       )
     }
 }
 
@@ -313,9 +329,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
         scale_color_manual(values = c(col_palette[2], col_palette[3])) +
         theme_minimal() +
         xlab("Counts by trend") + 
-        ylab("Identifier") +
+        ylab("Qualitative compounds trend plot") +
         labs(fill = "Counts by trend") +
-        ggtitle("Explore plot") +
+        ggtitle("") +
         theme(legend.position = "bottom", legend.title = element_blank()) +
         guides(col = guide_legend(nrow = 2, byrow = T)) + 
         guides(shape = guide_legend(nrow = 2, byrow = T)) 

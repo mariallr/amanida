@@ -1,13 +1,15 @@
 
-#' Semi-quantitative meta-analysis
+#' Quanlitative meta-analysis
 #' 
-#' \code{amanida_vote} performs vote-counting on qualitative data
+#' \code{amanida_vote} performs vote-counting on qualitative data. 
+#' 
+#' Vote-counting is computed without trend division. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
 #'
 #' Note that \code{amanida_vote} skips rows with missing values or NA. 
 #'
 #' Formats compatible are csv, xlsx, xls or txt.
 #' 
-#' @param data datafile data imported using amanida_read function
+#' @param data data imported using amanida_read function
 #' @return METAtable S4 object with vote-counting for each compound on @slot vote
 #' 
 #' @import dplyr

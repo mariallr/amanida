@@ -43,7 +43,7 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
   if (ext %in% c("csv", "tsv", "txt")) {
     stopifnot("Please, specify a separator."=!is.null(separator))
     
-    datafile <- readr::read_delim(file, delim = separator) %>%
+    datafile <- readr::read_delim(file, delim = separator, col_types = readr::cols()) %>%
       # In some (specially spanish) locales, when the delimiter is ";", the decimal
       # point is ","; let's make sure here this is correct
       mutate(
