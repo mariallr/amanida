@@ -1,12 +1,21 @@
 
-context("Import data")
+context("Import dataset")
 
-test_that("Read table function works", {
+test_that("Read table quantitative function works", {
   coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
   input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
   datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
   
   expect_equal(datafile$pvalue[5], 1e-3)
-  
+  expect_equal(datafile$trend[15], 1)
 })
+
+test_that("Read table qualitative function works", {
+  coln = c("Compound Name", "N total", "References")
+  input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+  datafile <- amanida_read(input_file, mode = "qual", coln, separator=";")
+  
+  expect_equal(datafile$trend[15], 1)
+})
+
 
