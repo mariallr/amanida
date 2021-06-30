@@ -1,1 +1,5 @@
-language: generic
+# Use R
+language: r
+sudo: true
+cache: packages
+warning_are_errors: false
