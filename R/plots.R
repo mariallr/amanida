@@ -98,7 +98,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
     geom_point(aes(shape = .$reports), size = 2.5) + 
     scale_shape_manual(values = c(8, 16), name = "") +
     theme_minimal() +
-    ggrepel::geom_text_repel(size = 3.5,
+    ggrepel::geom_text_repel(size = 4,
                              fontface = "bold",
                              segment.size = 0.4,
                              point.padding = (unit(0.3, "lines")),
@@ -107,7 +107,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
                              max.overlaps = Inf) +
     # Axis titles
     xlab( "log2(Fold-change)") + 
-    ylab("-log10(p-value)") + 
+    ylab(expression(paste("-log10(", italic(p), "-value)"))) + 
     labs(colour = "") +
     
     # X axis breaks
@@ -131,6 +131,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
     }
     
 }
+
 
 # Plot for vote-counting
 vote_plot <- function(mets, counts = NULL) {
@@ -169,23 +170,32 @@ vote_plot <- function(mets, counts = NULL) {
   }
   
   # Subset vote-couting data
-  as_tibble(mets@vote) %>% 
+  tb <- as_tibble(mets@vote) %>% 
     mutate(
     votes = as.numeric(votes)) %>%
-    filter (abs(votes) >= cuts) %>%
+    filter (abs(votes) >= cuts)
+  
+  if(nrow(tb) > 30) {
+    message("Too much values, only showing 30 highest values. Please check counts parameter.")
+    
+   tb <- tb  %>%
+      slice_max(abs(votes), n = 30, with_ties = FALSE) 
+  }
+  
+   tb %>%
     {
     ggplot(., aes(reorder(id, votes), votes, fill = votes)) + 
     geom_bar(stat = "identity", show.legend = F, width = .5
              ) +
-    geom_text(aes(label = reorder(id, votes)), vjust = 0.2, size = 1.5, 
+    geom_text(aes(label = reorder(id, votes)), vjust = 0.2, size = 3.5, 
               hjust = ifelse(test = .$votes > 0, yes = 0, no = 1)) +
     scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
     theme_light() + 
     theme(axis.text.y = element_blank(),
-          axis.text.x = element_text(size = 8),
-          axis.title = element_text(size = 8),
+          axis.text.x = element_text(size = 10),
+          axis.title = element_text(size = 10),
           axis.ticks.y = element_blank(), 
-          plot.title = element_text(size = 10), 
+          plot.title = element_text(size = 12), 
           panel.grid.minor = element_blank(),
           panel.grid.major.y = element_blank(), 
           panel.border = element_blank(), 
@@ -200,6 +210,7 @@ vote_plot <- function(mets, counts = NULL) {
                                   max(.$votes) + 1)
                        )
     }
+  
 }
 
 
@@ -223,9 +234,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   #'  
   #' @return a ggplot bar-plot showing the sum of votes for each compound divided by the trend
   #' @examples 
-  #' data("sample_data", type = "mix", counts = 1)
+  #' data("sample_data")
   #' 
-  #' explore_plot(sample_data)
+  #' explore_plot(sample_data, type = "mix", counts = 1)
   #' 
   #' @export
   #' 
@@ -312,6 +323,15 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   
   # Prepare data for plot
   
+  if(nrow(dt) > 25) {
+    message("Too much values, only showing 30 first values. Please check counts and/or type parameters.")
+    
+    dt <- dt %>% 
+      ungroup() %>%
+      arrange(id) %>%
+      slice(1:30)
+  }
+  
   dt %>%
     {
       ggplot(., mapping = aes(x = cont,
@@ -329,9 +349,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
         scale_color_manual(values = c(col_palette[2], col_palette[3])) +
         theme_minimal() +
         xlab("Counts by trend") + 
-        ylab("Qualitative compounds trend plot") +
+        ylab("") +
         labs(fill = "Counts by trend") +
-        ggtitle("") +
+        ggtitle("Qualitative compounds trend plot") +
         theme(legend.position = "bottom", legend.title = element_blank()) +
         guides(col = guide_legend(nrow = 2, byrow = T)) + 
         guides(shape = guide_legend(nrow = 2, byrow = T)) 
