@@ -175,11 +175,11 @@ vote_plot <- function(mets, counts = NULL) {
     votes = as.numeric(votes)) %>%
     filter (abs(votes) >= cuts)
   
-  if(nrow(tb) > 20) {
-    message("Too much values, only showing 20 highest values. Please think to change counts parameter")
+  if(nrow(tb) > 30) {
+    message("Too much values, only showing 30 highest values. Please check counts parameter.")
     
    tb <- tb  %>%
-      slice_max(abs(votes), n = 20, with_ties = FALSE) 
+      slice_max(abs(votes), n = 30, with_ties = FALSE) 
   }
   
    tb %>%
@@ -324,12 +324,12 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   # Prepare data for plot
   
   if(nrow(dt) > 25) {
-    message("Too much values, only showing 20 highest values. Please think to change counts parameter")
+    message("Too much values, only showing 30 first values. Please check counts and/or type parameters.")
     
     dt <- dt %>% 
       ungroup() %>%
       arrange(id) %>%
-      slice(1:25)
+      slice(1:30)
   }
   
   dt %>%
