@@ -7,6 +7,8 @@ test_that("Read table quantitative function works", {
   datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
   
   expect_equal(datafile$pvalue[5], 1e-3)
+  expect_equal(datafile$foldchange[10], 0.34)
+  expect_equal(datafile$N[55], 135)
   expect_equal(datafile$trend[15], 1)
 })
 
@@ -16,6 +18,7 @@ test_that("Read table qualitative function works", {
   datafile <- amanida_read(input_file, mode = "qual", coln, separator=";")
   
   expect_equal(datafile$trend[15], 1)
+  expect_equal(datafile$id[75], "3-Methylhistidine")
 })
 
 

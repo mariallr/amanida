@@ -1,4 +1,3 @@
-library(vdiffr)
 
 context("Testing plots")
 
@@ -7,9 +6,9 @@ test_that("Volcano plot", {
   
   result <- compute_amanida(sample_data)
   
-  volc <- volcano_plot(result, cutoff= c(0.05, 4))
+  volc <- volcano_plot(result, cutoff = c(0.05, 4))
   
-  expect_doppelganger("Volcano plot of adapted meta-analysis results", volc)
+  vdiffr::expect_doppelganger("Volcano plot of adapted meta-analysis results", volc)
 })
 
 test_that("Vote plot", {
@@ -19,7 +18,7 @@ test_that("Vote plot", {
   
   votep <- vote_plot(result)
   
-  expect_doppelganger("Vote plot", votep)
+  vdiffr::expect_doppelganger("Vote plot", votep)
 })
 
 test_that("Explore plot", {
@@ -29,5 +28,7 @@ test_that("Explore plot", {
   
   expl <- explore_plot(sample_data, counts = 2)
   
-  expect_doppelganger("Explore plot", expl)
+  vdiffr::expect_doppelganger("Explore plot", expl)
 })
+
+
