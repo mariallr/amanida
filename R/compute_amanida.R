@@ -28,7 +28,7 @@ compute_amanida <- function(datafile) {
   chisq = NULL; logfc = NULL; ref = NULL; pval = NULL; fc = NULL; N_total = NULL;
   reference = NULL; votes = NULL; articles = NULL; vote_counting = NULL;
   
-  if(ncol(datafile == 3)) {
+  if(ncol(datafile) == 3) {
     stop("Compute_amanida needs quantitative data with p-value and fold-change. To import it use amanida_read in 'quan' mode.")
   }
 

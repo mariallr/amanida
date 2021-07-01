@@ -1,1 +1,11 @@
-language: generic
+# Use R
+language: r
+sudo: true
+cache: packages
+warnings_are_errors: false
+
+r_packages: 
+  - covr
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'
