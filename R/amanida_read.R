@@ -21,7 +21,6 @@
 #' @import dplyr
 #' @import readr
 #' @import readxl
-#' @importFrom magrittr %>%
 #' @importFrom stats complete.cases
 #' 
 #' @examples
@@ -87,7 +86,7 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
       select(all_of(coln)) %>%
       # Only complete cases and rename
       filter(complete.cases(.)) %>%
-      rename_with(.cols = everything(), .fn = ~ VAR_NAMES) %>% 
+      rename_with(.cols = everything(), .fn = ~ VAR_NAMES) %>%
       mutate(trend = case_when(
         tolower(trend) == "down" ~ -1,
         T ~ 1
@@ -96,3 +95,4 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
     stop("Please, indicate mode: 'quan' for quantitative and 'qual' for qualitative")
   }
 }
+

@@ -36,7 +36,7 @@ compute_amanida <- function(datafile) {
     sta <- datafile %>% 
       mutate(logp = log10(`pvalue`),
              logfc = log2(`foldchange`)) %>%
-      group_by(`id`, `trend`) %>% 
+      group_by(`id`, `trend`) %>%
       summarize(
       # Combine p-values using Fisher's method weighted by number of individuals
       chisq = (-2/sum(`N`))*sum(`logp` * `N`),

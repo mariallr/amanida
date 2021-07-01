@@ -28,8 +28,8 @@ a ggplot bar-plot showing the sum of votes for each compound divided by the tren
 Sum of votes divided by trend are plotted, then is obtained the total result by compound summing both trends.
 }
 \examples{
-data("sample_data", type = "mix", counts = 1)
+data("sample_data")
 
-explore_plot(sample_data)
+explore_plot(sample_data, type = "mix", counts = 1)
 
 }

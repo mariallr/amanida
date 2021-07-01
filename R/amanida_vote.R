@@ -28,7 +28,7 @@ amanida_vote <- function(data) {
     . = NULL; votes = NULL; articles = NULL; vote_counting = NULL; trend = NULL;
   
   vote <-  data %>%
-    group_by(`id`) %>% 
+    group_by(`id`) %>%
     summarize(
       # Votes per compound
       votes = sum(trend),
