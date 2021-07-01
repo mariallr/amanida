@@ -59,7 +59,7 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
       # Select columns with data needed
       select(all_of(coln)) %>%
       # Only complete cases and rename
-      filter(complete_cases(.)) %>%
+      filter(complete.cases(.)) %>%
       rename_with(.cols = everything(), .fn = ~ VAR_NAMES) %>%
       mutate(
         # Make sure numeric things are numeric

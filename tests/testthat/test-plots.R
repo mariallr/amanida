@@ -1,4 +1,4 @@
-vdiffr_skip_stale()
+library(vdiffr)
 
 context("Testing plots")
 
@@ -7,7 +7,7 @@ test_that("Volcano plot", {
   
   result <- compute_amanida(sample_data)
   
-  volc <- volcano_plot(result)
+  volc <- volcano_plot(result, cutoff= c(0.05, 4))
   
   expect_doppelganger("Volcano plot of adapted meta-analysis results", volc)
 })
