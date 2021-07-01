@@ -26,9 +26,17 @@ test_that("Explore plot", {
   
   result <- compute_amanida(sample_data)
   
-  expl <- explore_plot(sample_data, counts = 2)
+  expl_a <- explore_plot(sample_data, type = "all", counts = 3)
   
-  vdiffr::expect_doppelganger("Explore plot", expl)
+  vdiffr::expect_doppelganger("Explore plot", expl_a)
+  
+  expl_m <- explore_plot(sample_data, type = "mix", counts = 2)
+  
+  vdiffr::expect_doppelganger("Explore plot", expl_m)
+  
+  expl_s <- explore_plot(sample_data, type = "sub", counts = 2)
+  
+  vdiffr::expect_doppelganger("Explore plot", expl_s)
 })
 
 
