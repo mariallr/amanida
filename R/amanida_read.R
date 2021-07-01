@@ -21,7 +21,6 @@
 #' @import dplyr
 #' @import readr
 #' @import readxl
-#' @importFrom magrittr %>%
 #' @importFrom stats complete.cases
 #' 
 #' @examples
@@ -43,7 +42,7 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
   if (ext %in% c("csv", "tsv", "txt")) {
     stopifnot("Please, specify a separator."=!is.null(separator))
     
-    datafile <- readr::read_delim(file, delim = separator, col_types = readr::cols()) %>%
+    datafile <- readr::read_delim(file, delim = separator, col_types = readr::cols()) |>
       # In some (specially spanish) locales, when the delimiter is ";", the decimal
       # point is ","; let's make sure here this is correct
       mutate(
@@ -60,8 +59,8 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
       # Select columns with data needed
       select(all_of(coln)) %>%
       # Only complete cases and rename
-      filter(complete.cases(.)) %>%
-      rename_with(.cols = everything(), .fn = ~ VAR_NAMES) %>%
+      filter(complete_cases(.)) %>%
+      rename_with(.cols = everything(), .fn = ~ VAR_NAMES) |>
       mutate(
         # Make sure numeric things are numeric
         `foldchange` = as.numeric(`foldchange`),
@@ -87,7 +86,7 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
       select(all_of(coln)) %>%
       # Only complete cases and rename
       filter(complete.cases(.)) %>%
-      rename_with(.cols = everything(), .fn = ~ VAR_NAMES) %>% 
+      rename_with(.cols = everything(), .fn = ~ VAR_NAMES) |>
       mutate(trend = case_when(
         tolower(trend) == "down" ~ -1,
         T ~ 1
@@ -96,3 +95,4 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
     stop("Please, indicate mode: 'quan' for quantitative and 'qual' for qualitative")
   }
 }
+

@@ -1,6 +1,6 @@
 Package: amanida
 Title: Meta-Analysis for Non-Integral Data
-Version: 0.0.8
+Version: 0.0.9
 Authors@R: 
   c(
     person(
@@ -41,6 +41,6 @@ Imports:
   tidyr (>= 1.1.0)
 Suggests:
     testthat
-Depends: R (>= 3.6)
+Depends: R (>= 4.1)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1

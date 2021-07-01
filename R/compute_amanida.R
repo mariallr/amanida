@@ -33,10 +33,10 @@ compute_amanida <- function(datafile) {
   }
 
     # Statistics grouping by compound identifier and trend
-    sta <- datafile %>% 
+    sta <- datafile |> 
       mutate(logp = log10(`pvalue`),
-             logfc = log2(`foldchange`)) %>%
-      group_by(`id`, `trend`) %>% 
+             logfc = log2(`foldchange`)) |>
+      group_by(`id`, `trend`) |>
       summarize(
       # Combine p-values using Fisher's method weighted by number of individuals
       chisq = (-2/sum(`N`))*sum(`logp` * `N`),
@@ -48,13 +48,13 @@ compute_amanida <- function(datafile) {
       N_total = sum(`N`),
       # References
       reference = paste(`ref`, collapse = "; ")
-      ) %>%
-      select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`)) %>%
+      ) |>
+      select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`)) |>
       ungroup()
     
     ## Vote-counting per each compound id
-    vote <- datafile %>% 
-      group_by(`id`) %>% 
+    vote <- datafile |> 
+      group_by(`id`) |> 
       summarize(
       # Votes per compound
       votes = sum(`trend`),

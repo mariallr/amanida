@@ -56,11 +56,11 @@ volcano_plot <- function(mets, cutoff = NULL) {
   }
   
   # Compounds with 2 or more reports
-  cont <- as_tibble(mets@vote) %>% 
-    mutate(articles = as.numeric(articles)) %>% 
+  cont <- as_tibble(mets@vote) |> 
+    mutate(articles = as.numeric(articles)) |> 
     filter(articles >= 2)
   
-  cont_ids <- cont %>% pull(id)
+  cont_ids <- cont |> pull(id)
   
   # Function for labels
   case_character_type <- function(lfc, lpval) {
@@ -76,25 +76,24 @@ volcano_plot <- function(mets, cutoff = NULL) {
   ## Volcano plot
   
   # Scatter plot for logarithmic fold-change vs. -logarithmic p-value
-  as_tibble(mets@stat) %>% 
+  as_tibble(mets@stat) %>%
     mutate( 
       # Format data needed
       across(c(pval,fc), as.numeric),
       # Negative logarithm of p-value for plot              
       lpval = -log10(pval),
       # Logarithm of fold-change
-      lfc = log2(fc)) %>% 
+      lfc = log2(fc)) %>%
     mutate(sig = case_character_type(lfc, lpval),
-   label = case_when(
+    label = case_when(
      sig == paste("p-value < ", 10^-cut_pval) ~ "",
      sig == "under cut-offs" ~ "",
      T ~ id),
    reports = case_when(
      id %in% cont_ids ~ "> 1 report",
-     T ~ "single report" )) %>% 
-    group_by('sig') %>% 
-    {
-      ggplot(., aes(lfc, lpval, label = label, colour = sig)) +
+     T ~ "single report" )) %>%
+    group_by('sig') %>%
+    { ggplot(.,aes(lfc, lpval, label = label, colour = sig)) +
     geom_point(aes(shape = .$reports), size = 2.5) + 
     scale_shape_manual(values = c(8, 16), name = "") +
     theme_minimal() +
@@ -128,8 +127,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
     guides(shape = guide_legend(nrow = 2, byrow = T)) +
     scale_color_manual(values = col_palette) +
     ggtitle("Volcano plot of adapated meta-analysis results")
-    }
-    
+  }
 }
 
 
@@ -170,15 +168,15 @@ vote_plot <- function(mets, counts = NULL) {
   }
   
   # Subset vote-couting data
-  tb <- as_tibble(mets@vote) %>% 
+  tb <- as_tibble(mets@vote) |> 
     mutate(
-    votes = as.numeric(votes)) %>%
+    votes = as.numeric(votes)) |>
     filter (abs(votes) >= cuts)
   
   if(nrow(tb) > 30) {
     message("Too much values, only showing 30 highest values. Please check counts parameter.")
     
-   tb <- tb  %>%
+   tb <- tb  |>
       slice_max(abs(votes), n = 30, with_ties = FALSE) 
   }
   
@@ -252,71 +250,73 @@ explore_plot <- function(data, type = "all", counts = NULL) {
     if (length(cuts) != 1) {
       stop( "Please indicate one cut-off")
     }
+  } else {
+    stop("Function needs counts parameter")
   } 
   
   if (type == "all") {
-    dt <- data %>%
+    dt <- data |>
       mutate(
         trend_l = case_when(
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% group_by(id) %>% 
-      mutate(vc = sum(trend)) %>%
-      group_by(id, trend_l) %>%
+      ) |> group_by(id) |> 
+      mutate(vc = sum(trend)) |>
+      group_by(id, trend_l) |>
       summarise(
         cont = n(),
         total_N = sum(N),
         vc = unique(vc),
         lab = c("Vote-counting")
-      ) %>% 
+      ) |>
       mutate(cont = case_when(
         trend_l == "Down-regulated" ~ cont*-1,
         T ~ cont*1
       ))
     
   } else if (type == "sub") {
-    dt <- data %>%
+    dt <- data |>
       mutate(
         trend_l = case_when(
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% group_by(id) %>% 
-      mutate(vc = sum(trend)) %>%
-      group_by(id, trend_l) %>%
+      ) |> group_by(id) |>
+      mutate(vc = sum(trend)) |>
+      group_by(id, trend_l) |>
       summarise(
         cont = n(),
         total_N = sum(N),
         vc = unique(vc),
         lab = c("Vote-counting")
-      ) %>% 
+      ) |>
       mutate(cont = case_when(
         trend_l == "Down-regulated" ~ cont*-1,
         T ~ cont*1
-      )) %>%
+      )) |>
       filter(vc > cuts | vc < -1*cuts)
     
   } else if (type == "mix") {
-    dt <- data %>%
+    dt <- data |>
       mutate(
         trend_l = case_when(
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% group_by(id) %>% 
-      mutate(vc = sum(trend)) %>%
-      group_by(id, trend_l) %>%
+      ) |> group_by(id) |> 
+      mutate(vc = sum(trend)) |>
+      group_by(id, trend_l) |>
       summarise(
         cont = n(),
         total_N = sum(N),
         vc = unique(vc),
         lab = c("Vote-counting")
-      ) %>% 
+      ) |>
       mutate(cont = case_when(
         trend_l == "Down-regulated" ~ cont*-1,
         T ~ cont*1
-      )) %>%
+      )) |>
       filter(vc > cuts | vc < -1*cuts |
                vc != cont)
   }
@@ -326,9 +326,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   if(nrow(dt) > 25) {
     message("Too much values, only showing 30 first values. Please check counts and/or type parameters.")
     
-    dt <- dt %>% 
-      ungroup() %>%
-      arrange(id) %>%
+    dt <- dt |> 
+      ungroup() |>
+      arrange(id) |>
       slice(1:30)
   }
   
