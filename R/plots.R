@@ -304,7 +304,7 @@ explore_plot <- function(data, type = "all", counts = NULL) {
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) |> group_by(id) %>% 
+      ) %>% group_by(id) %>% 
       mutate(vc = sum(trend)) %>%
       group_by(id, trend_l) %>%
       summarise(
