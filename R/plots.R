@@ -122,7 +122,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
                colour = "black", 
                linetype = "dashed") + 
     theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5),
-          legend.text = element_text(size = 12)) +
+          legend.text = element_text(size = 10)) +
     guides(col = guide_legend(nrow = 2, byrow = T)) + 
     guides(shape = guide_legend(nrow = 2, byrow = T)) +
     scale_color_manual(values = col_palette) +
@@ -325,7 +325,7 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   
   if(nrow(dt) > 25) {
     message("Too much values, only showing 30 first values. Please check counts and/or type parameters.")
-    
+
     dt <- dt %>%
       ungroup() %>%
       arrange(id) %>%

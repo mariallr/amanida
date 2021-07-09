@@ -54,8 +54,10 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
     stop("Format not compatible; try csv, tsv, excel or txt. Aborting.")
   }
   
+  misrow <- sum(!complete.cases(datafile))
+  
   if (mode == "quan") {
-    datafile %>%
+    datafile <- datafile %>%
       # Select columns with data needed
       select(all_of(coln)) %>%
       # Only complete cases and rename
@@ -81,7 +83,7 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
   } else if (mode == "qual") {
     VAR_NAMES <- c('id', 'trend', 'ref')
     
-    datafile %>%
+    datafile <- datafile %>%
       # Select columns with data needed
       select(all_of(coln)) %>%
       # Only complete cases and rename
@@ -94,5 +96,10 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
   } else {
     stop("Please, indicate mode: 'quan' for quantitative and 'qual' for qualitative")
   }
+  
+  message(paste("Loaded dataset with", nrow(datafile),"rows which contains", 
+                length(unique(datafile$id)), "different identifiers. There are",
+                misrow, "rows skipped from original dataset because contained NA values."))
+  return(datafile)
 }
 
