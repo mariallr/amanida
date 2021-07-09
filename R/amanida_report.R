@@ -30,15 +30,11 @@
 #' @export
 
 
-
-
-input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
-
 amanida_report <- function(input_file, separator = NULL, analysis_type, column_id, 
                            pvalue_cutoff, fc_cutoff, votecount_lim) {
   
   rmarkdown::render(
-  input = "amanida_report.Rmd",
+  input = system.file("rmd", "amanida_report.Rmd", package = "amanida"),
   output_file = "Amanida_report.html",
   output_dir = getwd(),
   params = list(
