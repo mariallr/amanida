@@ -19,6 +19,9 @@
 #' @return an html document
 #' 
 #' @import rmarkdown
+#' @import kableExtra
+#' @import knitr
+#' @import tidyverse
 #' 
 #' @examples
 #' column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
