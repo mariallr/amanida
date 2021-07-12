@@ -55,6 +55,10 @@ volcano_plot <- function(mets, cutoff = NULL) {
     cut_fc <- log2(2.83)
   }
   
+  message(paste("The cut-off used are "), 10^cut_pval*-1, " for p-value (", round(cut_pval,2), 
+          " in log10 scale) and ", 2^cut_fc, 
+          " for fold-change (", cut_fc, " in log2 scale).", sep = "")
+  
   # Compounds with 2 or more reports
   cont <- as_tibble(mets@vote) %>% 
     mutate(articles = as.numeric(articles)) %>% 
@@ -167,6 +171,8 @@ vote_plot <- function(mets, counts = NULL) {
     cuts <- 1
   }
   
+  message("Cut-off for votes is ", cuts, ".", sep = "")
+  
   # Subset vote-couting data
   tb <- as_tibble(mets@vote) %>% 
     mutate(
@@ -253,6 +259,8 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   } else {
     stop("Function needs counts parameter")
   } 
+  
+  message("Cut-off for votes is ", cuts, ".", sep = "")
   
   if (type == "all") {
     dt <- data %>%

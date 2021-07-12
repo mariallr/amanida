@@ -46,7 +46,6 @@ In case of quantitative analysis \code{amanida_report} uses the functions \code{
 column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
 input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
 
-amanida_report(input_file, separator = ";", column_id, analysis_type = "quan", pvalue_cutoff = 0.05, 
-fc_cutoff = 4, votecount_lim = 2)
+amanida_report(input_file, separator = ";", column_id, analysis_type = "quan", pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2)
 
 }
