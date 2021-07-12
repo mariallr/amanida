@@ -54,7 +54,7 @@ compute_amanida <- function(datafile) {
     
     ## Vote-counting per each compound id
     vote <- datafile %>% 
-      dplyr::roup_by(`id`) %>% 
+      dplyr::group_by(`id`) %>% 
       summarize(
       # Votes per compound
       votes = sum(`trend`),
