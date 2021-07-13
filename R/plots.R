@@ -55,6 +55,10 @@ volcano_plot <- function(mets, cutoff = NULL) {
     cut_fc <- log2(2.83)
   }
   
+  message(paste("The cut-off used are "), 10^cut_pval*-1, " for p-value (", round(cut_pval,2), 
+          " in log10 scale) and ", 2^cut_fc, 
+          " for fold-change (", cut_fc, " in log2 scale).", sep = "")
+  
   # Compounds with 2 or more reports
   cont <- as_tibble(mets@vote) %>% 
     mutate(articles = as.numeric(articles)) %>% 
@@ -122,7 +126,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
                colour = "black", 
                linetype = "dashed") + 
     theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5),
-          legend.text = element_text(size = 12)) +
+          legend.text = element_text(size = 10)) +
     guides(col = guide_legend(nrow = 2, byrow = T)) + 
     guides(shape = guide_legend(nrow = 2, byrow = T)) +
     scale_color_manual(values = col_palette) +
@@ -166,6 +170,8 @@ vote_plot <- function(mets, counts = NULL) {
   } else {
     cuts <- 1
   }
+  
+  message("Cut-off for votes is ", cuts, ".", sep = "")
   
   # Subset vote-couting data
   tb <- as_tibble(mets@vote) %>% 
@@ -254,6 +260,8 @@ explore_plot <- function(data, type = "all", counts = NULL) {
     stop("Function needs counts parameter")
   } 
   
+  message("Cut-off for votes is ", cuts, ".", sep = "")
+  
   if (type == "all") {
     dt <- data %>%
       mutate(
@@ -325,7 +333,7 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   
   if(nrow(dt) > 25) {
     message("Too much values, only showing 30 first values. Please check counts and/or type parameters.")
-    
+
     dt <- dt %>%
       ungroup() %>%
       arrange(id) %>%
