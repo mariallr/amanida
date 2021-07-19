@@ -55,9 +55,9 @@ volcano_plot <- function(mets, cutoff = NULL) {
     cut_fc <- log2(2.83)
   }
   
-  message(paste("The cut-off used are "), 10^cut_pval*-1, " for p-value (", round(cut_pval,2), 
+  message(paste("The cut-off used are "), (10^-cut_pval), " for p-value (", round(cut_pval,2), 
           " in log10 scale) and ", 2^cut_fc, 
-          " for fold-change (", cut_fc, " in log2 scale).", sep = "")
+          " for fold-change (", round(cut_fc,2), " in log2 scale).", sep = "")
   
   # Compounds with 2 or more reports
   cont <- as_tibble(mets@vote) %>% 

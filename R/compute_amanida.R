@@ -39,7 +39,7 @@ compute_amanida <- function(datafile) {
       dplyr::group_by(`id`, `trend`) %>%
       summarize(
       # Combine p-values using Fisher's method weighted by number of individuals
-      chisq = (-2/sum(`N`))*sum(`logp` * `N`),
+      chisq = -2*((sum(`logp` * `N`)/sum(`N`))*n()),
       # P-values comparison using Chi-squared distribution
       pval = pchisq(`chisq`, 2*n(), lower.tail = F),
       # Wheigthed mean for combining fold-change values

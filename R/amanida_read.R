@@ -4,7 +4,7 @@
 #' \code{amanida_read} imports the data and formats for \code{compute_amanida} 
 #' or \code{amanida_vote} functions
 #'
-#' Note that \code{amanida_read} skips rows with missing values or NA.
+#' Note that \code{amanida_read} skips rows with missing values or NA. Negatives values for fold-change are transformed to positive (1/value). 
 #'
 #' Formats compatible are csv, xlsx, xls or txt.
 #' 
