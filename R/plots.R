@@ -96,7 +96,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
    reports = case_when(
      id %in% cont_ids ~ "> 1 report",
      T ~ "single report" )) %>%
-    group_by('sig') %>%
+    dplyr::group_by('sig') %>%
     { ggplot(.,aes(lfc, lpval, label = label, colour = sig)) +
     geom_point(aes(shape = .$reports), size = 2.5) + 
     scale_shape_manual(values = c(8, 16), name = "") +
@@ -269,9 +269,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% group_by(id) %>% 
+      ) %>% dplyr::group_by(id) %>% 
       mutate(vc = sum(trend)) %>%
-      group_by(id, trend_l) %>%
+      dplyr::group_by(id, trend_l) %>%
       summarise(
         cont = n(),
         total_N = sum(N),
@@ -290,9 +290,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% group_by(id) %>%
+      ) %>% dplyr::group_by(id) %>%
       mutate(vc = sum(trend)) %>%
-      group_by(id, trend_l) %>%
+      dplyr::group_by(id, trend_l) %>%
       summarise(
         cont = n(),
         total_N = sum(N),
@@ -312,9 +312,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% group_by(id) %>% 
+      ) %>% dplyr::group_by(id) %>% 
       mutate(vc = sum(trend)) %>%
-      group_by(id, trend_l) %>%
+      dplyr::group_by(id, trend_l) %>%
       summarise(
         cont = n(),
         total_N = sum(N),
