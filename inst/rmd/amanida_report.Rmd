@@ -34,7 +34,7 @@ Data is loaded using `amanida_read` function:
 ```{r, eval = F}
 coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
 input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
-datafile <- amanida_read(input_file, mode = "qual", coln, separator=";")
+datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 ```
 
 Your data:
@@ -90,7 +90,13 @@ amanida_result@stat
 
 ```{r, echo = F}
 kbl(amanida_result@stat %>%
-      arrange(pval) %>%
+      arrange(pval) %>% 
+      group_by(id) %>%
+      mutate(id = case_when(pval < params$pvalue_cutoff & 
+                              (fc > params$fc_cutoff | 
+                                 fc < 1/params$fc_cutoff) ~ ig,
+                            T ~ paste(id, "*"))) %>%
+      ungroup() %>%
       mutate(pval = format(pval, scientific = T, digits = 3),
              fc = round(fc, 2)) %>%
       rename("ID" = id,
@@ -103,7 +109,9 @@ kbl(amanida_result@stat %>%
       caption = "Table 2: Quantitative analysis",
     align = "c") %>%
   kable_styling(latex_options = c("basic", "scale_down")) %>%
-  scroll_box(width = "100%", height = "400px") 
+  scroll_box(width = "100%", height = "400px") %>%
+  footnote(symbol = c("Value over cut-offs")
+           )
 ```
 
 
@@ -134,7 +142,9 @@ volcano_plot(amanida_result, cutoff = c(params$pvalue_cutoff, params$fc_cutoff))
 
 *Note: labeled compounds are the ones found significant for the cut-off indicated*
 
-As we have divided data by trend, now will be inspected the behaviour to see if there are discrepancies on the results obtained. This is evaluated comparing the number of articles where an element is found up-regulated and down-regulated. It is also ploted the total results, as vote-counting, obtained by the difference between up-regulated and down-regulated number of reports.  
+## Qualitative results
+
+With qualitative analysis can be inspected the behaviour to see if there are discrepancies on the results obtained. This is evaluated comparing the number of articles where an element is found up-regulated and down-regulated. It is also ploted the total results, as vote-counting, obtained by the difference between up-regulated and down-regulated number of reports.  
 
 Here, the explore_plot will only display the relevant identifiers (elements bigger than number of votes specified) or those with discrepancies between studies. 
 
@@ -145,8 +155,6 @@ explore_plot(datafile, type = "mix", params$votecount_lim)
 ```
 
 It is important to check if our significant compounds have discrepancies on the reports. 
-
-## Qualitative results
 
 To see the complete results for vote-counting use:
 
