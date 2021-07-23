@@ -1,6 +1,6 @@
 
 ---
-title: "Qualitative meta-analysis results"
+title: "Quantitative meta-analysis results"
 author: "Amanida R package"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -34,7 +34,7 @@ Data is loaded using `amanida_read` function:
 ```{r, eval = F}
 coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
 input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
-datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
+datafile <- amanida_read(input_file, mode = "qual", coln, separator=";")
 ```
 
 Your data:
@@ -118,7 +118,7 @@ sig_res <- amanida_result@stat %>%
 The cut-off selected by the user for significant results are:
 
 * p-value: `r params$pvalue_cutoff`.
-* fold-change: `r params$fc_cutoff` for up-regulated and `r 1/params$fc_cutoff` for down-regulated.
+* fold-change: `r params$fc_cutoff` for up-regulated and `r round(1/params$fc_cutoff,2)` for down-regulated.
 
 Using indicated cut-offs there are **`r nrow(sig_res)`** compounds significant, `r length(which(sig_res$trend == 1))` up-regulated and `r length(which(sig_res$trend == -1))` down-regulated compounds.
 
@@ -126,7 +126,7 @@ Using indicated cut-offs there are **`r nrow(sig_res)`** compounds significant, 
 
 To see graphically the results obtained is used `volcano_plot`:
 
-With `r params$file_name` and a p-value cut-off of `r params$pvalue_cutoff` and fold-change cut-off of `r params$fc_cutoff` (up-regulated) or `r 1/params$fc_cutoff` (down-regulated):
+With `r params$file_name` and a p-value cut-off of `r params$pvalue_cutoff` and fold-change cut-off of `r params$fc_cutoff` (up-regulated) or `r round(1/params$fc_cutoff,2)` (down-regulated):
 
 ```{r out.width='100%'}
 volcano_plot(amanida_result, cutoff = c(params$pvalue_cutoff, params$fc_cutoff))
@@ -136,7 +136,7 @@ volcano_plot(amanida_result, cutoff = c(params$pvalue_cutoff, params$fc_cutoff))
 
 As we have divided data by trend, now will be inspected the behaviour to see if there are discrepancies on the results obtained. This is evaluated comparing the number of articles where an element is found up-regulated and down-regulated. It is also ploted the total results, as vote-counting, obtained by the difference between up-regulated and down-regulated number of reports.  
 
-Here, the explore_plot will only display the relevant identifiers (elements bigger than 2 votes) or those with discrepencies between studies. 
+Here, the explore_plot will only display the relevant identifiers (elements bigger than number of votes specified) or those with discrepancies between studies. 
 
 As dataset is big, on the following plot will be only displayed elements bigger than `r params$votecount_lim` votes and the elements with discrepancies between studies:
 

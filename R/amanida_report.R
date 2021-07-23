@@ -31,23 +31,40 @@
 #' 
 #' @export
 
-
 amanida_report <- function(input_file, separator = NULL, analysis_type, column_id, 
-                           pvalue_cutoff, fc_cutoff, votecount_lim) {
+                           pvalue_cutoff = NULL, fc_cutoff = NULL, votecount_lim) {
   
-  rmarkdown::render(
-  input = system.file("rmd", "amanida_report.Rmd", package = "amanida"),
-  output_file = "Amanida_report.html",
-  output_dir = getwd(),
-  params = list(
-    file_name = input_file,
-    separator = separator,
-    analysis_type = analysis_type,
-    column_id = column_id,
-    pvalue_cutoff = pvalue_cutoff,
-    fc_cutoff = fc_cutoff,
-    votecount_lim = votecount_lim,
-    show_code = FALSE
+  if(analysis_type == "quan") {
+    rmarkdown::render(
+      input = system.file("rmd", "amanida_report.Rmd", package = "amanida"),
+      output_file = "Amanida_report.html",
+      output_dir = getwd(),
+      params = list(
+        file_name = input_file,
+        separator = separator,
+        analysis_type = analysis_type,
+        column_id = column_id,
+        pvalue_cutoff = pvalue_cutoff,
+        fc_cutoff = fc_cutoff,
+        votecount_lim = votecount_lim,
+        show_code = FALSE
+      )
     )
-  )
+  } else if (analysis_type == "qual") {
+    rmarkdown::render(
+      input = system.file("rmd", "amanida_report_qual.Rmd", package = "amanida"),
+      output_file = "Amanida_report_qualitative.html",
+      output_dir = getwd(),
+      params = list(
+        file_name = input_file,
+        separator = separator,
+        analysis_type = analysis_type,
+        column_id = column_id,
+        votecount_lim = votecount_lim,
+        show_code = FALSE
+      )
+    )
+  } else {
+    message("Please indicate analysis type, 'quan' for quantitative or 'qual' for qualitative")
+  }
 }

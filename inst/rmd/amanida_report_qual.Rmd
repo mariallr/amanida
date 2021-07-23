@@ -1,0 +1,103 @@
+
+---
+title: "Quantitative meta-analysis results"
+author: "Amanida R package"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: lumen
+params: 
+  file_name: input_file
+  separator: ";"
+  analysis_type: "qual"
+  column_id: coln
+  votecount_lim: 1
+  show_code: FALSE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+library(amanida)
+```
+
+## Data exploration
+
+Data is loaded using `amanida_read` function:
+
+```{r, eval = F}
+coln = c("Compound Name", "Behaviour", "References")
+input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+datafile <- amanida_read(input_file, mode = "qual", coln, separator=";")
+```
+
+Your data:
+
+```{r, echo = F}
+datafile <- amanida_read(params$file_name, params$analysis_type, params$column_id, params$separator) 
+```
+
+Here are shown 10 random rows:
+
+```{r, echo = F}
+data_imp <- datafile %>% 
+  mutate(trend = case_when(trend == -1 ~ "Down-regulated",
+                           T ~ "Up-regulated")) %>%
+  rename("ID" = id,
+         "Reference" = ref,
+         "Behaviour" = trend) %>%
+  slice_sample(n = 10)
+
+kbl(data_imp, 
+      booktabs = T, 
+      caption = "Table 1: Data exploration",
+    align = "c") %>%
+  kable_styling(latex_options = c("basic", "scale_down")) %>%
+  scroll_box(width = "100%", height = "400px")
+```
+
+## Qualitative analysis
+
+Qualitative analysis is performed by the vote-counting computed as follows: for compounds up-regulated are count as +1 and for down-regulated as -1. Total sum is obtained for each compound. 
+
+```{r, eval = T}
+vote_results <- amanida_vote(datafile)
+```
+
+```{r, eval = F}
+vote_results@vote
+```
+
+```{r, echo = F}
+kbl(vote_results@vote %>%
+      arrange(desc(abs(votes))) %>% 
+      select(id, votes, articles) %>%
+      rename("ID" = id,
+        "Votes" = votes,
+         "Articles reporting" = articles), 
+      booktabs = T, 
+      caption = "Table 3: Qualitative analysis",
+    align = "c") %>%
+  kable_styling(latex_options = c("basic", "scale_down")) %>%
+  scroll_box(width = "100%", height = "400px") 
+```
+
+Qualitative results can be also graphically inspected without trend division. Here the vote_plot is set to show the identifiers with a minimum of a vote-counting of `r params$votecount_lim`
+
+```{r, out.width= '100%', echo = T}
+vote_plot(vote_results, counts = params$votecount_lim)
+```
+
+Here, the explore_plot will only display the relevant identifiers (elements bigger than 2 votes) or those with discrepancies between studies. 
+
+As dataset is big, on the following plot will be only displayed elements bigger than `r params$votecount_lim` votes and the elements with discrepancies between studies:
+
+```{r pressure, echo=T, message=TRUE}
+explore_plot(datafile, type = "mix", params$votecount_lim)
+```
+
+*Qualitative analysis using Amanida R package*

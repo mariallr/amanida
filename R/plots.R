@@ -55,9 +55,9 @@ volcano_plot <- function(mets, cutoff = NULL) {
     cut_fc <- log2(2.83)
   }
   
-  message(paste("The cut-off used are "), 10^cut_pval*-1, " for p-value (", round(cut_pval,2), 
+  message(paste("The cut-off used are "), (10^-cut_pval), " for p-value (", round(cut_pval,2), 
           " in log10 scale) and ", 2^cut_fc, 
-          " for fold-change (", cut_fc, " in log2 scale).", sep = "")
+          " for fold-change (", round(cut_fc,2), " in log2 scale).", sep = "")
   
   # Compounds with 2 or more reports
   cont <- as_tibble(mets@vote) %>% 
@@ -96,7 +96,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
    reports = case_when(
      id %in% cont_ids ~ "> 1 report",
      T ~ "single report" )) %>%
-    group_by('sig') %>%
+    dplyr::group_by('sig') %>%
     { ggplot(.,aes(lfc, lpval, label = label, colour = sig)) +
     geom_point(aes(shape = .$reports), size = 2.5) + 
     scale_shape_manual(values = c(8, 16), name = "") +
@@ -269,9 +269,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% group_by(id) %>% 
+      ) %>% dplyr::group_by(id) %>% 
       mutate(vc = sum(trend)) %>%
-      group_by(id, trend_l) %>%
+      dplyr::group_by(id, trend_l) %>%
       summarise(
         cont = n(),
         total_N = sum(N),
@@ -290,9 +290,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% group_by(id) %>%
+      ) %>% dplyr::group_by(id) %>%
       mutate(vc = sum(trend)) %>%
-      group_by(id, trend_l) %>%
+      dplyr::group_by(id, trend_l) %>%
       summarise(
         cont = n(),
         total_N = sum(N),
@@ -312,9 +312,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% group_by(id) %>% 
+      ) %>% dplyr::group_by(id) %>% 
       mutate(vc = sum(trend)) %>%
-      group_by(id, trend_l) %>%
+      dplyr::group_by(id, trend_l) %>%
       summarise(
         cont = n(),
         total_N = sum(N),

@@ -9,8 +9,8 @@ amanida_report(
   separator = NULL,
   analysis_type,
   column_id,
-  pvalue_cutoff,
-  fc_cutoff,
+  pvalue_cutoff = NULL,
+  fc_cutoff = NULL,
   votecount_lim
 )
 }
