@@ -24,7 +24,7 @@
 #' @import readxl
 #' @import tidyr
 #' @importFrom methods hasArg new
-#' @importFrom stats pchisq reorder
+#' @importFrom stats qgamma pgamma
 #' @importFrom magrittr %>%
 #' 
 #' @docType package
