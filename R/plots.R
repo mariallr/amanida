@@ -148,6 +148,8 @@ vote_plot <- function(mets, counts = NULL) {
   #' @param counts value of vote-counting cut-off. Will be only displayed data over the cut-off.
   #'  
   #' @return a ggplot bar-plot showing the vote-count per compound
+  #' 
+  #' @importFrom stats reorder
   #' @examples 
   #' data("sample_data")
   #' 
@@ -237,6 +239,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   #' @param counts value of vote-counting cut-off. Will be only displayed data over the cut-off.  
   #'  
   #' @return a ggplot bar-plot showing the sum of votes for each compound divided by the trend
+  #' 
+  #' @importFrom stats reorder
+  #' 
   #' @examples 
   #' data("sample_data")
   #' 
