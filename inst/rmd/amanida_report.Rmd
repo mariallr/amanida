@@ -92,10 +92,11 @@ amanida_result@stat
 kbl(amanida_result@stat %>%
       arrange(pval) %>% 
       group_by(id) %>%
-      mutate(id = case_when((fc > 1 & fc < params$fc_cutoff) & pval > params$pvalue_cutoff | 
-                             (fc < 1 & fc > 1/params$fc_cutoff) & pval > params$pvalue_cutoff
-                               ~ id,
-                            T ~ paste(id, "*"))) %>%
+      mutate(id = case_when((trend == 1 & fc > params$fc_cutoff & pval < params$pvalue_cutoff)
+                               ~ paste(id, "*"),
+                             (trend == -1 & fc < (1/params$fc_cutoff) &
+                                pval < params$pvalue_cutoff) ~ paste(id, "*"),
+                            T ~ id)) %>%
       ungroup() %>%
       mutate(pval = format(pval, scientific = T, digits = 3),
              fc = round(fc, 2)) %>%
