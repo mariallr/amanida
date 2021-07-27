@@ -20,6 +20,7 @@ params:
 ---
 
 ```{r setup, include=FALSE}
+Sys.setlocale("LC_TIME", "English")
 knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
 library(kableExtra)
@@ -43,7 +44,7 @@ Your data:
 datafile <- amanida_read(params$file_name, params$analysis_type, params$column_id, params$separator) 
 ```
 
-Here are shown 10 random rows:
+Here is shown the table imported:
 
 ```{r, echo = F}
 data_imp <- datafile %>% 
@@ -56,8 +57,7 @@ data_imp <- datafile %>%
          "Fold-Change" = foldchange,
          "Number of participants" = N,
          "Reference" = ref,
-         "Behaviour" = trend) %>%
-  slice_sample(n = 10)
+         "Behaviour" = trend)
 
 kbl(data_imp, 
       booktabs = T, 
@@ -73,8 +73,6 @@ Quantitative analysis is done for each different identifier. It combines the sta
 
 * Statistical significance (p-value): Fisher's method weigthed by number of participants on the study.
 * Effect size (fold-change): logarithmic transformation for average with weighting by number of participants. 
-
-*Important: data is divided by trend before combination to respect discrepancies.*
 
 `compute_amanida` function is used to combine p-values and fold-change. 
 

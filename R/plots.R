@@ -365,7 +365,8 @@ explore_plot <- function(data, type = "all", counts = NULL) {
         ylab("") +
         labs(fill = "Counts by trend") +
         ggtitle("Qualitative compounds trend plot") +
-        theme(legend.position = "bottom", legend.title = element_blank()) +
+        theme(legend.position = "bottom", legend.title = element_blank(),
+              text = element_text(size = 16)) +
         guides(col = guide_legend(nrow = 2, byrow = T)) + 
         guides(shape = guide_legend(nrow = 2, byrow = T)) 
     }
