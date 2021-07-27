@@ -17,12 +17,11 @@ params:
   show_code: FALSE
 ---
 
-```{r setup, include=FALSE}
-Sys.setlocale("LC_TIME", "English")
+```{r setup, echo=FALSE, warning = F, message = F}
+set.seed(123)
 knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
 library(kableExtra)
-library(tidyverse)
 library(amanida)
 ```
 
@@ -42,7 +41,7 @@ Your data:
 datafile <- amanida_read(params$file_name, params$analysis_type, params$column_id, params$separator) 
 ```
 
-Here is shown the table imported:
+Here is shown the imported table:
 
 ```{r, echo = F}
 data_imp <- datafile %>% 
@@ -75,10 +74,7 @@ vote_results@vote
 ```{r, echo = F}
 kbl(vote_results@vote %>%
       arrange(desc(abs(votes))) %>% 
-      select(id, votes, articles) %>%
-      rename("ID" = id,
-        "Votes" = votes,
-         "Articles reporting" = articles), 
+      select("ID" = id, "Votes" = votes, "Articles reporting" = articles), 
       booktabs = T, 
       caption = "Table 3: Qualitative analysis",
     align = "c") %>%

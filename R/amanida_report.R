@@ -36,6 +36,7 @@ amanida_report <- function(input_file, separator = NULL, analysis_type, column_i
                            pvalue_cutoff = NULL, fc_cutoff = NULL, votecount_lim) {
   
   if(analysis_type == "quan") {
+    Sys.setlocale("English")
     rmarkdown::render(
       input = system.file("rmd", "amanida_report.Rmd", package = "amanida"),
       output_file = "Amanida_report.html",
@@ -52,6 +53,7 @@ amanida_report <- function(input_file, separator = NULL, analysis_type, column_i
       )
     )
   } else if (analysis_type == "qual") {
+    Sys.setlocale("English")
     rmarkdown::render(
       input = system.file("rmd", "amanida_report_qual.Rmd", package = "amanida"),
       output_file = "Amanida_report_qualitative.html",

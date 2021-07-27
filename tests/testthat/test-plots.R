@@ -2,6 +2,7 @@
 context("Testing plots")
 
 test_that("Volcano plot", {
+  set.seed(123)
   data("sample_data")
   
   result <- compute_amanida(sample_data)
@@ -12,6 +13,7 @@ test_that("Volcano plot", {
 })
 
 test_that("Vote plot", {
+  set.seed(123)
   data("sample_data")
   
   result <- compute_amanida(sample_data)
@@ -22,6 +24,7 @@ test_that("Vote plot", {
 })
 
 test_that("Explore plot", {
+  set.seed(123)
   data("sample_data")
   
   result <- compute_amanida(sample_data)

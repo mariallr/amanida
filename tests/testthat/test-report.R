@@ -1,6 +1,7 @@
 context("Report meta-analysis")
 
 test_that("Report function quan", {
+  set.seed(123)
   local_edition(3)
   column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
   input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
@@ -14,6 +15,7 @@ test_that("Report function quan", {
 })
 
 test_that("Report function qual", {
+  set.seed(123)
   local_edition(3)
   column_id = c("Compound Name", "Behaviour", "References")
   input_file <- system.file("extdata", "dataset2.csv", package = "amanida")

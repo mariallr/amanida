@@ -5,6 +5,7 @@ amanida_palette <- function() {
   #' 
   #' @return vector of colours
   #' 
+  set.seed(123) 
   
   c("#F4A460", "#87CEEB", "#CD5C5C", "#A9A9A9", "#FFEFD5")
 }
@@ -34,6 +35,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
   
   articles = NULL; pval = NULL; fc = NULL; lfc = NULL; lpval = NULL; . = NULL; 
   label = NULL; sig = NULL;
+  set.seed(123)
   
   col_palette <- amanida_palette()
   
@@ -160,6 +162,7 @@ vote_plot <- function(mets, counts = NULL) {
   #' 
   
   votes = NULL; . = NULL;
+  set.seed(123)
   
   col_palette <- amanida_palette()
   
@@ -252,6 +255,7 @@ explore_plot <- function(data, type = "all", counts = NULL) {
 
   trend = NULL; trend_l = NULL; N = NULL; vc = NULL; . = NULL; 
   cont = NULL; lab = NULL;
+  set.seed(123)
   
   col_palette <- amanida_palette()
   
@@ -366,7 +370,7 @@ explore_plot <- function(data, type = "all", counts = NULL) {
         labs(fill = "Counts by trend") +
         ggtitle("Qualitative compounds trend plot") +
         theme(legend.position = "bottom", legend.title = element_blank(),
-              text = element_text(size = 16)) +
+              axis.text.y = element_text(size = 14)) +
         guides(col = guide_legend(nrow = 2, byrow = T)) + 
         guides(shape = guide_legend(nrow = 2, byrow = T)) 
     }

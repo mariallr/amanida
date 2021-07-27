@@ -19,12 +19,11 @@ params:
   show_code: FALSE
 ---
 
-```{r setup, include=FALSE}
-Sys.setlocale("LC_TIME", "English")
+```{r setup, echo = F, warning = F, message = F}
+set.seed(123)
 knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
 library(kableExtra)
-library(tidyverse)
 library(amanida)
 ```
 
@@ -44,7 +43,7 @@ Your data:
 datafile <- amanida_read(params$file_name, params$analysis_type, params$column_id, params$separator) 
 ```
 
-Here is shown the table imported:
+Here is shown the imported table:
 
 ```{r, echo = F}
 data_imp <- datafile %>% 
@@ -109,8 +108,7 @@ kbl(amanida_result@stat %>%
     align = "c") %>%
   kable_styling(latex_options = c("basic", "scale_down")) %>%
   scroll_box(width = "100%", height = "400px") %>%
-  footnote(symbol = c("Value over cut-offs")
-           )
+  footnote(symbol = c("Value over cut-offs"))
 ```
 
 
@@ -125,15 +123,15 @@ sig_res <- amanida_result@stat %>%
 The cut-off selected by the user for significant results are:
 
 * p-value: `r params$pvalue_cutoff`.
-* fold-change: `r params$fc_cutoff` for up-regulated and `r round(1/params$fc_cutoff,2)` for down-regulated.
+* fold-change: `r params$fc_cutoff` for up-regulated and `r round(1/params$fc_cutoff, 2)` for down-regulated.
 
-Using indicated cut-offs there are **`r nrow(sig_res)`** compounds significant, `r length(which(sig_res$trend == 1))` up-regulated and `r length(which(sig_res$trend == -1))` down-regulated compounds.
+Using indicated cut-offs there are **`r nrow(sig_res)`** compounds significant, `r sum(sig_res$trend == 1)` up-regulated and `r sum(sig_res$trend == -1)` down-regulated compounds.
 
 ### Graphical results
 
 To see graphically the results obtained is used `volcano_plot`:
 
-With `r params$file_name` and a p-value cut-off of `r params$pvalue_cutoff` and fold-change cut-off of `r params$fc_cutoff` (up-regulated) or `r round(1/params$fc_cutoff,2)` (down-regulated):
+With `r params$file_name` and a p-value cut-off of `r params$pvalue_cutoff` and fold-change cut-off of `r params$fc_cutoff` (up-regulated) or `r round(1/params$fc_cutoff, 2)` (down-regulated):
 
 ```{r out.width='100%'}
 volcano_plot(amanida_result, cutoff = c(params$pvalue_cutoff, params$fc_cutoff))
@@ -165,10 +163,7 @@ amanida_result@vote
 ```{r, echo = F}
 kbl(amanida_result@vote %>%
       arrange(desc(abs(votes))) %>% 
-      select(id, votes, articles) %>%
-      rename("ID" = id,
-        "Votes" = votes,
-             "Articles reporting" = articles), 
+      select("ID" = id, "Votes" = votes, "Articles reporting" = articles),
       booktabs = T, 
       caption = "Table 3: Qualitative analysis",
     align = "c") %>%

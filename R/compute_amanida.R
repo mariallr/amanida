@@ -29,6 +29,8 @@ compute_amanida <- function(datafile) {
   pval = NULL; fc = NULL; N_total = NULL; reference = NULL; N = NULL;
   votes = NULL; articles = NULL; vote_counting = NULL; ref = NULL; trend = NULL;
   
+  set.seed(123)
+  
   if(ncol(datafile) == 3) {
     stop("Compute_amanida needs quantitative data with p-value and fold-change. To import it use amanida_read in 'quan' mode.")
   }
@@ -41,15 +43,11 @@ compute_amanida <- function(datafile) {
         # Weigthed P-value combination
         pval = pgamma(sum(G), shape = n(), scale = 2, lower.tail = F),
         # Weighted average of fold-change
-                fc = 2^(sum(log2(foldchange) * `N`) / sum(`N`)),
-                N_total = sum(N),
-                reference = paste(`ref`, collapse = "; ")
-      ) %>%
-      mutate(trend = case_when(fc < 1 ~ -1, 
-                               T ~ 1)) %>%
+        fc = 2^(sum(log2(foldchange) * `N`) / sum(`N`)), N_total = sum(N),
+                reference = paste(`ref`, collapse = "; ")) %>%
+      mutate(trend = case_when(fc < 1 ~ -1, T ~ 1)) %>%
       select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`))
       
-    
     ## Vote-counting per each compound id
     vote <- datafile %>% 
       dplyr::group_by(`id`) %>% 

@@ -2,6 +2,7 @@
 context("Quantitative meta-analysis")
 
 test_that("Quantitative analysis of data", {
+  set.seed(123)
   data("sample_data")
   
   result <- compute_amanida(sample_data)
