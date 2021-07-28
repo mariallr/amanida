@@ -23,7 +23,7 @@ params:
 set.seed(123)
 knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
-library(kableExtra)
+import::from(kableExtra, kbl, kable_styling, scroll_box, footnote)
 library(amanida)
 ```
 

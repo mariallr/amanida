@@ -19,7 +19,7 @@
 #' @return an html document
 #' 
 #' @import rmarkdown
-#' @import kableExtra
+#' @importFrom kableExtra kbl kable_styling scroll_box footnote
 #' @import knitr
 #' @import tidyverse
 #' 
@@ -34,7 +34,7 @@
 
 amanida_report <- function(input_file, separator = NULL, analysis_type, column_id, 
                            pvalue_cutoff = NULL, fc_cutoff = NULL, votecount_lim) {
-  Sys.setlocale("LC_TIME", "English")
+  Sys.setlocale("LC_TIME", "C")
   
   if(analysis_type == "quan") {
     rmarkdown::render(

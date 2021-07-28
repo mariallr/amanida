@@ -5,7 +5,7 @@
 #' Entries corresponding to metabolites are combined as follows:
 #' \itemize{
 #'  \item P-values are combined using Fisher method weighted by N and gamma distribution
-#'  \item Fold-change are combined by weighted mean
+#'  \item Fold-change are combined by weighted mean. Transformation works with fold-change transformed to log scale with base 2. 
 #' }
 #' 
 #' Vote-counting is computed based on votes. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
