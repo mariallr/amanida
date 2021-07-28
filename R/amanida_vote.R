@@ -26,6 +26,8 @@
 
 amanida_vote <- function(data) {
     . = NULL; votes = NULL; articles = NULL; vote_counting = NULL; trend = NULL;
+    
+    set.seed(123)
   
   vote <-  data %>%
     dplyr::group_by(`id`) %>%

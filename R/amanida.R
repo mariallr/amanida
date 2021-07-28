@@ -24,8 +24,9 @@
 #' @import readxl
 #' @import tidyr
 #' @importFrom methods hasArg new
-#' @importFrom stats pchisq reorder
+#' @importFrom stats qgamma pgamma reorder
 #' @importFrom magrittr %>%
+#' @importFrom kableExtra kbl kable_styling scroll_box footnote
 #' 
 #' @docType package
 #' 

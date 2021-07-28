@@ -2,13 +2,13 @@
 #' 
 #' \code{compute_amanida} Combines for the same entry or metabolite the statistical values of p-value and fold-change. Also is computed a vote-counting for each compound. 
 #' 
-#' Entries corresponding to metabolites are divided by trend and then combined as follows:
+#' Entries corresponding to metabolites are combined as follows:
 #' \itemize{
-#'  \item P-values are combined using Fisher method weighted by N and chi-squared distribution
-#'  \item Fold-change are combined by weighted mean
+#'  \item P-values are combined using Fisher method weighted by N and gamma distribution
+#'  \item Fold-change are combined by weighted mean. Transformation works with fold-change transformed to log scale with base 2. 
 #' }
 #' 
-#' Vote-counting is computed without trend division. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
+#' Vote-counting is computed based on votes. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
 #'   
 #' @param datafile data imported using amanida_read function
 #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
@@ -19,39 +19,35 @@
 #' compute_amanida(sample_data)
 #' 
 #' @import dplyr
+#' @importFrom stats qgamma pgamma
 #' 
 #' @export
 
 compute_amanida <- function(datafile) {
   
-  pvalue = NULL; foldchange = NULL; trend = NULL; N = NULL; logp = NULL; 
-  chisq = NULL; logfc = NULL; ref = NULL; pval = NULL; fc = NULL; N_total = NULL;
-  reference = NULL; votes = NULL; articles = NULL; vote_counting = NULL;
+  pvalue = NULL; foldchange = NULL; ratio = NULL; df = NULL; G = NULL;  
+  pval = NULL; fc = NULL; N_total = NULL; reference = NULL; N = NULL;
+  votes = NULL; articles = NULL; vote_counting = NULL; ref = NULL; trend = NULL;
+  
+  set.seed(123)
   
   if(ncol(datafile) == 3) {
     stop("Compute_amanida needs quantitative data with p-value and fold-change. To import it use amanida_read in 'quan' mode.")
   }
-
-    # Statistics grouping by compound identifier and trend
-    sta <- datafile %>% 
-      mutate(logp = log10(`pvalue`),
-             logfc = log2(`foldchange`)) %>%
-      dplyr::group_by(`id`, `trend`) %>%
-      summarize(
-      # Combine p-values using Fisher's method weighted by number of individuals
-      chisq = -2*((sum(`logp` * `N`)/sum(`N`))*n()),
-      # P-values comparison using Chi-squared distribution
-      pval = pchisq(`chisq`, 2*n(), lower.tail = F),
-      # Wheigthed mean for combining fold-change values
-      fc = 2^(sum(`logfc` * `N`) / sum(`N`)),
-      # Sum of total individuals
-      N_total = sum(`N`),
-      # References
-      reference = paste(`ref`, collapse = "; ")
-      ) %>%
-      select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`)) %>%
-      ungroup()
-    
+    # Statistics grouping by compound identifier
+    sta <- datafile %>% group_by(id) %>%
+      mutate(ratio = N /sum(N),
+             df = n()*ratio,
+             G = qgamma(pvalue, shape = df, scale = 2, lower.tail = F)) %>%
+      summarise(
+        # Weigthed P-value combination
+        pval = pgamma(sum(G), shape = n(), scale = 2, lower.tail = F),
+        # Weighted average of fold-change
+        fc = 2^(sum(log2(foldchange) * `N`) / sum(`N`)), N_total = sum(N),
+                reference = paste(`ref`, collapse = "; ")) %>%
+      mutate(trend = case_when(fc < 1 ~ -1, T ~ 1)) %>%
+      select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`))
+      
     ## Vote-counting per each compound id
     vote <- datafile %>% 
       dplyr::group_by(`id`) %>% 

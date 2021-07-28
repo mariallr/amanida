@@ -33,6 +33,8 @@
 amanida_read <- function(file, mode, coln, separator=NULL) {
   . = NULL; foldchange = NULL; pvalue = NULL; N = NULL; 
   
+  set.seed(123)
+  
   VAR_NAMES <- c('id', 'pvalue', 'foldchange', 'N', 'ref')
 
   # Get file type

@@ -2,6 +2,7 @@
 context("Import dataset")
 
 test_that("Read table quantitative function works", {
+  set.seed(123)
   coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
   input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
   datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
@@ -13,6 +14,7 @@ test_that("Read table quantitative function works", {
 })
 
 test_that("Read table qualitative function works", {
+  set.seed(123)
   coln = c("Compound Name", "N total", "References")
   input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
   datafile <- amanida_read(input_file, mode = "qual", coln, separator=";")

@@ -19,7 +19,7 @@
 #' @return an html document
 #' 
 #' @import rmarkdown
-#' @import kableExtra
+#' @importFrom kableExtra kbl kable_styling scroll_box footnote
 #' @import knitr
 #' @import tidyverse
 #' 
@@ -27,12 +27,14 @@
 #' column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
 #' input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
 #' 
-#' amanida_report(input_file, separator = ";", column_id, analysis_type = "quan", pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2)
+#' amanida_report(input_file, separator = ";", column_id, analysis_type = "quan", 
+#'                        pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2)
 #' 
 #' @export
 
 amanida_report <- function(input_file, separator = NULL, analysis_type, column_id, 
                            pvalue_cutoff = NULL, fc_cutoff = NULL, votecount_lim) {
+  Sys.setlocale("LC_TIME", "C")
   
   if(analysis_type == "quan") {
     rmarkdown::render(

@@ -7,16 +7,15 @@
 
 `Amanida` package contains a collection of functions for computing a meta-analysis in R only using significance and effect size. It covers the lack of data provided on metabolomic studies, where is rare to have error or variance disclosed. With this adaptation, only using p-value and fold-change, global significance and effect size for compounds or metabolites are obtained. 
 
-Furthermore, `Amanida` also computes quanlitative meta-analysis performing a vote-counting for compounds, including the option of only using identifier and trend labels.  
+Furthermore, `Amanida` also computes qualitative meta-analysis performing a vote-counting for compounds, including the option of only using identifier and trend labels.  
 
 
 ## Documentation
 
 The following computations are included:
 
-* Trend division: values are divided in tables to mantain the trend, up-regulated (fold-change > 1) and down-regulated (fold-change < 1).
-* P-value combination: Fisher's method weigthed by number of participants on the study. 
-* Fold-change combination: logarithmic transformation for average with weigthing by number of participants. 
+* P-value combination: Fisher's method weighted by number of participants on the study. 
+* Fold-change combination: logarithmic transformation for average with weighting by number of participants. 
 * Compound vote-counting: votes are +1 for up-regulation, -1 for down-regulation and 0 if no trend. The total votes are divided by the number of reports. 
 
 The following plots are included to visualize the results: 
@@ -140,6 +139,37 @@ Data can be shown in three types:
 explore_plot(sample_data, type = "mix", counts = 1)
 ```
 
+## Report 
+
+All results using Amanida can be obtained in a single step using `amanida_report` function. It only requires the following parameters for qualitative analysis report:
+* file: path to the dataset
+* separator: separator used in the dataset
+* analysis_type: specify "quan"
+* column_id: nomes of columns to be used, see `amanida_read` documentation for more information
+* pvalue_cutoff: numeric value where the p-value will be considered as significant, usually 0.05
+* fc_cutoff: numeric value where the fold-change will be considered as significant, usually 2
+* votecount_lim: numeric value set as minimum to show vote-counting results
+
+And for quantitative analysis report:
+* file: path to the dataset
+* separator: separator used in the dataset
+* analysis_type: specify "qual"
+* column_id: nomes of columns to be used, see `amanida_read` documentation for more information
+* votecount_lim: numeric value set as minimum to show vote-counting results
+
+```r
+column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
+input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+amanida_report(input_file, 
+                separator = ";", 
+                column_id, 
+                analysis_type = "quan", 
+                pvalue_cutoff = 0.05, 
+                fc_cutoff = 4, 
+                votecount_lim = 2)
+  
+```
+
 
 ## Examples
 
@@ -149,7 +179,7 @@ There is an example dataset installed, to run examples please load:
 data("sample_data")
 ```
 
-The dataset consits in a short list of compounds extracted from *Comprehensive volatilome and metabolome signatures of colorectal cancer in urine: A systematic review and meta-analysis.* Mallafré et al. 2021 Article in revision.
+The dataset consist in a short list of compounds extracted from *Comprehensive Volatilome and Metabolome Signatures of Colorectal Cancer in Urine: A Systematic Review and Meta-Analysis* Mallafré et al. Cancers 2021, 13(11), 2534; https://doi.org/10.3390/cancers13112534
 
 
 Please fill an issue if you have any question or problem :)

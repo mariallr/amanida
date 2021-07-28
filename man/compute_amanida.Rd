@@ -16,13 +16,13 @@ METAtable S4 object with p-value combined, fold-change combined and vote-countin
 \code{compute_amanida} Combines for the same entry or metabolite the statistical values of p-value and fold-change. Also is computed a vote-counting for each compound.
 }
 \details{
-Entries corresponding to metabolites are divided by trend and then combined as follows:
+Entries corresponding to metabolites are combined as follows:
 \itemize{
-\item P-values are combined using Fisher method weighted by N and chi-squared distribution
-\item Fold-change are combined by weighted mean
+\item P-values are combined using Fisher method weighted by N and gamma distribution
+\item Fold-change are combined by weighted mean. Transformation works with fold-change transformed to log scale with base 2.
 }
 
-Vote-counting is computed without trend division. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
+Vote-counting is computed based on votes. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
 }
 \examples{
 data("sample_data")

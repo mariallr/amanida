@@ -17,11 +17,11 @@ params:
   show_code: FALSE
 ---
 
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE, warning = F, message = F}
+set.seed(123)
 knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
-library(kableExtra)
-library(tidyverse)
+library(kableExtra, include.only = c('kbl', 'kable_styling', 'scroll_box', 'footnote'))
 library(amanida)
 ```
 
@@ -41,7 +41,7 @@ Your data:
 datafile <- amanida_read(params$file_name, params$analysis_type, params$column_id, params$separator) 
 ```
 
-Here are shown 10 random rows:
+Here is shown the imported table:
 
 ```{r, echo = F}
 data_imp <- datafile %>% 
@@ -49,8 +49,7 @@ data_imp <- datafile %>%
                            T ~ "Up-regulated")) %>%
   rename("ID" = id,
          "Reference" = ref,
-         "Behaviour" = trend) %>%
-  slice_sample(n = 10)
+         "Behaviour" = trend)
 
 kbl(data_imp, 
       booktabs = T, 
@@ -75,10 +74,7 @@ vote_results@vote
 ```{r, echo = F}
 kbl(vote_results@vote %>%
       arrange(desc(abs(votes))) %>% 
-      select(id, votes, articles) %>%
-      rename("ID" = id,
-        "Votes" = votes,
-         "Articles reporting" = articles), 
+      select("ID" = id, "Votes" = votes, "Articles reporting" = articles), 
       booktabs = T, 
       caption = "Table 3: Qualitative analysis",
     align = "c") %>%
