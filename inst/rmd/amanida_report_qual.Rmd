@@ -21,7 +21,7 @@ params:
 set.seed(123)
 knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
-import::from(kableExtra, kbl, kable_styling, scroll_box, footnote)
+library(kableExtra, include.only = c('kbl', 'kable_styling', 'scroll_box', 'footnote'))
 library(amanida)
 ```
 
