@@ -1,5 +1,5 @@
 
-#' Quanlitative meta-analysis
+#' Qualitative meta-analysis
 #' 
 #' \code{amanida_vote} performs vote-counting on qualitative data. 
 #' 

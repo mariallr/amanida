@@ -2,7 +2,7 @@
 % Please edit documentation in R/amanida_vote.R
 \name{amanida_vote}
 \alias{amanida_vote}
-\title{Quanlitative meta-analysis}
+\title{Qualitative meta-analysis}
 \usage{
 amanida_vote(data)
 }
