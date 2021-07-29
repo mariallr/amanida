@@ -2,17 +2,23 @@
 context("Quantitative meta-analysis")
 
 test_that("Quantitative analysis of data", {
-  set.seed(123)
+ 
   data("sample_data")
   
   result <- compute_amanida(sample_data)
   
-  expect_equal(result@stat$fc[8], 0.6389)
-  expect_equal(result@stat$N_total[6], 342)
-  expect_equal(result@stat$pval[2], 0.0189)
+  expect_equal(result@stat %>% filter(id == "2-Ethyl-5-methylfuran") %>% 
+                 pull(fc), 0.6389, tolerance = 0.01)
+  expect_equal(result@stat %>% filter(id == "Fumaric acid") %>% 
+                 pull(N_total), 204)
+  expect_equal(result@stat %>% filter(id == "Phenylacetic acid") %>% 
+                 pull(pval), 4.636927e-05)
   
-  expect_equal(result@vote$votes[100], -1)
-  expect_equal(result@vote$articles[48], 1)
-  expect_equal(result@vote$vote_counting[62], -1)
+  expect_equal(result@vote %>% filter(id == "3-Phosphoglycerate") %>% 
+                 pull(votes), -1)
+  expect_equal(result@vote %>% filter(id == "L-Tryptophan") %>% 
+                 pull(articles), 3)
+  expect_equal(result@vote %>% filter(id == "Tiglic aldehyde") %>% 
+                 pull(vote_counting), -1)
 })
 
