@@ -109,13 +109,17 @@ We will consider that a feature have statistical significance if it is over the 
 
 Optionally we van observe the qualitative results. A bar plot shows the result of vote-counting.
 
+**Note:** output is restricted to 30 features to facilitate the readability. To visualize less features increase `counts` parameter. 
+
 ```{r, fig.width = 5, fig.height = 6}
 vote_plot(amanida_result, counts = 1)
 ```
 
 With vote plot discrepancies in compounds behaviour are not detected at first glance, and we suggest to combine the results with the explore plot. Discrepancies in results are shown when `type = "mix"` is used:
 
-* counts parameter: this value indicate the minimum votes to show the results
+* counts parameter: this value indicate the minimum votes to show the results. 
+
+**Note:** output is restricted to 25 features to facilitate the readability. To visualize less features increase `counts` parameter. 
 
 ```{r, fig.width = 6.5, fig.height = 8.5}
 explore_plot(sample_data, type = "mix", counts = 1)
