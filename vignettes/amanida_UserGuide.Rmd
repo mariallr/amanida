@@ -1,0 +1,131 @@
+---
+title: "Amanida User Guide"
+subtitle: "`r paste0('v',packageVersion('amanida'))`"
+author: "Maria Llambrich (maria.llambrich@urv.cat)"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{amanida_UserGuide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+set.seed(123)
+```
+
+This vignette illustrates `Amanida` R package, which contains a collection of functions for computing a weighted meta-analysis in R using significance, relative change and study size. It explains how to conduct the meta-analysis, visualize the results and draw conclusions. 
+
+## Introduction
+
+The widespread of metabolomics as a potential tool for clinical diagno-sis has increased the systematic reviews and meta-analysis on this topic. Meta-analysis is the statistical combination in a single estimate for results from primary studies answering the same question, which is a common practice in medical research. When raw data is not available to perform a meta-analysis, there are different approaches that can be applied but them require the standard deviation, that is used for effect size estimate calculation and weighted methods. Nowadays, there isn’t a tool to perform a weighted meta-analysis which could be applied to a dataset of overall results without the standard deviation. Meta-analysis tools base the study of effect size using the difference of means, but in case of metabolomics we found that the comparison between groups is disclosed using relative change. The purpose of amanida is to perform a weighted meta-analysis combining overall results based on statistical significance, relative change and study size. In Amanida, statistical significance and relative change are combined using weighted methods which no requires standard deviation, weighted Fisher for p-values and weighted average for fold-change, where the weight comes from study size.     
+
+Furthermore, Amanida also computes qualitative meta-analysis performing a vote-counting for compounds, including the option of only using identifier and trend labels.
+
+### Installation
+
+`Amanida` can be installed from `CRAN` repository, by:
+
+```{r install,eval=FALSE}
+install.packages("amanida")
+```
+
+Then loaded by:
+
+```{r}
+library(amanida)
+```
+
+## Amanida meta-analysis: a tutorial
+
+Here we show how to conduct a meta-analysis using Amanida approach. We are using a dataset obtained in systematic review and meta-analysis: *Comprehensive Volatilome and Metabolome Signatures of Colorectal Cancer in Urine: A Systematic Review and Meta-Analysis* Mallafré et al. Cancers 2021, 13(11), 2534; https://doi.org/10.3390/cancers13112534.
+
+Before using `Amanida` is important the curation of the identifiers. The objective of a meta-analysis is combine the different results of a same feature, for this is important that all identifiers are in the same format.For metabolomics data we recommend to use the InChIkey transformed to common name for easy readability. 
+
+### Import data
+
+Dataset to analyse must include the following columns: identifier, p-value, fold-change, study size (N) and reference.
+
+Once we have the dataset in a supported format (xls/xlsx, csv or txt), we import as follows:
+
+```{r}
+coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
+input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
+```
+
+It creates a tibble which contain the data needed to perform the amanida meta-analysis. 
+**Note**: missing data is ignored and negative values of fold-change are transformed to positive (1/value).
+
+### Analysis
+
+In this step will be performed the combination of overall results weightening by study size. Methods for combine results are:
+
+* P-value: weighted p-values combination, which is a variant of Fisher’s method. A gamma distribution is used to assign non-integral weights proportional to study size to each p-value.
+
+* Fold-change: logarithmic transformation (base 2) and then averaged with weighting by study size. 
+
+
+**Note**: Only with the object created by `amanida_read` function in `mode = "quan"` are able to compute the amanida meta-analysis. 
+
+It is also included a qualitative analysis, the vote-counting, that is computed by the sum of votes assigned as follows: votes are +1 for up-regulation, -1 for down-regulation and 0 if no trend.
+
+```{r}
+amanida_result <- compute_amanida(datafile)
+```
+
+#### Results and visualization
+
+Combination results are disclosed in two tables
+
+* meta-analysis results acces by `amanida_result@stat`
+* vote-counting results acces by `amanida_results@vote`
+
+##### Quantitative results
+
+Amanida meta-analysis gives the combination for p-value and fold-change for each feature.Trend variable correspond to the direrction of the combination, 1 means that the feature is increased in case group and -1 the opposite. N_total is the sum of the study sizes for that feature, which are disclosed in reference variable. 
+
+```{r}
+head(amanida_result@stat)
+```
+
+To observe the results of meta-analysis graphically is used a volcano plot, as classical volcano plots the log10(p-values) are plotted against the log2(fold-change). Threshold can be selected by the user, in case of fold-change we recommend values higher than 2, where it is considered to be biological meaningful. 
+
+**Note**: cut-off have to be indicated without log scale.
+
+```{r, fig.width = 7, fig.height = 9}
+volcano_plot(amanida_result, cutoff = c(0.05,3.5))
+```
+
+We will consider that a feature have statistical significance if it is over the cut-offs threshold (labelled points). But to guarantee this claim is need to be sure that the features don't have big discrepances. In this case we use a explore plot, where for the same feature we can compare results by trend. Discrepancies in results are shown when `type = "mix"` is used:
+
+* counts parameter: this value indicate the features
+
+```{r, fig.width = 6.5, fig.height = 8.5}
+explore_plot(sample_data, type = "mix", counts = 1)
+```
+
+In sample data we observe some features over the cut-off threshold, then we check the consistency of result. In this case, compounds with more than one report and statistical significance are Hippuric acid and Phenol. Both of them have consistency as all reports results are in the same trend. We can conclude that for Hippuric acid and Phenol have evidences to reject the null hypothesis.  
+
+**Note**: features with reports in up-regulated and down-regulated points to low consistency. 
+
+##### Qualitative results
+
+Optionally we van observe the qualitative results. A bar plot shows the result of vote-counting.
+
+```{r, fig.width = 5, fig.height = 6}
+vote_plot(amanida_result, counts = 1)
+```
+
+With vote plot discrepancies are not detected at first glance, for we suggest to combine with the explore plot. 
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+

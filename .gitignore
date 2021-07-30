@@ -9,3 +9,5 @@
 .Rbuildignore
 .DS_Store
 /Users/maria/OneDrive - URV/metaanalysis_pack/amanida/
+.travis.yml
+inst/doc
