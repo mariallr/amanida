@@ -7,7 +7,7 @@
 #' 
 #' @param input_file path to the original dataset in xlsx, xls, csv or txt format
 #' @param separator indicate the separator used in the input_file parameter
-#' @param column_id vector containing columns names to use. It have to be in order identification, p-values, fold-changes, sample size and reference. 
+#' @param column_id vector containing columns names to use. It has to be in order identification, p-values, fold-changes, sample size and reference. 
 #' @param analysis_type indicate if data will be quantitative, qualitative or both. Options are:
 #' \itemize{
 #'   \item "quan-qual" for quantitative and qualitative meta-analysis

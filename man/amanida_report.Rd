@@ -26,7 +26,7 @@ amanida_report(
 \item "qual" for qualitative meta-analysis using trend label
 }}
 
-\item{column_id}{vector containing columns names to use. It have to be in order identification, p-values, fold-changes, sample size and reference.}
+\item{column_id}{vector containing columns names to use. It has to be in order identification, p-values, fold-changes, sample size and reference.}
 
 \item{pvalue_cutoff}{numeric value to consider statistical significance}
 

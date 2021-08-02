@@ -1,5 +1,5 @@
 ---
-title: "Amanida User Guide"
+title: "amanida_UserGuide"
 subtitle: "`r paste0('v',packageVersion('amanida'))`"
 author: "Maria Llambrich (maria.llambrich@urv.cat)"
 date: "`r Sys.Date()`"
@@ -128,6 +128,38 @@ explore_plot(sample_data, type = "mix", counts = 1)
 In sample data we observe some compounds over the cut-off threshold, then we check the consistency of result. In this case, compounds with more than one report and statistical significance are Hippuric acid and Phenol. Both of them have consistency as all reports results are in the same trend. We can conclude that for Hippuric acid and Phenol have evidences to reject the null hypothesis.  
 
 **Note**: compounds with both up-regulated and down-regulated tendencies points to low consistency. 
+
+## Amanida report
+
+All computations and functions discussed above can be obtained straightforward in an html document. From scratch `amanida_report` computes the meta-analysis and display the results graphically.
+
+It needs the following parameters:
+
+* file: path to the dataset where is the data to import it. It is the original file xlsx, xls, csv or txt. 
+* separator: symbol used in the dataset to separate the different items, i.e. if you have a csv file you will use separator = ",". 
+* analysis_type: parameter to choose which type of meta-analysis perform. 
+  * "quan-qual": for quantitative and qualitative meta-analysis
+  * "quan": for quantitative meta-analysis
+  * "qual": for qualitative meta-analysis
+* column_id: vector containing the name of columns to select from the original dataset. It has to be in order identification, p-values, fold-changes, sample size and reference.
+* pvalue_cutoff: numerical value to indicate the threshold on p-values. Recommended 0.05. 
+* fc_cutoff: numerical value to indicate the threshold on fold-change. Recommended to use values > 2.  
+* votecount_lim: numerical value to indicate the threshold for qualitative graphics.  
+
+```{r, eval = F}
+column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
+input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+
+amanida_report(input_file, 
+               separator = ";", 
+               analysis_type = "quan-qual",
+               column_id = column_id, 
+               pvalue_cutoff = 0.05, 
+               fc_cutoff = 4, 
+               votecount_lim = 2)
+```
+
+The report will be saved in the working directory. 
 
 ## Session Info
 
