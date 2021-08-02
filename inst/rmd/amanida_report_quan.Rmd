@@ -139,9 +139,7 @@ volcano_plot(amanida_result, cutoff = c(params$pvalue_cutoff, params$fc_cutoff))
 
 *Note: labeled compounds are the ones found significant for the cut-off indicated*
 
-## Qualitative results
-
-With qualitative analysis can be inspected the behaviour to see if there are discrepancies on the results obtained. This is evaluated comparing the number of articles where an element is found up-regulated and down-regulated. It is also ploted the total results, as vote-counting, obtained by the difference between up-regulated and down-regulated number of reports.  
+Discrepancies on the results obtained are evaluated comparing the number of articles where an element is found up-regulated and down-regulated. It is also ploted the total results, as vote-counting, obtained by the difference between up-regulated and down-regulated number of reports.  
 
 Here, the explore_plot will only display the relevant identifiers (elements bigger than number of votes specified) or those with discrepancies between studies. 
 
@@ -153,32 +151,5 @@ explore_plot(datafile, type = "mix", params$votecount_lim)
 
 It is important to check if our significant compounds have discrepancies on the reports. 
 
-To see the complete results for vote-counting use:
-
-```{r, eval = F}
-amanida_result@vote 
-```
-
-
-```{r, echo = F}
-kbl(amanida_result@vote %>%
-      arrange(desc(abs(votes))) %>% 
-      select("ID" = id, "Votes" = votes, "Articles reporting" = articles),
-      booktabs = T, 
-      caption = "Table 3: Qualitative analysis",
-    align = "c") %>%
-  kable_styling(latex_options = c("basic", "scale_down")) %>%
-  scroll_box(width = "100%", height = "400px") 
-```
-
-Qualitative results can be also graphically inspected without trend division. Here the vote_plot is set to show the identifiers with a minimum of a vote-counting of `r params$votecount_lim`
-
-```{r, out.width= '100%', echo = T}
-vote_plot(amanida_result, counts = params$votecount_lim)
-```
-
 
 *Qualitative analysis using Amanida R package*
-
-
-

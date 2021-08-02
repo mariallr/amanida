@@ -14,7 +14,7 @@
 #'   \item "quan" for quantitative meta-analysis using p-value and fold-change
 #'   \item "qual" for qualitative meta-analysis using trend label
 #'   }
-#' @param coln columns names to use
+#' @param coln columns names to use. It has to be in order identification, p-values, fold-changes, sample size and reference.
 #' @param separator the separator used on file
 #' @return tibble table with data imported
 #' 
@@ -24,8 +24,8 @@
 #' @importFrom stats complete.cases
 #' 
 #' @examples
-#' coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
-#' input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+#' coln <-  c("Compound Name", "P-value", "Fold-change", "N total", "References")
+#' input_file <- getsampleDB()
 #' datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 #' 
 #' @export
