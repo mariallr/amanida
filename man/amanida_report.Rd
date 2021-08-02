@@ -7,7 +7,7 @@
 amanida_report(
   input_file,
   separator = NULL,
-  analysis_type,
+  analysis_type = NULL,
   column_id,
   pvalue_cutoff = NULL,
   fc_cutoff = NULL,
@@ -15,17 +15,18 @@ amanida_report(
 )
 }
 \arguments{
-\item{input_file}{path to file}
+\item{input_file}{path to the original dataset in xlsx, xls, csv or txt format}
 
 \item{separator}{indicate the separator used in the input_file parameter}
 
-\item{analysis_type}{indicate if data will be quantitative or qualitative. Options are:
+\item{analysis_type}{indicate if data will be quantitative, qualitative or both. Options are:
 \itemize{
+\item "quan-qual" for quantitative and qualitative meta-analysis
 \item "quan" for quantitative meta-analysis using p-value and fold-change
 \item "qual" for qualitative meta-analysis using trend label
 }}
 
-\item{column_id}{columns names to use. It have to be in order identification, p-values, fold-changes, sample size and reference.}
+\item{column_id}{vector containing columns names to use. It have to be in order identification, p-values, fold-changes, sample size and reference.}
 
 \item{pvalue_cutoff}{numeric value to consider statistical significance}
 
@@ -34,13 +35,13 @@ amanida_report(
 \item{votecount_lim}{minimum numeric value for vote-counting visualization}
 }
 \value{
-an html document
+an html document saved in the working directory
 }
 \description{
-\code{amanida_report} creates a report for data using amanida functions
+\code{amanida_report} creates a report from the data using amanida functions
 }
 \details{
-In case of quantitative analysis \code{amanida_report} uses the functions \code{amanida_read} and \code{compute_amanida} for analyse the input data. Then the results are showed using \code{volcano_plot}, \code{explore_plot} and \code{vote_plot}.
+This function uses directly the dataset to create a report with the meta-analysis results. In case of quantitative analysis \code{amanida_report} uses the functions \code{amanida_read} and \code{compute_amanida} for analyse the input data. Then the results are showed using \code{volcano_plot}, \code{explore_plot} and \code{vote_plot}.
 }
 \examples{
 column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")

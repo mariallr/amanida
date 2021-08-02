@@ -1,0 +1,184 @@
+
+---
+title: "Quantitative and qualitative meta-analysis results"
+author: "Amanida R package"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: lumen
+params: 
+  file_name: input_file
+  separator: ";"
+  analysis_type: "quan-qual"
+  column_id: coln
+  pvalue_cutoff: 0.05
+  fc_cutoff: 4
+  votecount_lim: 1
+  show_code: FALSE
+---
+
+```{r setup, echo = F, warning = F, message = F}
+set.seed(123)
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(kableExtra, include.only = c('kbl', 'kable_styling', 'scroll_box', 'footnote'))
+library(amanida)
+```
+
+## Data exploration
+
+Data is loaded using `amanida_read` function:
+
+```{r, eval = F}
+coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
+input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
+```
+
+Your data:
+
+```{r, echo = F}
+datafile <- amanida_read(params$file_name, mode = "quan", params$column_id, params$separator) 
+```
+
+Here is shown the imported table:
+
+```{r, echo = F}
+data_imp <- datafile %>% 
+  mutate(foldchange = round(foldchange,2),
+         pvalue = format(pvalue, scientific = T, digits = 3),
+         trend = case_when(trend == -1 ~ "Down-regulated",
+                           T ~ "Up-regulated")) %>%
+  rename("ID" = id,
+         "P-value" = pvalue,
+         "Fold-Change" = foldchange,
+         "Number of participants" = N,
+         "Reference" = ref,
+         "Behaviour" = trend)
+
+kbl(data_imp, 
+      booktabs = T, 
+      caption = "Table 1: Data exploration",
+    align = "c") %>%
+  kable_styling(latex_options = c("basic", "scale_down")) %>%
+  scroll_box(width = "100%", height = "400px")
+```
+
+## Quantitative analysis
+
+Quantitative analysis is done for each different identifier. It combines the statistical significance and the effect size reported on the different studies, as follows:
+
+* Statistical significance (p-value): Fisher's method weigthed by number of participants on the study.
+* Effect size (fold-change): logarithmic transformation for average with weighting by number of participants. 
+
+`compute_amanida` function is used to combine p-values and fold-change. 
+
+```{r}
+amanida_result <- compute_amanida(datafile) 
+```
+
+Here are shown your results:
+
+```{r, eval = F}
+amanida_result@stat
+```
+
+```{r, echo = F}
+kbl(amanida_result@stat %>%
+      arrange(pval) %>% 
+      group_by(id) %>%
+      mutate(id = case_when((trend == 1 & fc > params$fc_cutoff & pval < params$pvalue_cutoff)
+                               ~ paste(id, "*"),
+                             (trend == -1 & fc < (1/params$fc_cutoff) &
+                                pval < params$pvalue_cutoff) ~ paste(id, "*"),
+                            T ~ id)) %>%
+      ungroup() %>%
+      mutate(pval = format(pval, scientific = T, digits = 3),
+             fc = round(fc, 2)) %>%
+      rename("ID" = id,
+             "Trend" = trend,
+             "P-value combined" = pval,
+             "Fold-change combined" = fc,
+             "Total sample size" = N_total,
+             "Reference" = reference), 
+      booktabs = T, 
+      caption = "Table 2: Quantitative analysis",
+    align = "c") %>%
+  kable_styling(latex_options = c("basic", "scale_down")) %>%
+  scroll_box(width = "100%", height = "400px") %>%
+  footnote(symbol = c("Value over cut-offs"))
+```
+
+
+### Significant results for quantitative analysis
+
+```{r, echo = F}
+sig_res <- amanida_result@stat %>%
+  filter(pval < params$pvalue_cutoff,
+         fc > params$fc_cutoff | fc < 1/params$fc_cutoff)
+```
+
+The cut-off selected by the user for significant results are:
+
+* p-value: `r params$pvalue_cutoff`.
+* fold-change: `r params$fc_cutoff` for up-regulated and `r round(1/params$fc_cutoff, 2)` for down-regulated.
+
+Using indicated cut-offs there are **`r nrow(sig_res)`** compounds significant, `r sum(sig_res$trend == 1)` up-regulated and `r sum(sig_res$trend == -1)` down-regulated compounds.
+
+### Graphical results
+
+To see graphically the results obtained is used `volcano_plot`:
+
+With `r params$file_name` and a p-value cut-off of `r params$pvalue_cutoff` and fold-change cut-off of `r params$fc_cutoff` (up-regulated) or `r round(1/params$fc_cutoff, 2)` (down-regulated):
+
+```{r out.width='100%'}
+volcano_plot(amanida_result, cutoff = c(params$pvalue_cutoff, params$fc_cutoff))
+```
+
+*Note: labeled compounds are the ones found significant for the cut-off indicated*
+
+## Qualitative results
+
+With qualitative analysis can be inspected the behaviour to see if there are discrepancies on the results obtained. This is evaluated comparing the number of articles where an element is found up-regulated and down-regulated. It is also ploted the total results, as vote-counting, obtained by the difference between up-regulated and down-regulated number of reports.  
+
+Here, the explore_plot will only display the relevant identifiers (elements bigger than number of votes specified) or those with discrepancies between studies. 
+
+As dataset is big, on the following plot will be only displayed elements bigger than `r params$votecount_lim` votes and the elements with discrepancies between studies:
+
+```{r pressure, echo=T, message=TRUE}
+explore_plot(datafile, type = "mix", params$votecount_lim)
+```
+
+It is important to check if our significant compounds have discrepancies on the reports. 
+
+To see the complete results for vote-counting use:
+
+```{r, eval = F}
+amanida_result@vote 
+```
+
+
+```{r, echo = F}
+kbl(amanida_result@vote %>%
+      arrange(desc(abs(votes))) %>% 
+      select("ID" = id, "Votes" = votes, "Articles reporting" = articles),
+      booktabs = T, 
+      caption = "Table 3: Qualitative analysis",
+    align = "c") %>%
+  kable_styling(latex_options = c("basic", "scale_down")) %>%
+  scroll_box(width = "100%", height = "400px") 
+```
+
+Qualitative results can be also graphically inspected without trend division. Here the vote_plot is set to show the identifiers with a minimum of a vote-counting of `r params$votecount_lim`
+
+```{r, out.width= '100%', echo = T}
+vote_plot(amanida_result, counts = params$votecount_lim)
+```
+
+
+*Qualitative analysis using Amanida R package*
+
+
+

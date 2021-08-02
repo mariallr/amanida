@@ -1,6 +1,6 @@
 
 ---
-title: "Quantitative meta-analysis results"
+title: "Qualitative meta-analysis results"
 author: "Amanida R package"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
