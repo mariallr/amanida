@@ -54,7 +54,7 @@ Once we have the dataset in a supported format (xls/xlsx, csv or txt), we import
 
 ```{r}
 coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
-input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+input_file <- getsampleDB()
 datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 ```
 
@@ -148,7 +148,7 @@ It needs the following parameters:
 
 ```{r, eval = F}
 column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
-input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+input_file <- getsampleDB()
 
 amanida_report(input_file, 
                separator = ";", 
