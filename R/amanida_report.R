@@ -25,11 +25,13 @@
 #' @import tidyverse
 #' 
 #' @examples
+#' \dontrun{
 #' column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
 #' input_file <- getsampleDB()
 #' 
 #' amanida_report(input_file, separator = ";", column_id, analysis_type = "quan", 
 #'                        pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2)
+#' }
 #' 
 #' @export
 
