@@ -44,10 +44,12 @@ an html document saved in the working directory
 This function uses directly the dataset to create a report with the meta-analysis results. In case of quantitative analysis \code{amanida_report} uses the functions \code{amanida_read} and \code{compute_amanida} for analyse the input data. Then the results are showed using \code{volcano_plot}, \code{explore_plot} and \code{vote_plot}.
 }
 \examples{
+\dontrun{
 column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
 input_file <- getsampleDB()
 
 amanida_report(input_file, separator = ";", column_id, analysis_type = "quan", 
                        pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2)
+}
 
 }
