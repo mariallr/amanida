@@ -8,6 +8,7 @@ compute_amanida(datafile)
 }
 \arguments{
 \item{datafile}{data imported using amanida_read function}
+\item{comp.inf}{when comp.inf = T the results table is completed with the lollowing information: PubChem CID, Molecular Formula, Molecular Weight, Canonical SMILES, InChIKey, KEGG ID, HMDB ID and Drubbank ID}
 }
 \value{
 METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
