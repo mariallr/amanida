@@ -23,6 +23,8 @@
 #' @import readr
 #' @import readxl
 #' @import tidyr
+#' @import webchem
+#' @import webchem
 #' @importFrom methods hasArg new
 #' @importFrom stats qgamma pgamma reorder
 #' @importFrom magrittr %>%
