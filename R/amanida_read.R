@@ -22,6 +22,7 @@
 #' @import readr
 #' @import readxl
 #' @importFrom stats complete.cases
+#' @import webchem
 #' 
 #' @examples
 #' coln <-  c("Compound Name", "P-value", "Fold-change", "N total", "References")
