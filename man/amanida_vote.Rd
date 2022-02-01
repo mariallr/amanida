@@ -9,7 +9,7 @@ amanida_vote(data, comp.inf = NULL)
 \arguments{
 \item{data}{data imported using amanida_read function}
 
-\item{comp.inf}{include compounds IDs from PubChem, KEGG, ChEBI, HMDB, Drugbank}
+\item{comp.inf}{include compounds IDs from PubChem, InChIKey, SMILES, KEGG, ChEBI, HMDB, Drugbank, Molecular Mass and Molecular Formula.}
 }
 \value{
 METAtable S4 object with vote-counting for each compound on @slot vote

@@ -15,9 +15,11 @@
 #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
 #' 
 #' @examples
+#' \dontrun{
 #' data("sample_data")
 #' 
 #' compute_amanida(sample_data)
+#' }
 #' 
 #' @import dplyr
 #' @import metaboliteIDmapping
@@ -84,7 +86,8 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
         sta <- sta |> mutate(cid = as.character(cid)) |>
           full_join(extra, by = c("cid" = "CID")) |>
           distinct() |>
-          rename(PubChem_CID = cid)
+          rename(PubChem_CID = cid) |>
+          select(-reference)
     }
       
     ## Vote-counting per each compound id
@@ -99,7 +102,7 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
       # Vote-counting
       vote_counting = `votes`/`articles`
     ) |>
-      select(-id_mod)
+      select(-c(id_mod, reference))
 
   # Save results in S4 object and return
   METAtables(stat=sta, vote=vote)

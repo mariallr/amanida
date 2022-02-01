@@ -113,7 +113,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
     # Axis titles
     xlab( "log2(Fold-change)") + 
     ylab(expression(paste("-log10(", italic(p), "-value)"))) + 
-    labs(colour = "") +
+    labs(colour = "", tag = "Created with amanida") +
     
     # X axis breaks
     scale_x_continuous(breaks = seq(round(-max(abs(.$lfc)),0) - 1, 
@@ -212,6 +212,7 @@ vote_plot <- function(mets, counts = NULL) {
     coord_flip() +
     ylab("Vote-counting") +
     xlab('')+
+    labs(tag = "Created with amanida") +
     ggtitle("Total vote count of compounds behaviour") +
     scale_y_continuous(expand = c(0.6, 0), 
                        breaks = seq(min(.$votes), max(.$votes), by = 1),
@@ -367,7 +368,7 @@ explore_plot <- function(data, type = "all", counts = NULL) {
         theme_minimal() +
         xlab("Counts by trend") + 
         ylab("") +
-        labs(fill = "Counts by trend") +
+        labs(fill = "Counts by trend", tag = "Created with amanida") +
         ggtitle("Qualitative compounds trend plot") +
         theme(legend.position = "bottom", legend.title = element_blank(),
               axis.text.y = element_text(size = 14)) +

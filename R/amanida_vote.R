@@ -18,11 +18,13 @@
 #' @import metaboliteIDmapping
 #' 
 #' @examples
+#' \dontrun{
 #' coln = c("Compound Name", "Behaviour", "References")
 #' input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
 #' data_votes <- amanida_read(input_file, mode = "qual", coln, separator = ";")
 #' 
 #' vote_result <- amanida_vote(data_votes)
+#' }
 #' 
 #' @export
 #' 
@@ -58,7 +60,8 @@ amanida_vote <- function(data, comp.inf = NULL) {
       
       vote <- vote |> mutate(cid = as.integer(cid)) |>
         full_join(b, by = c("cid" = "CID")) |>
-        distinct() 
+        distinct() |>
+        select(-reference)
       
       extra <- NULL
       for (i in 1:nrow(vote)){
