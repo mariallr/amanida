@@ -1,6 +1,6 @@
 Package: amanida
 Title: Meta-Analysis for Non-Integral Data
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
   c(
     person(
@@ -42,12 +42,14 @@ Imports:
   rmarkdown (>= 2.9.0),
   kableExtra (>= 1.3.0),
   knitr (>= 1.33),
-  tidyverse (>= 1.3.0)
+  tidyverse (>= 1.3.0), 
+  webchem (>= 1.1.0),
+  metaboliteIDmapping (>= 1.0.0)
 Suggests:
     testthat,
     vdiffr,
     markdown
 Depends: R (>= 4.0)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

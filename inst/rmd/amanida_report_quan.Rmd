@@ -146,8 +146,10 @@ Here, the explore_plot will only display the relevant identifiers (elements bigg
 As dataset is big, on the following plot will be only displayed elements bigger than `r params$votecount_lim` votes and the elements with discrepancies between studies:
 
 ```{r pressure, echo=T, message=TRUE}
-explore_plot(datafile, type = "mix", params$votecount_lim)
+amanida::explore_plot(datafile, type = "mix", params$votecount_lim)
 ```
+
+*Note: Plots are limited to 30 compounds for readability, for complete plot download from ubidi.shinyapps.io/easy-amanida*
 
 It is important to check if our significant compounds have discrepancies on the reports. 
 

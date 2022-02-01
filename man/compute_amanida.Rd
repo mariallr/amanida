@@ -4,16 +4,18 @@
 \alias{compute_amanida}
 \title{Combine statistical results and compute vote-counting}
 \usage{
-compute_amanida(datafile)
+compute_amanida(datafile, comp.inf = NULL)
 }
 \arguments{
 \item{datafile}{data imported using amanida_read function}
+
+\item{comp.inf}{include compounds IDs from PubChem, KEGG, ChEBI, HMDB, Drugbank}
 }
 \value{
 METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
 }
 \description{
-\code{compute_amanida} Combines for the same entry or metabolite the statistical values of p-value and fold-change. Also is computed a vote-counting for each compound.
+\code{compute_amanida} Combines for the same entry or metabolite the statistical values of p-value and fold-change. Also is computed a vote-counting for each compound. Compound combination is made with PubChem CID when is available.
 }
 \details{
 Entries corresponding to metabolites are combined as follows:

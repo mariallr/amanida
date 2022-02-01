@@ -84,9 +84,83 @@ kbl(vote_results@vote %>%
 
 Qualitative results can be also graphically inspected without trend division. Here the vote_plot is set to show the identifiers with a minimum of a vote-counting of `r params$votecount_lim`
 
+```{r include=FALSE}
+vote_plot <- function(mets, counts = NULL) {
+  
+  votes = NULL; . = NULL;
+  set.seed(123)
+  
+  col_palette <- amanida_palette()
+  
+  if (hasArg(counts)) { 
+    cuts <- counts
+    
+    if (length(counts) != 1) {
+      stop( "Please indicate one cut-off only")
+    }
+  } else {
+    cuts <- 1
+  }
+  
+  message("Cut-off for votes is ", cuts, ".", sep = "")
+  
+  # Subset vote-couting data
+  tb <- as_tibble(mets@vote) %>% 
+    mutate(
+      votes = as.numeric(votes)) %>%
+    filter (abs(votes) >= cuts)
+  
+   if (nrow(tb) < 1) {
+    stop( "Cut-off value out of limit")
+  }
+  
+  if(nrow(tb) > 30) {
+    message("Too much values, only showing 30 highest values. Please check counts parameter.")
+    
+   tb <- tb  %>%
+      slice_max(abs(votes), n = 30, with_ties = FALSE) 
+  }
+  
+  tb %>%
+    {
+      ggplot(., aes(reorder(id, votes), votes, fill = votes)) + 
+        geom_bar(stat = "identity", show.legend = F, width = .5
+        ) +
+        geom_text(aes(label = reorder(id, votes)), vjust = 0.2, size = 3.5, 
+                  hjust = ifelse(test = .$votes > 0, yes = 0, no = 1)) +
+        scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
+        theme_light() + 
+        theme(axis.text.y = element_blank(),
+              axis.text.x = element_text(size = 10),
+              axis.title = element_text(size = 10),
+              axis.ticks.y = element_blank(), 
+              plot.title = element_text(size = 12), 
+              panel.grid.minor = element_blank(),
+              panel.grid.major.y = element_blank(), 
+              panel.border = element_blank(), 
+              panel.grid.major.x = element_line(linetype = "dashed"), 
+              plot.tag = element_text(size = 9, colour = "grey"),
+              plot.tag.position = "bottomright") +
+        labs(tag = "Created with amanida") +
+        coord_flip() +
+        ylab("Vote-counting") +
+        xlab('')+
+        ggtitle("Total vote count of compounds behaviour") +
+        scale_y_continuous(expand = c(0.6, 0), 
+                           breaks = seq(max(abs(.$votes))*-1, max(abs(.$votes)), by = 1),
+                           limits = c(max(abs(.$votes))*-1,
+                                      max(abs(.$votes)) + 1)
+        )
+    }
+  
+}
+```
+
 ```{r, out.width= '100%', echo = T}
 vote_plot(vote_results, counts = params$votecount_lim)
 ```
+
+*Note: Plots are limited to 30 compounds for readability, for complete plot download from ubidi.shinyapps.io/easy-amanida*
 
 Here, the explore_plot will only display the relevant identifiers (elements bigger than 2 votes) or those with discrepancies between studies. 
 
@@ -95,5 +169,7 @@ As dataset is big, on the following plot will be only displayed elements bigger 
 ```{r pressure, echo=T, message=TRUE}
 explore_plot(datafile, type = "mix", params$votecount_lim)
 ```
+
+*Note: Plots are limited to 30 compounds for readability, for complete plot download from ubidi.shinyapps.io/easy-amanida*
 
 *Qualitative analysis using Amanida R package*
