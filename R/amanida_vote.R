@@ -10,7 +10,7 @@
 #' Formats compatible are csv, xlsx, xls or txt.
 #' 
 #' @param data data imported using amanida_read function
-#' @param comp.inf include compounds IDs from PubChem, KEGG, ChEBI, HMDB, Drugbank
+#' @param comp.inf include compounds IDs from PubChem, InChIKey, SMILES, KEGG, ChEBI, HMDB, Drugbank, Molecular Mass and Molecular Formula. 
 #' @return METAtable S4 object with vote-counting for each compound on @slot vote
 #' 
 #' @import dplyr
@@ -56,6 +56,10 @@ amanida_vote <- function(data, comp.inf = NULL) {
       
       b <- pc_prop(vote$cid, properties = c("MolecularFormula", "MolecularWeight", "InChIKey", "CanonicalSMILES"))
       
+      vote <- vote |> mutate(cid = as.integer(cid)) |>
+        full_join(b, by = c("cid" = "CID")) |>
+        distinct() 
+      
       extra <- NULL
       for (i in 1:nrow(vote)){
         b <- metabolitesMapping |> mutate(CID = as.character(CID)) |>
@@ -65,8 +69,10 @@ amanida_vote <- function(data, comp.inf = NULL) {
         extra <- extra |> bind_rows(b)
       }
       
-      vote <- vote |> full_join(extra, by = c("cid" = "CID")) |>
-        distinct()
+      vote <- vote |> mutate(cid = as.character(cid)) |>
+        full_join(extra, by = c("cid" = "CID")) |>
+        distinct() |>
+        rename(PubChem_CID = cid)
   }
   
   
@@ -77,3 +83,4 @@ amanida_vote <- function(data, comp.inf = NULL) {
   METAtables(stat=sta, vote=vote)
 
 }
+

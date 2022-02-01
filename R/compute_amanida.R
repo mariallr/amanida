@@ -11,7 +11,7 @@
 #' Vote-counting is computed based on votes. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
 #'   
 #' @param datafile data imported using amanida_read function
-#' @param comp.inf include compounds IDs from PubChem, KEGG, ChEBI, HMDB, Drugbank
+#' @param comp.inf include compounds IDs from PubChem, InChIKey, SMILES, KEGG, ChEBI, HMDB, Drugbank, Molecular Mass and Molecular Formula
 #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
 #' 
 #' @examples
@@ -68,6 +68,10 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
         
         b <- pc_prop(sta$cid, properties = c("MolecularFormula", "MolecularWeight", "InChIKey", "CanonicalSMILES"))
         
+        sta <- sta |> mutate(cid = as.integer(cid)) |>
+          full_join(b, by = c("cid" = "CID")) |>
+          distinct() 
+        
         extra <- NULL
         for (i in 1:nrow(sta)){
           b <- metabolitesMapping |> mutate(CID = as.character(CID)) |>
@@ -77,8 +81,10 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
            extra <- extra |> bind_rows(b)
         }
         
-        sta <- sta |> full_join(extra, by = c("cid" = "CID")) |>
-          distinct() 
+        sta <- sta |> mutate(cid = as.character(cid)) |>
+          full_join(extra, by = c("cid" = "CID")) |>
+          distinct() |>
+          rename(PubChem_CID = cid)
     }
       
     ## Vote-counting per each compound id
