@@ -74,7 +74,7 @@ vote_results@vote
 ```{r, echo = F}
 kbl(vote_results@vote %>%
       arrange(desc(abs(votes))) %>% 
-      select("ID" = id, "Votes" = votes, "Articles reporting" = articles), 
+      select("ID" = id, "Votes" = votes, 5:13), 
       booktabs = T, 
       caption = "Table 3: Qualitative analysis",
     align = "c") %>%

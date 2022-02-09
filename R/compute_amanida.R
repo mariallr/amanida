@@ -22,7 +22,7 @@
 #' }
 #' 
 #' @import dplyr
-#' @import metaboliteIDmapping
+#' @importFrom metaboliteIDmapping metabolitesMapping
 #' @import webchem
 #' @importFrom stats qgamma pgamma
 #' 
@@ -67,7 +67,12 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
       select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`, `cid`))
     
     if (!hasArg(comp.inf)) { 
-        
+      if (!requireNamespace("metaboliteIDmapping", quietly = TRUE)) {
+        stop(
+          "Package \"pkg\" must be installed to use this function.",
+          call. = FALSE
+        )
+      }
         b <- pc_prop(sta$cid, properties = c("MolecularFormula", "MolecularWeight", "InChIKey", "CanonicalSMILES"))
         
         sta <- sta |> mutate(cid = as.integer(cid)) |>
@@ -102,7 +107,8 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
       # Vote-counting
       vote_counting = `votes`/`articles`
     ) |>
-      select(-c(id_mod, reference))
+      distinct() |>
+      select(-id_mod)
 
   # Save results in S4 object and return
   METAtables(stat=sta, vote=vote)

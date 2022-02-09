@@ -5,7 +5,7 @@ test_that("Volcano plot", {
   set.seed(123)
   data("sample_data")
   
-  result <- compute_amanida(sample_data)
+  result <- compute_amanida(sample_data, comp.inf = F)
   
   volc <- volcano_plot(result, cutoff = c(0.05, 4))
   
@@ -16,7 +16,7 @@ test_that("Vote plot", {
   set.seed(123)
   data("sample_data")
   
-  result <- compute_amanida(sample_data)
+  result <- compute_amanida(sample_data, comp.inf = F)
   
   votep <- vote_plot(result)
   
@@ -26,8 +26,6 @@ test_that("Vote plot", {
 test_that("Explore plot", {
   set.seed(123)
   data("sample_data")
-  
-  result <- compute_amanida(sample_data)
   
   expl_a <- explore_plot(sample_data, type = "all", counts = 3)
   

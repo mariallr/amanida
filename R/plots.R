@@ -128,7 +128,9 @@ volcano_plot <- function(mets, cutoff = NULL) {
                colour = "black", 
                linetype = "dashed") + 
     theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5),
-          legend.text = element_text(size = 10)) +
+          legend.text = element_text(size = 10),
+          plot.tag = element_text(size = 9, colour = "grey"),
+          plot.tag.position = "bottomright") +
     guides(col = guide_legend(nrow = 2, byrow = T)) + 
     guides(shape = guide_legend(nrow = 2, byrow = T)) +
     scale_color_manual(values = col_palette) +
@@ -208,7 +210,9 @@ vote_plot <- function(mets, counts = NULL) {
           panel.grid.minor = element_blank(),
           panel.grid.major.y = element_blank(), 
           panel.border = element_blank(), 
-          panel.grid.major.x = element_line(linetype = "dashed")) +
+          panel.grid.major.x = element_line(linetype = "dashed"),
+          plot.tag = element_text(size = 9, colour = "grey"),
+          plot.tag.position = "bottomright") +
     coord_flip() +
     ylab("Vote-counting") +
     xlab('')+
@@ -371,7 +375,9 @@ explore_plot <- function(data, type = "all", counts = NULL) {
         labs(fill = "Counts by trend", tag = "Created with amanida") +
         ggtitle("Qualitative compounds trend plot") +
         theme(legend.position = "bottom", legend.title = element_blank(),
-              axis.text.y = element_text(size = 14)) +
+              axis.text.y = element_text(size = 14),
+              plot.tag = element_text(size = 9, colour = "grey"),
+              plot.tag.position = "bottomright") +
         guides(col = guide_legend(nrow = 2, byrow = T)) + 
         guides(shape = guide_legend(nrow = 2, byrow = T)) 
     }

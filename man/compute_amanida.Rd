@@ -27,8 +27,10 @@ Entries corresponding to metabolites are combined as follows:
 Vote-counting is computed based on votes. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
 }
 \examples{
+\dontrun{
 data("sample_data")
 
 compute_amanida(sample_data)
+}
 
 }

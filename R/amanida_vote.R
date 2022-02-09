@@ -15,7 +15,7 @@
 #' 
 #' @import dplyr
 #' @import webchem
-#' @import metaboliteIDmapping
+#' @importFrom metaboliteIDmapping metabolitesMapping
 #' 
 #' @examples
 #' \dontrun{
@@ -29,7 +29,7 @@
 #' @export
 #' 
 
-amanida_vote <- function(data, comp.inf = NULL) {
+amanida_vote <- function(data, comp.inf = F) {
     . = NULL; votes = NULL; articles = NULL; vote_counting = NULL; trend = NULL;
     query = NULL; cid = NULL; CID = NULL; KEGG = NULL; ChEBI = NULL; HMDB = NULL; Drugbank = NULL;
     
@@ -60,8 +60,7 @@ amanida_vote <- function(data, comp.inf = NULL) {
       
       vote <- vote |> mutate(cid = as.integer(cid)) |>
         full_join(b, by = c("cid" = "CID")) |>
-        distinct() |>
-        select(-reference)
+        distinct() 
       
       extra <- NULL
       for (i in 1:nrow(vote)){
