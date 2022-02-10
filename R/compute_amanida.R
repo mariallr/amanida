@@ -22,7 +22,6 @@
 #' }
 #' 
 #' @import dplyr
-#' @importFrom metaboliteIDmapping metabolitesMapping
 #' @import webchem
 #' @importFrom stats qgamma pgamma
 #' 
@@ -67,25 +66,26 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
       select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`, `cid`))
     
     if (!hasArg(comp.inf)) { 
-      if (!requireNamespace("metaboliteIDmapping", quietly = TRUE)) {
-        stop(
-          "Package \"pkg\" must be installed to use this function.",
-          call. = FALSE
-        )
-      }
+      
         b <- pc_prop(sta$cid, properties = c("MolecularFormula", "MolecularWeight", "InChIKey", "CanonicalSMILES"))
         
         sta <- sta |> mutate(cid = as.integer(cid)) |>
           full_join(b, by = c("cid" = "CID")) |>
           distinct() 
         
-        extra <- NULL
-        for (i in 1:nrow(sta)){
-          b <- metabolitesMapping |> mutate(CID = as.character(CID)) |>
-            dplyr::filter(CID %in% sta$cid[i]) |> 
-            slice(1) |>
-            select(c(CID, KEGG, ChEBI, HMDB, Drugbank))
-           extra <- extra |> bind_rows(b)
+        if(requireNamespace("metaboliteIDmapping", quietly = TRUE)) {
+          extra <- NULL
+          for (i in 1:nrow(sta)){
+            b <- metaboliteIDmapping::metabolitesMapping |> 
+              mutate(CID = as.character(CID)) |>
+              dplyr::filter(CID %in% sta$cid[i]) |> 
+              slice(1) |>
+              select(c(CID, KEGG, ChEBI, HMDB, Drugbank))
+            extra <- extra |> bind_rows(b)
+          }
+        } else {
+          msg <- c("metaboliteIDmapping is not installed. amanida can operate without metaboliteIDmapping, unless you want the complete information using comp.inf = F")
+          warning(msg)
         }
         
         sta <- sta |> mutate(cid = as.character(cid)) |>
