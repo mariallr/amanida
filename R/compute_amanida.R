@@ -83,16 +83,22 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
               select(c(CID, KEGG, ChEBI, HMDB, Drugbank))
             extra <- extra |> bind_rows(b)
           }
+          
+          sta <- sta |> mutate(cid = as.character(cid)) |>
+            full_join(extra, by = c("cid" = "CID")) |>
+            distinct() |>
+            rename(PubChem_CID = cid) |>
+            select(-reference)
+          
         } else {
           msg <- c("metaboliteIDmapping is not installed. amanida can operate without metaboliteIDmapping, unless you want the complete information using comp.inf = F")
           warning(msg)
+          
+          sta <- sta |> mutate(cid = as.character(cid)) |>
+            distinct() |>
+            rename(PubChem_CID = cid) |>
+            select(-reference)
         }
-        
-        sta <- sta |> mutate(cid = as.character(cid)) |>
-          full_join(extra, by = c("cid" = "CID")) |>
-          distinct() |>
-          rename(PubChem_CID = cid) |>
-          select(-reference)
     }
       
     ## Vote-counting per each compound id

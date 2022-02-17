@@ -43,7 +43,7 @@ amanida_vote <- function(data, comp.inf = F) {
     data <- data |> full_join(a, by = c("id" = "query")) |>
       mutate("id_mod" = ifelse(is.na(cid), id, cid))
   
-  vote <-  data %>%
+  vote <- data %>%
     dplyr::group_by(`id`) %>%
     summarize(
       # Votes per compound
@@ -70,17 +70,19 @@ amanida_vote <- function(data, comp.inf = F) {
             slice(1) |>
             select(c(CID, KEGG, ChEBI, HMDB, Drugbank))
           extra <- extra |> bind_rows(b)
-        
         }
+        vote <- vote |> mutate(cid = as.character(cid)) |>
+          full_join(extra, by = c("cid" = "CID")) |>
+          distinct() |>
+          rename(PubChem_CID = cid)
       } else {
         msg <- c("metaboliteIDmapping is not installed. amanida can operate without metaboliteIDmapping, unless you want the complete information using comp.inf = F")
         warning(msg)
+        
+        vote <- vote |> mutate(cid = as.character(cid)) |>
+          distinct() |>
+          rename(PubChem_CID = cid)
       }
-      
-      vote <- vote |> mutate(cid = as.character(cid)) |>
-        full_join(extra, by = c("cid" = "CID")) |>
-        distinct() |>
-        rename(PubChem_CID = cid)
   }
   
   
