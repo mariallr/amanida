@@ -21,9 +21,10 @@ a ggplot bar-plot showing the vote-count per compound
 Vote-couting is the sum of number of reports up-regulated and the substraction of reports down-regulated.
 }
 \examples{
-data("sample_data")
-
-result <- compute_amanida(sample_data)
-vote_plot(result)
+\dontrun{
+    data("sample_data")
+    result <- compute_amanida(sample_data)
+    vote_plot(result)
+}
 
 }

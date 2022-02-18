@@ -4,12 +4,12 @@
 \alias{amanida_vote}
 \title{Qualitative meta-analysis}
 \usage{
-amanida_vote(data, comp.inf = NULL)
+amanida_vote(data, comp.inf = F)
 }
 \arguments{
 \item{data}{data imported using amanida_read function}
 
-\item{comp.inf}{include compounds IDs from PubChem, KEGG, ChEBI, HMDB, Drugbank}
+\item{comp.inf}{include compounds IDs from PubChem, InChIKey, SMILES, KEGG, ChEBI, HMDB, Drugbank, Molecular Mass and Molecular Formula.}
 }
 \value{
 METAtable S4 object with vote-counting for each compound on @slot vote
@@ -25,10 +25,12 @@ Note that \code{amanida_vote} skips rows with missing values or NA.
 Formats compatible are csv, xlsx, xls or txt.
 }
 \examples{
+\dontrun{
 coln = c("Compound Name", "Behaviour", "References")
 input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
 data_votes <- amanida_read(input_file, mode = "qual", coln, separator = ";")
 
 vote_result <- amanida_vote(data_votes)
+}
 
 }

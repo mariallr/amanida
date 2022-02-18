@@ -12,22 +12,24 @@
 #' @param data data imported using amanida_read function
 #' @param comp.inf include compounds IDs from PubChem, InChIKey, SMILES, KEGG, ChEBI, HMDB, Drugbank, Molecular Mass and Molecular Formula. 
 #' @return METAtable S4 object with vote-counting for each compound on @slot vote
+#' @export
 #' 
 #' @import dplyr
 #' @import webchem
-#' @import metaboliteIDmapping
 #' 
 #' @examples
+#' \dontrun{
 #' coln = c("Compound Name", "Behaviour", "References")
 #' input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
 #' data_votes <- amanida_read(input_file, mode = "qual", coln, separator = ";")
 #' 
 #' vote_result <- amanida_vote(data_votes)
+#' }
 #' 
 #' @export
 #' 
 
-amanida_vote <- function(data, comp.inf = NULL) {
+amanida_vote <- function(data, comp.inf = F) {
     . = NULL; votes = NULL; articles = NULL; vote_counting = NULL; trend = NULL;
     query = NULL; cid = NULL; CID = NULL; KEGG = NULL; ChEBI = NULL; HMDB = NULL; Drugbank = NULL;
     
@@ -41,7 +43,7 @@ amanida_vote <- function(data, comp.inf = NULL) {
     data <- data |> full_join(a, by = c("id" = "query")) |>
       mutate("id_mod" = ifelse(is.na(cid), id, cid))
   
-  vote <-  data %>%
+  vote <- data %>%
     dplyr::group_by(`id`) %>%
     summarize(
       # Votes per compound
@@ -53,26 +55,34 @@ amanida_vote <- function(data, comp.inf = NULL) {
       cid = unique(cid)
       )
   if (!hasArg(comp.inf)) { 
-      
+    
       b <- pc_prop(vote$cid, properties = c("MolecularFormula", "MolecularWeight", "InChIKey", "CanonicalSMILES"))
-      
+        
       vote <- vote |> mutate(cid = as.integer(cid)) |>
-        full_join(b, by = c("cid" = "CID")) |>
-        distinct() 
-      
-      extra <- NULL
-      for (i in 1:nrow(vote)){
-        b <- metabolitesMapping |> mutate(CID = as.character(CID)) |>
-          dplyr::filter(CID %in% vote$cid[i]) |> 
-          slice(1) |>
-          select(c(CID, KEGG, ChEBI, HMDB, Drugbank))
-        extra <- extra |> bind_rows(b)
+          full_join(b, by = c("cid" = "CID")) |>
+          distinct() 
+      if(requireNamespace("metaboliteIDmapping", quietly = TRUE)) {
+        extra <- NULL
+        for (i in 1:nrow(vote)){
+          b <- metaboliteIDmapping::metabolitesMapping |> 
+            mutate(CID = as.character(CID)) |>
+            dplyr::filter(CID %in% vote$cid[i]) |> 
+            slice(1) |>
+            select(c(CID, KEGG, ChEBI, HMDB, Drugbank))
+          extra <- extra |> bind_rows(b)
+        }
+        vote <- vote |> mutate(cid = as.character(cid)) |>
+          full_join(extra, by = c("cid" = "CID")) |>
+          distinct() |>
+          rename(PubChem_CID = cid)
+      } else {
+        msg <- c("metaboliteIDmapping is not installed. amanida can operate without metaboliteIDmapping, unless you want the complete information using comp.inf = F")
+        warning(msg)
+        
+        vote <- vote |> mutate(cid = as.character(cid)) |>
+          distinct() |>
+          rename(PubChem_CID = cid)
       }
-      
-      vote <- vote |> mutate(cid = as.character(cid)) |>
-        full_join(extra, by = c("cid" = "CID")) |>
-        distinct() |>
-        rename(PubChem_CID = cid)
   }
   
   

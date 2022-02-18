@@ -78,6 +78,8 @@ It is also included a qualitative analysis, the vote-counting, that is computed 
 amanida_result <- compute_amanida(datafile)
 ```
 
+**Note**: The output include compound identifiers from public repositories such as PubChem or the Human Metabolite DataBase, if compounds are not used this could be avoided with `comp.inf = F`.
+
 ### Results and visualization
 
 Combination results are disclosed in two tables
@@ -114,6 +116,8 @@ Optionally we van observe the qualitative results. A bar plot shows the result o
 ```{r, fig.width = 5, fig.height = 6}
 vote_plot(amanida_result, counts = 1)
 ```
+
+**Note**: The output include compound identifiers from public repositories such as PubChem or the Human Metabolite DataBase, if compounds are not used this could be avoided with `comp.inf = F`.
 
 With vote plot discrepancies in compounds behaviour are not detected at first glance, and we suggest to combine the results with the explore plot. Discrepancies in results are shown when `type = "mix"` is used:
 

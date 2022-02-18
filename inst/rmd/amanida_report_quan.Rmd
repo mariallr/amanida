@@ -101,8 +101,7 @@ kbl(amanida_result@stat %>%
              "Trend" = trend,
              "P-value combined" = pval,
              "Fold-change combined" = fc,
-             "Total sample size" = N_total,
-             "Reference" = reference), 
+             "Total sample size" = N_total), 
       booktabs = T, 
       caption = "Table 2: Quantitative analysis",
     align = "c") %>%

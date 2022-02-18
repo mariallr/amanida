@@ -9,7 +9,7 @@ compute_amanida(datafile, comp.inf = NULL)
 \arguments{
 \item{datafile}{data imported using amanida_read function}
 
-\item{comp.inf}{include compounds IDs from PubChem, KEGG, ChEBI, HMDB, Drugbank}
+\item{comp.inf}{include compounds IDs from PubChem, InChIKey, SMILES, KEGG, ChEBI, HMDB, Drugbank, Molecular Mass and Molecular Formula}
 }
 \value{
 METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
@@ -27,8 +27,10 @@ Entries corresponding to metabolites are combined as follows:
 Vote-counting is computed based on votes. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
 }
 \examples{
+\dontrun{
 data("sample_data")
 
 compute_amanida(sample_data)
+}
 
 }
