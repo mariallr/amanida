@@ -25,10 +25,12 @@ volcano_plot <- function(mets, cutoff = NULL) {
   #' @return plot of results
   #'  
   #' @examples 
-  #' data("sample_data")
-  #' 
-  #' amanida_result <- compute_amanida(sample_data)
-  #' volcano_plot(amanida_result)
+  #' \dontrun{
+  #'    data("sample_data")
+  #'    
+  #'    amanida_result <- compute_amanida(sample_data)
+  #'    volcano_plot(amanida_result)
+  #' }
   #'
   #' @export
   #' 
@@ -155,10 +157,11 @@ vote_plot <- function(mets, counts = NULL) {
   #' 
   #' @importFrom stats reorder
   #' @examples 
-  #' data("sample_data")
-  #' 
-  #' result <- compute_amanida(sample_data)
-  #' vote_plot(result)
+  #' \dontrun{
+  #'     data("sample_data")
+  #'     result <- compute_amanida(sample_data)
+  #'     vote_plot(result)
+  #' }
   #' 
   #' @export
   #' 

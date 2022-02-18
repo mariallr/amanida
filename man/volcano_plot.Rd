@@ -22,9 +22,11 @@ Results are presented as -log10 for p-value and log2 for fold-change.
 Values over the cut off are labeled. If not cutoff is provided will be used alpha 0.05 for p-value and 1.5 for logarithmic fold-change.
 }
 \examples{
-data("sample_data")
-
-amanida_result <- compute_amanida(sample_data)
-volcano_plot(amanida_result)
+\dontrun{
+   data("sample_data")
+   
+   amanida_result <- compute_amanida(sample_data)
+   volcano_plot(amanida_result)
+}
 
 }
