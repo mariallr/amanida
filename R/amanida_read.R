@@ -45,7 +45,7 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
   if (ext %in% c("csv", "tsv", "txt")) {
     stopifnot("Please, specify a separator."=!is.null(separator))
     
-    datafile <- readr::read_delim(file, delim = separator, col_types = readr::cols()) %>%
+    datafile <- readr::read_delim(file, delim = separator, col_types = readr::cols()) |>
       # In some (specially spanish) locales, when the delimiter is ";", the decimal
       # point is ","; let's make sure here this is correct
       mutate(
@@ -60,12 +60,12 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
   misrow <- sum(!complete.cases(datafile))
   
   if (mode == "quan") {
-    datafile <- datafile %>%
+    datafile <- datafile |>
       # Select columns with data needed
-      select(all_of(coln)) %>%
+      select(all_of(coln)) |>
       # Only complete cases and rename
-      filter(complete.cases(.)) %>%
-      rename_with(.cols = everything(), .fn = ~ VAR_NAMES) %>%
+      drop_na() |>
+      rename_with(.cols = everything(), .fn = ~ VAR_NAMES) |>
       mutate(
         # Make sure numeric things are numeric
         `foldchange` = as.numeric(`foldchange`),
@@ -86,12 +86,12 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
   } else if (mode == "qual") {
     VAR_NAMES <- c('id', 'trend', 'ref')
     
-    datafile <- datafile %>%
+    datafile <- datafile |>
       # Select columns with data needed
-      select(all_of(coln)) %>%
+      select(all_of(coln)) |>
       # Only complete cases and rename
-      filter(complete.cases(.)) %>%
-      rename_with(.cols = everything(), .fn = ~ VAR_NAMES) %>%
+      drop_na() |>
+      rename_with(.cols = everything(), .fn = ~ VAR_NAMES) |>
       mutate(trend = case_when(
         tolower(trend) == "down" ~ -1,
         T ~ 1

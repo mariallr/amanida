@@ -11,7 +11,9 @@ amanida_report(
   column_id,
   pvalue_cutoff = NULL,
   fc_cutoff = NULL,
-  votecount_lim
+  votecount_lim,
+  path,
+  comp_inf = NULL
 )
 }
 \arguments{
@@ -33,6 +35,10 @@ amanida_report(
 \item{fc_cutoff}{numeric value to consider significance for effect size}
 
 \item{votecount_lim}{minimum numeric value for vote-counting visualization}
+
+\item{path}{path to the directory where html file is created}
+
+\item{comp_inf}{complete information of compounds from public databases}
 }
 \value{
 an html document saved in the working directory
@@ -47,9 +53,11 @@ This function uses directly the dataset to create a report with the meta-analysi
 \dontrun{
 column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
 input_file <- getsampleDB()
+path <- tempdir()
 
 amanida_report(input_file, separator = ";", column_id, analysis_type = "quan", 
-                       pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2)
+                path, pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2, 
+                comp_inf = F)
 }
 
 }
