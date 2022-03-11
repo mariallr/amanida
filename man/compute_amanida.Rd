@@ -4,7 +4,7 @@
 \alias{compute_amanida}
 \title{Combine statistical results and compute vote-counting}
 \usage{
-compute_amanida(datafile, comp.inf = NULL)
+compute_amanida(datafile, comp.inf = F)
 }
 \arguments{
 \item{datafile}{data imported using amanida_read function}

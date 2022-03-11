@@ -122,7 +122,7 @@ vote_plot <- function(mets, counts = NULL) {
   if(nrow(tb) > 30) {
     message("Too much values, only showing 30 highest values. Please check counts parameter.")
     
-   tb <- tb  %>%
+   tb <- tb  |>
       slice_max(abs(votes), n = 30, with_ties = FALSE) 
   }
   

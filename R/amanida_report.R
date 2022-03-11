@@ -8,7 +8,7 @@
 #' @param input_file path to the original dataset in xlsx, xls, csv or txt format
 #' @param separator indicate the separator used in the input_file parameter
 #' @param column_id vector containing columns names to use. It has to be in order identification, p-values, fold-changes, sample size and reference. 
-#' @param path path to the directory where html file is created
+#' @param path path to the directory where html file is created, otherwise the file will be saved in a temporal folder
 #' @param analysis_type indicate if data will be quantitative, qualitative or both. Options are:
 #' \itemize{
 #'   \item "quan-qual" for quantitative and qualitative meta-analysis
@@ -30,10 +30,9 @@
 #' \dontrun{
 #' column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
 #' input_file <- getsampleDB()
-#' path <- tempdir()
 #' 
 #' amanida_report(input_file, separator = ";", column_id, analysis_type = "quan", 
-#'                 path, pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2, 
+#'                 pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2, 
 #'                 comp_inf = F)
 #' }
 #' 
@@ -41,7 +40,7 @@
 
 amanida_report <- function(input_file, separator = NULL, analysis_type = NULL, 
                            column_id, pvalue_cutoff = NULL, fc_cutoff = NULL, 
-                           votecount_lim, path, comp_inf = NULL) {
+                           votecount_lim, path = NULL, comp_inf = NULL) {
   analysis = NULL;
   
   Sys.setlocale("LC_TIME", "C")
@@ -51,6 +50,12 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL,
     
   } else {
     analysis <- "quan-qual"
+  }
+  
+  if (hasArg(path)) {
+    path <- path
+  } else {
+    path <- tempdir()
   }
   
   if(analysis == "quan-qual") {

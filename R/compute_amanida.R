@@ -27,7 +27,7 @@
 #' 
 #' @export
 
-compute_amanida <- function(datafile, comp.inf = NULL) {
+compute_amanida <- function(datafile, comp.inf = F) {
   
   pvalue = NULL; foldchange = NULL; ratio = NULL; df = NULL; G = NULL;  
   pval = NULL; fc = NULL; N_total = NULL; reference = NULL; N = NULL;

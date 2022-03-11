@@ -36,7 +36,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
   #' 
   
   articles = NULL; pval = NULL; fc = NULL; lfc = NULL; lpval = NULL; . = NULL; 
-  label = NULL; sig = NULL;
+  label = NULL; sig = NULL; reports = NULL;
   set.seed(123)
   
   col_palette <- amanida_palette()
