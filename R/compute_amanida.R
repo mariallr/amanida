@@ -27,7 +27,7 @@
 #' 
 #' @export
 
-compute_amanida <- function(datafile, comp.inf = NULL) {
+compute_amanida <- function(datafile, comp.inf = F) {
   
   pvalue = NULL; foldchange = NULL; ratio = NULL; df = NULL; G = NULL;  
   pval = NULL; fc = NULL; N_total = NULL; reference = NULL; N = NULL;
@@ -41,31 +41,37 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
     stop("Compute_amanida needs quantitative data with p-value and fold-change. To import it use amanida_read in 'quan' mode.")
   }
   
-  a <- get_cid(datafile$id, 
-               from = "name",
-               domain = c("compound", "substance", "assay"))
-  a <- a %>% distinct(query, .keep_all = TRUE)
-  
-  datafile <- datafile |> full_join(a, by = c("id" = "query")) |>
-    mutate("id_mod" = ifelse(is.na(cid), id, cid))
-  
-    # Statistics grouping by compound identifier
-    sta <- datafile %>% group_by(id_mod) %>%
-      mutate(ratio = N /sum(N),
-             df = n()*ratio,
-             G = qgamma(pvalue, shape = df, scale = 2, lower.tail = F)) %>%
-      summarise(
-        # Weigthed P-value combination
-        pval = pgamma(sum(G), shape = n(), scale = 2, lower.tail = F),
-        # Weighted average of fold-change
-        fc = 2^(sum(log2(foldchange) * `N`) / sum(`N`)), N_total = sum(N),
-                reference = paste(`ref`, collapse = "; "),
-        id = unique(id),
-        cid = unique(cid)) %>%
-      mutate(trend = case_when(fc < 1 ~ -1, T ~ 1)) %>%
-      select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`, `cid`))
+  if (hasArg(comp.inf)) { 
+     compinf <- comp.inf
     
-    if (!hasArg(comp.inf)) { 
+  } else {
+    compinf = FALSE
+  }
+    
+  if (compinf == T) { 
+    a <- get_cid(datafile$id, 
+                   from = "name",
+                   domain = c("compound", "substance", "assay"))
+      a <- a |> distinct(query, .keep_all = TRUE)
+      
+      datafile <- datafile |> full_join(a, by = c("id" = "query")) |>
+        mutate("id_mod" = ifelse(is.na(cid), id, cid))
+      
+      # Statistics grouping by compound identifier
+      sta <- datafile |> group_by(id_mod) |>
+        mutate(ratio = N /sum(N),
+               df = n()*ratio,
+               G = qgamma(pvalue, shape = df, scale = 2, lower.tail = F)) |>
+        summarise(
+          # Weigthed P-value combination
+          pval = pgamma(sum(G), shape = n(), scale = 2, lower.tail = F),
+          # Weighted average of fold-change
+          fc = 2^(sum(log2(foldchange) * `N`) / sum(`N`)), N_total = sum(N),
+          reference = paste(`ref`, collapse = "; "),
+          id = unique(id),
+          cid = unique(cid)) |>
+        mutate(trend = case_when(fc < 1 ~ -1, T ~ 1)) |>
+        select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`, `cid`))
       
         b <- pc_prop(sta$cid, properties = c("MolecularFormula", "MolecularWeight", "InChIKey", "CanonicalSMILES"))
         
@@ -99,11 +105,25 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
             rename(PubChem_CID = cid) |>
             select(-reference)
         }
+    } else {
+      sta <- datafile %>% group_by(id) |>
+        mutate(ratio = N /sum(N),
+               df = n()*ratio,
+               G = qgamma(pvalue, shape = df, scale = 2, lower.tail = F)) |>
+        summarise(
+          # Weigthed P-value combination
+          pval = pgamma(sum(G), shape = n(), scale = 2, lower.tail = F),
+          # Weighted average of fold-change
+          fc = 2^(sum(log2(foldchange) * `N`) / sum(`N`)), N_total = sum(N),
+          reference = paste(`ref`, collapse = "; "),
+          id = unique(id)) |>
+        mutate(trend = case_when(fc < 1 ~ -1, T ~ 1)) |>
+        select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`))
     }
       
     ## Vote-counting per each compound id
-    vote <- datafile %>% 
-      dplyr::group_by(`id_mod`) %>% 
+    vote <- datafile |>
+      dplyr::group_by(`id`) |> 
       summarize(
         id = id,
       # Votes per compound
@@ -112,9 +132,7 @@ compute_amanida <- function(datafile, comp.inf = NULL) {
       articles = n(),
       # Vote-counting
       vote_counting = `votes`/`articles`
-    ) |>
-      distinct() |>
-      select(-id_mod)
+    ) |> distinct()
 
   # Save results in S4 object and return
   METAtables(stat=sta, vote=vote)

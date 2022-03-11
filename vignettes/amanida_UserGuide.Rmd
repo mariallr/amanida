@@ -149,6 +149,8 @@ It needs the following parameters:
 * pvalue_cutoff: numerical value to indicate the threshold on p-values. Recommended 0.05. 
 * fc_cutoff: numerical value to indicate the threshold on fold-change. Recommended to use values > 2.  
 * votecount_lim: numerical value to indicate the threshold for qualitative graphics.  
+* path: path to save the html created, otherwise the file will be saved in a temporal folder. 
+* comp_inf: to include information about metabolites from public databases such as PubChem, HMDB or KEGG. 
 
 ```{r, eval = F}
 column_id = c("Compound Name", "P-value", "Fold-change", "N total", "References")
@@ -160,7 +162,8 @@ amanida_report(input_file,
                column_id = column_id, 
                pvalue_cutoff = 0.05, 
                fc_cutoff = 4, 
-               votecount_lim = 2)
+               votecount_lim = 2,
+               comp_inf = F)
 ```
 
 The report will be saved in the working directory. 

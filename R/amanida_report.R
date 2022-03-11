@@ -8,6 +8,7 @@
 #' @param input_file path to the original dataset in xlsx, xls, csv or txt format
 #' @param separator indicate the separator used in the input_file parameter
 #' @param column_id vector containing columns names to use. It has to be in order identification, p-values, fold-changes, sample size and reference. 
+#' @param path path to the directory where html file is created, otherwise the file will be saved in a temporal folder
 #' @param analysis_type indicate if data will be quantitative, qualitative or both. Options are:
 #' \itemize{
 #'   \item "quan-qual" for quantitative and qualitative meta-analysis
@@ -17,6 +18,7 @@
 #' @param pvalue_cutoff numeric value to consider statistical significance
 #' @param fc_cutoff numeric value to consider significance for effect size
 #' @param votecount_lim minimum numeric value for vote-counting visualization
+#' @param comp_inf complete information of compounds from public databases
 #' @return an html document saved in the working directory
 #' 
 #' @import rmarkdown
@@ -30,13 +32,15 @@
 #' input_file <- getsampleDB()
 #' 
 #' amanida_report(input_file, separator = ";", column_id, analysis_type = "quan", 
-#'                        pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2)
+#'                 pvalue_cutoff = 0.05, fc_cutoff = 4, votecount_lim = 2, 
+#'                 comp_inf = F)
 #' }
 #' 
 #' @export
 
-amanida_report <- function(input_file, separator = NULL, analysis_type = NULL, column_id, 
-                           pvalue_cutoff = NULL, fc_cutoff = NULL, votecount_lim) {
+amanida_report <- function(input_file, separator = NULL, analysis_type = NULL, 
+                           column_id, pvalue_cutoff = NULL, fc_cutoff = NULL, 
+                           votecount_lim, path = NULL, comp_inf = NULL) {
   analysis = NULL;
   
   Sys.setlocale("LC_TIME", "C")
@@ -48,11 +52,17 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL, c
     analysis <- "quan-qual"
   }
   
+  if (hasArg(path)) {
+    path <- path
+  } else {
+    path <- tempdir()
+  }
+  
   if(analysis == "quan-qual") {
     rmarkdown::render(
       input = system.file("rmd", "amanida_report_quanqual.Rmd", package = "amanida"),
       output_file = "Amanida_report.html",
-      output_dir = getwd(),
+      output_dir = path,
       params = list(
         file_name = input_file,
         separator = separator,
@@ -61,6 +71,7 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL, c
         pvalue_cutoff = pvalue_cutoff,
         fc_cutoff = fc_cutoff,
         votecount_lim = votecount_lim,
+        comp_inf = comp_inf,
         show_code = FALSE
       )
     )
@@ -68,7 +79,7 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL, c
     rmarkdown::render(
       input = system.file("rmd", "amanida_report_quan.Rmd", package = "amanida"),
       output_file = "Amanida_report.html",
-      output_dir = getwd(),
+      output_dir = path,
       params = list(
         file_name = input_file,
         separator = separator,
@@ -77,6 +88,7 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL, c
         pvalue_cutoff = pvalue_cutoff,
         fc_cutoff = fc_cutoff,
         votecount_lim = votecount_lim,
+        comp_inf = comp_inf,
         show_code = FALSE
       )
     )
@@ -85,13 +97,14 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL, c
     rmarkdown::render(
       input = system.file("rmd", "amanida_report_qual.Rmd", package = "amanida"),
       output_file = "Amanida_report_qualitative.html",
-      output_dir = getwd(),
+      output_dir = path,
       params = list(
         file_name = input_file,
         separator = separator,
         analysis_type = analysis,
         column_id = column_id,
         votecount_lim = votecount_lim,
+        comp_inf = comp_inf,
         show_code = FALSE
       )
     )

@@ -16,6 +16,7 @@ params:
   pvalue_cutoff: 0.05
   fc_cutoff: 4
   votecount_lim: 1
+  comp_inf: F
   show_code: FALSE
 ---
 
@@ -46,11 +47,11 @@ datafile <- amanida_read(params$file_name, params$analysis_type, params$column_i
 Here is shown the imported table:
 
 ```{r, echo = F}
-data_imp <- datafile %>% 
+data_imp <- datafile |> 
   mutate(foldchange = round(foldchange,2),
          pvalue = format(pvalue, scientific = T, digits = 3),
          trend = case_when(trend == -1 ~ "Down-regulated",
-                           T ~ "Up-regulated")) %>%
+                           T ~ "Up-regulated")) |>
   rename("ID" = id,
          "P-value" = pvalue,
          "Fold-Change" = foldchange,
@@ -61,8 +62,8 @@ data_imp <- datafile %>%
 kbl(data_imp, 
       booktabs = T, 
       caption = "Table 1: Data exploration",
-    align = "c") %>%
-  kable_styling(latex_options = c("basic", "scale_down")) %>%
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
   scroll_box(width = "100%", height = "400px")
 ```
 
@@ -76,7 +77,7 @@ Quantitative analysis is done for each different identifier. It combines the sta
 `compute_amanida` function is used to combine p-values and fold-change. 
 
 ```{r}
-amanida_result <- compute_amanida(datafile) 
+amanida_result <- compute_amanida(datafile, comp.inf = params$comp_inf) 
 ```
 
 Here are shown your results:
@@ -86,17 +87,17 @@ amanida_result@stat
 ```
 
 ```{r, echo = F}
-kbl(amanida_result@stat %>%
-      arrange(pval) %>% 
-      group_by(id) %>%
+kbl(amanida_result@stat |>
+      arrange(pval) |> 
+      group_by(id) |>
       mutate(id = case_when((trend == 1 & fc > params$fc_cutoff & pval < params$pvalue_cutoff)
                                ~ paste(id, "*"),
                              (trend == -1 & fc < (1/params$fc_cutoff) &
                                 pval < params$pvalue_cutoff) ~ paste(id, "*"),
-                            T ~ id)) %>%
-      ungroup() %>%
+                            T ~ id)) |>
+      ungroup() |>
       mutate(pval = format(pval, scientific = T, digits = 3),
-             fc = round(fc, 2)) %>%
+             fc = round(fc, 2)) |>
       rename("ID" = id,
              "Trend" = trend,
              "P-value combined" = pval,
@@ -104,17 +105,19 @@ kbl(amanida_result@stat %>%
              "Total sample size" = N_total), 
       booktabs = T, 
       caption = "Table 2: Quantitative analysis",
-    align = "c") %>%
-  kable_styling(latex_options = c("basic", "scale_down")) %>%
-  scroll_box(width = "100%", height = "400px") %>%
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
+  scroll_box(width = "100%", height = "400px") |>
   footnote(symbol = c("Value over cut-offs"))
 ```
+
+*Note: \* indicates the result is statistical significant* 
 
 
 ### Significant results for quantitative analysis
 
 ```{r, echo = F}
-sig_res <- amanida_result@stat %>%
+sig_res <- amanida_result@stat |>
   filter(pval < params$pvalue_cutoff,
          fc > params$fc_cutoff | fc < 1/params$fc_cutoff)
 ```

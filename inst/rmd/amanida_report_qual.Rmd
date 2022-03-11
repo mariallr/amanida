@@ -14,6 +14,7 @@ params:
   analysis_type: "qual"
   column_id: coln
   votecount_lim: 1
+  comp_inf: FALSE
   show_code: FALSE
 ---
 
@@ -44,9 +45,9 @@ datafile <- amanida_read(params$file_name, params$analysis_type, params$column_i
 Here is shown the imported table:
 
 ```{r, echo = F}
-data_imp <- datafile %>% 
+data_imp <- datafile |> 
   mutate(trend = case_when(trend == -1 ~ "Down-regulated",
-                           T ~ "Up-regulated")) %>%
+                           T ~ "Up-regulated")) |>
   rename("ID" = id,
          "Reference" = ref,
          "Behaviour" = trend)
@@ -54,8 +55,8 @@ data_imp <- datafile %>%
 kbl(data_imp, 
       booktabs = T, 
       caption = "Table 1: Data exploration",
-    align = "c") %>%
-  kable_styling(latex_options = c("basic", "scale_down")) %>%
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
   scroll_box(width = "100%", height = "400px")
 ```
 
@@ -64,7 +65,7 @@ kbl(data_imp,
 Qualitative analysis is performed by the vote-counting computed as follows: for compounds up-regulated are count as +1 and for down-regulated as -1. Total sum is obtained for each compound. 
 
 ```{r, eval = T}
-vote_results <- amanida_vote(datafile)
+vote_results <- amanida_vote(datafile, comp.inf = params$comp_inf)
 ```
 
 ```{r, eval = F}
@@ -72,14 +73,14 @@ vote_results@vote
 ```
 
 ```{r, echo = F}
-kbl(vote_results@vote %>%
-      arrange(desc(abs(votes))) %>% 
-      select(-c( "vote_counting")) %>% 
+kbl(vote_results@vote |>
+      arrange(desc(abs(votes))) |> 
+      select(-c( "vote_counting")) |> 
       rename("ID" = id, "Votes" = votes), 
       booktabs = T, 
       caption = "Table 3: Qualitative analysis",
-    align = "c") %>%
-  kable_styling(latex_options = c("basic", "scale_down")) %>%
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
   scroll_box(width = "100%", height = "400px") 
 ```
 
@@ -106,9 +107,12 @@ vote_plot <- function(mets, counts = NULL) {
   message("Cut-off for votes is ", cuts, ".", sep = "")
   
   # Subset vote-couting data
-  tb <- as_tibble(mets@vote) %>% 
+  tb <- as_tibble(mets@vote) |> 
     mutate(
-      votes = as.numeric(votes)) %>%
+      votes = as.numeric(votes),
+      test = case_when(
+      votes > 0 ~ 0,
+      T ~ 1)) |>
     filter (abs(votes) >= cuts)
   
    if (nrow(tb) < 1) {
@@ -118,17 +122,17 @@ vote_plot <- function(mets, counts = NULL) {
   if(nrow(tb) > 30) {
     message("Too much values, only showing 30 highest values. Please check counts parameter.")
     
-   tb <- tb  %>%
+   tb <- tb  |>
       slice_max(abs(votes), n = 30, with_ties = FALSE) 
   }
   
-  tb %>%
-    {
-      ggplot(., aes(reorder(id, votes), votes, fill = votes)) + 
+  max_p <- max(tb$votes)
+  
+      ggplot(tb, aes(reorder(id, votes), votes, fill = votes)) + 
         geom_bar(stat = "identity", show.legend = F, width = .5
         ) +
         geom_text(aes(label = reorder(id, votes)), vjust = 0.2, size = 3.5, 
-                  hjust = ifelse(test = .$votes > 0, yes = 0, no = 1)) +
+                  hjust = tb$test) +
         scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
         theme_light() + 
         theme(axis.text.y = element_blank(),
@@ -148,11 +152,10 @@ vote_plot <- function(mets, counts = NULL) {
         xlab('')+
         ggtitle("Total vote count of compounds behaviour") +
         scale_y_continuous(expand = c(0.6, 0), 
-                           breaks = seq(max(abs(.$votes))*-1, max(abs(.$votes)), by = 1),
-                           limits = c(max(abs(.$votes))*-1,
-                                      max(abs(.$votes)) + 1)
+                           breaks = seq(max_p*-1, max_p, by = 1),
+                           limits = c(max_p*-1,
+                                      max_p + 1)
         )
-    }
   
 }
 ```

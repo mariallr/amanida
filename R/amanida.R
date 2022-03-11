@@ -24,10 +24,8 @@
 #' @import readxl
 #' @import tidyr
 #' @import webchem
-#' @import webchem
 #' @importFrom methods hasArg new
 #' @importFrom stats qgamma pgamma reorder
-#' @importFrom magrittr %>%
 #' @importFrom kableExtra kbl kable_styling scroll_box footnote
 #' 
 #' @docType package

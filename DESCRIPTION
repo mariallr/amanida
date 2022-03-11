@@ -1,6 +1,6 @@
 Package: amanida
 Title: Meta-Analysis for Non-Integral Data
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
     person("Maria", "Llambrich", , "maria.llambrich@urv.cat", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8418-0982")),
@@ -12,7 +12,8 @@ Description: Combination of results for meta-analysis using significance
     a global significance on each metabolite. Produces a volcano plot
     summarising the relevant results from meta-analysis. Vote-counting
     reports for metabolites. And explore plot to detect discrepancies
-    between studies at a first glance.
+    between studies at a first glance. Methodology is described in the
+    Llambrich et al. (2021) <doi:10.1093/bioinformatics/btab591>.  
 License: GPL-3
 URL: https://github.com/mariallr/amanida
 Depends: 

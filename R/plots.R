@@ -36,7 +36,7 @@ volcano_plot <- function(mets, cutoff = NULL) {
   #' 
   
   articles = NULL; pval = NULL; fc = NULL; lfc = NULL; lpval = NULL; . = NULL; 
-  label = NULL; sig = NULL;
+  label = NULL; sig = NULL; reports = NULL;
   set.seed(123)
   
   col_palette <- amanida_palette()
@@ -64,11 +64,11 @@ volcano_plot <- function(mets, cutoff = NULL) {
           " for fold-change (", round(cut_fc,2), " in log2 scale).", sep = "")
   
   # Compounds with 2 or more reports
-  cont <- as_tibble(mets@vote) %>% 
-    mutate(articles = as.numeric(articles)) %>% 
+  cont <- as_tibble(mets@vote) |> 
+    mutate(articles = as.numeric(articles)) |> 
     filter(articles >= 2)
   
-  cont_ids <- cont %>% pull(id)
+  cont_ids <- cont |> pull(id)
   
   # Function for labels
   case_character_type <- function(lfc, lpval) {
@@ -84,14 +84,14 @@ volcano_plot <- function(mets, cutoff = NULL) {
   ## Volcano plot
   
   # Scatter plot for logarithmic fold-change vs. -logarithmic p-value
-  as_tibble(mets@stat) %>%
+  met <- as_tibble(mets@stat) |>
     mutate( 
       # Format data needed
       across(c(pval,fc), as.numeric),
       # Negative logarithm of p-value for plot              
       lpval = -log10(pval),
       # Logarithm of fold-change
-      lfc = log2(fc)) %>%
+      lfc = log2(fc)) |>
     mutate(sig = case_character_type(lfc, lpval),
     label = case_when(
      sig == paste("p-value < ", 10^-cut_pval) ~ "",
@@ -99,10 +99,11 @@ volcano_plot <- function(mets, cutoff = NULL) {
      T ~ id),
    reports = case_when(
      id %in% cont_ids ~ "> 1 report",
-     T ~ "single report" )) %>%
-    dplyr::group_by('sig') %>%
-    { ggplot(.,aes(lfc, lpval, label = label, colour = sig)) +
-    geom_point(aes(shape = .$reports), size = 2.5) + 
+     T ~ "single report" )) |>
+    dplyr::group_by('sig')
+  
+    ggplot(met, aes(lfc, lpval, label = label, colour = sig)) +
+    geom_point(aes(shape = reports), size = 2.5) + 
     scale_shape_manual(values = c(8, 16), name = "") +
     theme_minimal() +
     ggrepel::geom_text_repel(size = 4,
@@ -118,9 +119,9 @@ volcano_plot <- function(mets, cutoff = NULL) {
     labs(colour = "", tag = "Created with amanida") +
     
     # X axis breaks
-    scale_x_continuous(breaks = seq(round(-max(abs(.$lfc)),0) - 1, 
-                                    round(max(abs(.$lfc)),0) + 1, 1), 
-                       limits = c(-max(abs(.$lfc)), max(abs(.$lfc)))) + 
+    # scale_x_continuous(breaks = seq(round(-max(abs(lfc)),0) - 1, 
+    #                                 round(max(abs(lfc)),0) + 1, 1), 
+    #                    limits = c(-max(abs(lfc)), max(abs(lfc)))) + 
     
     # Cutoff marks
     geom_hline(yintercept = cut_pval, 
@@ -137,7 +138,6 @@ volcano_plot <- function(mets, cutoff = NULL) {
     guides(shape = guide_legend(nrow = 2, byrow = T)) +
     scale_color_manual(values = col_palette) +
     ggtitle("Volcano plot of adapated meta-analysis results")
-  }
 }
 
 
@@ -184,25 +184,29 @@ vote_plot <- function(mets, counts = NULL) {
   message("Cut-off for votes is ", cuts, ".", sep = "")
   
   # Subset vote-couting data
-  tb <- as_tibble(mets@vote) %>% 
+  tb <- as_tibble(mets@vote) |> 
     mutate(
-    votes = as.numeric(votes)) %>%
+    votes = as.numeric(votes),
+    test = case_when(
+      votes > 0 ~ 0,
+      T ~ 1)) |>
     filter (abs(votes) >= cuts)
   
   if(nrow(tb) > 30) {
     message("Too much values, only showing 30 highest values. Please check counts parameter.")
     
-   tb <- tb  %>%
+   tb <- tb  |>
       slice_max(abs(votes), n = 30, with_ties = FALSE) 
   }
   
-   tb %>%
-    {
-    ggplot(., aes(reorder(id, votes), votes, fill = votes)) + 
+  min_p <- min(tb$votes)
+  max_p <- max(tb$votes)
+  
+   ggplot(tb, aes(reorder(id, votes), votes, fill = votes)) + 
     geom_bar(stat = "identity", show.legend = F, width = .5
              ) +
     geom_text(aes(label = reorder(id, votes)), vjust = 0.2, size = 3.5, 
-              hjust = ifelse(test = .$votes > 0, yes = 0, no = 1)) +
+              hjust = tb$test) +
     scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
     theme_light() + 
     theme(axis.text.y = element_blank(),
@@ -222,11 +226,10 @@ vote_plot <- function(mets, counts = NULL) {
     labs(tag = "Created with amanida") +
     ggtitle("Total vote count of compounds behaviour") +
     scale_y_continuous(expand = c(0.6, 0), 
-                       breaks = seq(min(.$votes), max(.$votes), by = 1),
-                       limits = c(min(.$votes) - 1,
-                                  max(.$votes) + 1)
+                       breaks = seq(min_p, max_p, by = 1),
+                       limits = c(min_p - 1,
+                                  max_p + 1)
                        )
-    }
   
 }
 
@@ -280,68 +283,68 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   message("Cut-off for votes is ", cuts, ".", sep = "")
   
   if (type == "all") {
-    dt <- data %>%
+    dt <- data |>
       mutate(
         trend_l = case_when(
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% dplyr::group_by(id) %>% 
-      mutate(vc = sum(trend)) %>%
-      dplyr::group_by(id, trend_l) %>%
+      ) |> dplyr::group_by(id) |> 
+      mutate(vc = sum(trend)) |>
+      dplyr::group_by(id, trend_l) |>
       summarise(
         cont = n(),
         total_N = sum(N),
         vc = unique(vc),
         lab = c("Vote-counting")
-      ) %>%
+      ) |>
       mutate(cont = case_when(
         trend_l == "Down-regulated" ~ cont*-1,
         T ~ cont*1
       ))
     
   } else if (type == "sub") {
-    dt <- data %>%
+    dt <- data |>
       mutate(
         trend_l = case_when(
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% dplyr::group_by(id) %>%
-      mutate(vc = sum(trend)) %>%
-      dplyr::group_by(id, trend_l) %>%
+      ) |> dplyr::group_by(id) |>
+      mutate(vc = sum(trend)) |>
+      dplyr::group_by(id, trend_l) |>
       summarise(
         cont = n(),
         total_N = sum(N),
         vc = unique(vc),
         lab = c("Vote-counting")
-      ) %>%
+      ) |>
       mutate(cont = case_when(
         trend_l == "Down-regulated" ~ cont*-1,
         T ~ cont*1
-      )) %>%
+      )) |>
       filter(vc > cuts | vc < -1*cuts)
     
   } else if (type == "mix") {
-    dt <- data %>%
+    dt <- data |>
       mutate(
         trend_l = case_when(
           trend == -1 ~ "Down-regulated", 
           T ~ "Up-regulated"
         )
-      ) %>% dplyr::group_by(id) %>% 
-      mutate(vc = sum(trend)) %>%
-      dplyr::group_by(id, trend_l) %>%
+      ) |> dplyr::group_by(id) |> 
+      mutate(vc = sum(trend)) |>
+      dplyr::group_by(id, trend_l) |>
       summarise(
         cont = n(),
         total_N = sum(N),
         vc = unique(vc),
         lab = c("Vote-counting")
-      ) %>%
+      ) |>
       mutate(cont = case_when(
         trend_l == "Down-regulated" ~ cont*-1,
         T ~ cont*1
-      )) %>%
+      )) |>
       filter(vc > cuts | vc < -1*cuts |
                vc != cont)
   }
@@ -351,15 +354,15 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   if(nrow(dt) > 25) {
     message("Too much values, only showing 30 first values. Please check counts and/or type parameters.")
 
-    dt <- dt %>%
-      ungroup() %>%
-      arrange(id) %>%
+    dt <- dt |>
+      ungroup() |>
+      arrange(id) |>
       slice(1:30)
   }
   
-  dt %>%
-    {
-      ggplot(., mapping = aes(x = cont,
+  max_p <- max(abs(dt$cont))
+  
+      ggplot(dt, mapping = aes(x = cont,
                               y = reorder(id, vc), fill = trend_l)) +
         geom_bar(aes(x = ifelse(test = trend_l == "Up-regulated",
                                 yes = cont, no = cont)), stat = "identity",
@@ -370,7 +373,7 @@ explore_plot <- function(data, type = "all", counts = NULL) {
                      size = 0.4, alpha = 0.9, 
                      arrow = arrow(length = unit(0.1, "cm")), 
                      lineend = "round", linejoin = "round") +
-        scale_x_continuous(labels = abs, limits = max(abs(.$cont)) * c(-1,1) * 1.01) +
+        scale_x_continuous(labels = abs, limits = max_p * c(-1,1) * 1.01) +
         scale_color_manual(values = c(col_palette[2], col_palette[3])) +
         theme_minimal() +
         xlab("Counts by trend") + 
@@ -383,7 +386,6 @@ explore_plot <- function(data, type = "all", counts = NULL) {
               plot.tag.position = "bottomright") +
         guides(col = guide_legend(nrow = 2, byrow = T)) + 
         guides(shape = guide_legend(nrow = 2, byrow = T)) 
-    }
 }
 
 

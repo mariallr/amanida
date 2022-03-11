@@ -35,26 +35,33 @@ amanida_vote <- function(data, comp.inf = F) {
     
     set.seed(123)
     
+    if (hasArg(comp.inf)) { 
+      compinf <- comp.inf
+      
+    } else {
+      compinf = FALSE
+    }
+    
+  if (comp.inf == T) { 
     a <- get_cid(data$id, 
                  from = "name",
                  domain = c("compound", "substance", "assay"))
-    a <- a %>% distinct(query, .keep_all = TRUE)
+    a <- a |> distinct(query, .keep_all = TRUE)
     
     data <- data |> full_join(a, by = c("id" = "query")) |>
       mutate("id_mod" = ifelse(is.na(cid), id, cid))
-  
-  vote <- data %>%
-    dplyr::group_by(`id`) %>%
-    summarize(
-      # Votes per compound
-      votes = sum(trend),
-      # Number of reports
-      articles = n(),
-      # Vote-counting
-      vote_counting = votes/articles, 
-      cid = unique(cid)
+    
+    vote <- data |>
+      dplyr::group_by(`id`) |>
+      summarize(
+        # Votes per compound
+        votes = sum(trend),
+        # Number of reports
+        articles = n(),
+        # Vote-counting
+        vote_counting = votes/articles, 
+        cid = unique(cid)
       )
-  if (!hasArg(comp.inf)) { 
     
       b <- pc_prop(vote$cid, properties = c("MolecularFormula", "MolecularWeight", "InChIKey", "CanonicalSMILES"))
         
@@ -83,6 +90,18 @@ amanida_vote <- function(data, comp.inf = F) {
           distinct() |>
           rename(PubChem_CID = cid)
       }
+  } else {
+    
+    vote <- data |>
+      dplyr::group_by(`id`) |>
+      summarize(
+        # Votes per compound
+        votes = sum(trend),
+        # Number of reports
+        articles = n(),
+        # Vote-counting
+        vote_counting = votes/articles
+      )
   }
   
   

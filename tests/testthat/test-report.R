@@ -7,7 +7,7 @@ test_that("Report function quan", {
   
   expect_message(amanida_report(input_file, separator = ";", column_id, 
                                       analysis_type = "quan", pvalue_cutoff = 0.05, 
-                                      fc_cutoff = 4, votecount_lim = 2), 
+                                      fc_cutoff = 4, votecount_lim = 2, comp_inf = F), 
                        "Output created:")
 })
 
@@ -16,9 +16,9 @@ test_that("Report function qual", {
   column_id = c("Compound Name", "Behaviour", "References")
   input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
   
-  expect_message(amanida_report(input_file, separator = ";", 
+  expect_message(amanida_report(input_file, separator = ";",
                                  column_id, analysis_type = "qual", 
-                                 votecount_lim = 2),
+                                 votecount_lim = 2, comp_inf = F),
              "Output created:")
 })
 

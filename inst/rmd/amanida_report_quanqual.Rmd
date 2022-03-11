@@ -16,6 +16,7 @@ params:
   pvalue_cutoff: 0.05
   fc_cutoff: 4
   votecount_lim: 1
+  comp_inf: FALSE
   show_code: FALSE
 ---
 
@@ -39,6 +40,7 @@ datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 
 Your data:
 
+
 ```{r, echo = F}
 datafile <- amanida_read(params$file_name, mode = "quan", params$column_id, params$separator) 
 ```
@@ -46,11 +48,11 @@ datafile <- amanida_read(params$file_name, mode = "quan", params$column_id, para
 Here is shown the imported table:
 
 ```{r, echo = F}
-data_imp <- datafile %>% 
+data_imp <- datafile |> 
   mutate(foldchange = round(foldchange,2),
          pvalue = format(pvalue, scientific = T, digits = 3),
          trend = case_when(trend == -1 ~ "Down-regulated",
-                           T ~ "Up-regulated")) %>%
+                           T ~ "Up-regulated")) |>
   rename("ID" = id,
          "P-value" = pvalue,
          "Fold-Change" = foldchange,
@@ -61,8 +63,8 @@ data_imp <- datafile %>%
 kbl(data_imp, 
       booktabs = T, 
       caption = "Table 1: Data exploration",
-    align = "c") %>%
-  kable_styling(latex_options = c("basic", "scale_down")) %>%
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
   scroll_box(width = "100%", height = "400px")
 ```
 
@@ -76,7 +78,7 @@ Quantitative analysis is done for each different identifier. It combines the sta
 `compute_amanida` function is used to combine p-values and fold-change. 
 
 ```{r}
-amanida_result <- compute_amanida(datafile) 
+amanida_result <- compute_amanida(datafile, comp.inf = params$comp_inf) 
 ```
 
 Here are shown your results:
@@ -86,17 +88,17 @@ amanida_result@stat
 ```
 
 ```{r, echo = F}
-kbl(amanida_result@stat %>%
-      arrange(pval) %>% 
-      group_by(id) %>%
+kbl(amanida_result@stat |>
+      arrange(pval) |> 
+      group_by(id) |>
       mutate(id = case_when((trend == 1 & fc > params$fc_cutoff & pval < params$pvalue_cutoff)
                                ~ paste(id, "*"),
                              (trend == -1 & fc < (1/params$fc_cutoff) &
                                 pval < params$pvalue_cutoff) ~ paste(id, "*"),
-                            T ~ id)) %>%
-      ungroup() %>%
+                            T ~ id)) |>
+      ungroup() |>
       mutate(pval = format(pval, scientific = T, digits = 3),
-             fc = round(fc, 2)) %>%
+             fc = round(fc, 2)) |>
       rename("ID" = id,
              "Trend" = trend,
              "P-value combined" = pval,
@@ -104,17 +106,18 @@ kbl(amanida_result@stat %>%
              "Total sample size" = N_total), 
       booktabs = T, 
       caption = "Table 2: Quantitative analysis",
-    align = "c") %>%
-  kable_styling(latex_options = c("basic", "scale_down")) %>%
-  scroll_box(width = "100%", height = "400px") %>%
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
+  scroll_box(width = "100%", height = "400px") |>
   footnote(symbol = c("Value over cut-offs"))
 ```
 
+*Note: \* indicates the result is statistical significant* 
 
 ### Significant results for quantitative analysis
 
 ```{r, echo = F}
-sig_res <- amanida_result@stat %>%
+sig_res <- amanida_result@stat |>
   filter(pval < params$pvalue_cutoff,
          fc > params$fc_cutoff | fc < 1/params$fc_cutoff)
 ```
@@ -164,11 +167,11 @@ volcano_plot <- function(mets, cutoff = NULL, names = T) {
           " for fold-change (", round(cut_fc,2), " in log2 scale).", sep = "")
   
   # Compounds with 2 or more reports
-  cont <- as_tibble(mets@vote) %>% 
-    mutate(articles = as.numeric(articles)) %>% 
+  cont <- as_tibble(mets@vote) |> 
+    mutate(articles = as.numeric(articles)) |> 
     filter(articles >= 2)
   
-  cont_ids <- cont %>% pull(id)
+  cont_ids <- cont |> pull(id)
   
   # Function for labels
   case_character_type <- function(lfc, lpval) {
@@ -184,14 +187,14 @@ volcano_plot <- function(mets, cutoff = NULL, names = T) {
   ## Volcano plot
   
   # Scatter plot for logarithmic fold-change vs. -logarithmic p-value
-  dt_p <- as_tibble(mets@stat) %>%
+  dt_p <- as_tibble(mets@stat) |>
     mutate( 
       # Format data needed
       across(c(pval,fc), as.numeric),
       # Negative logarithm of p-value for plot              
       lpval = -log10(pval),
       # Logarithm of fold-change
-      lfc = log2(fc)) %>%
+      lfc = log2(fc)) |>
     mutate(sig = case_character_type(lfc, lpval),
            label = case_when(
              sig == paste("p-value < ", 10^-cut_pval) ~ "",
@@ -199,7 +202,7 @@ volcano_plot <- function(mets, cutoff = NULL, names = T) {
              T ~ id),
            reports = case_when(
              id %in% cont_ids ~ "> 1 report",
-             T ~ "single report" )) %>%
+             T ~ "single report" )) |>
     dplyr::group_by('sig') 
   if ( names == T) {
     ggplot(dt_p, aes(lfc, lpval, label = label, colour = sig)) +
@@ -293,13 +296,13 @@ amanida_result@vote
 ```
 
 ```{r, echo = F}
-kbl(amanida_result@vote %>%
-      arrange(desc(abs(votes))) %>% 
+kbl(amanida_result@vote |>
+      arrange(desc(abs(votes))) |>
       select("ID" = id, "Votes" = votes, "Articles reporting" = articles),
       booktabs = T, 
       caption = "Table 3: Qualitative analysis",
-    align = "c") %>%
-  kable_styling(latex_options = c("basic", "scale_down")) %>%
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
   scroll_box(width = "100%", height = "400px") 
 ```
 
@@ -327,9 +330,12 @@ vote_plot <- function(mets, counts = NULL) {
   message("Cut-off for votes is ", cuts, ".", sep = "")
   
   # Subset vote-couting data
-  tb <- as_tibble(mets@vote) %>% 
+  tb <- as_tibble(mets@vote) |> 
     mutate(
-      votes = as.numeric(votes)) %>%
+      votes = as.numeric(votes),
+      test = case_when(
+      votes > 0 ~ 0,
+      T ~ 1)) |>
     filter (abs(votes) >= cuts)
   
    if (nrow(tb) < 1) {
@@ -339,17 +345,17 @@ vote_plot <- function(mets, counts = NULL) {
   if(nrow(tb) > 30) {
     message("Too much values, only showing 30 highest values. Please check counts parameter.")
     
-   tb <- tb  %>%
+   tb <- tb  |>
       slice_max(abs(votes), n = 30, with_ties = FALSE) 
   }
   
-  tb %>%
-    {
-      ggplot(., aes(reorder(id, votes), votes, fill = votes)) + 
+  max_p <- max(tb$votes)
+  
+    ggplot(tb, aes(reorder(id, votes), votes, fill = votes)) + 
         geom_bar(stat = "identity", show.legend = F, width = .5
         ) +
         geom_text(aes(label = reorder(id, votes)), vjust = 0.2, size = 3.5, 
-                  hjust = ifelse(test = .$votes > 0, yes = 0, no = 1)) +
+                  hjust = tb$test) +
         scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
         theme_light() + 
         theme(axis.text.y = element_blank(),
@@ -369,11 +375,10 @@ vote_plot <- function(mets, counts = NULL) {
         xlab('')+
         ggtitle("Total vote count of compounds behaviour") +
         scale_y_continuous(expand = c(0.6, 0), 
-                           breaks = seq(max(abs(.$votes))*-1, max(abs(.$votes)), by = 1),
-                           limits = c(max(abs(.$votes))*-1,
-                                      max(abs(.$votes)) + 1)
+                           breaks = seq(max_p*-1, max_p, by = 1),
+                           limits = c(max_p*-1,
+                                      max_p + 1)
         )
-    }
   
 }
 ```
