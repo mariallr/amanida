@@ -73,7 +73,8 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL,
         votecount_lim = votecount_lim,
         comp_inf = comp_inf,
         show_code = FALSE
-      )
+      ), 
+      quiet = T
     )
   } else if(analysis == "quan") {
     rmarkdown::render(
@@ -90,7 +91,8 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL,
         votecount_lim = votecount_lim,
         comp_inf = comp_inf,
         show_code = FALSE
-      )
+      ), 
+      quiet = T
     )
     
   } else if (analysis == "qual") {
@@ -106,7 +108,8 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL,
         votecount_lim = votecount_lim,
         comp_inf = comp_inf,
         show_code = FALSE
-      )
+      ), 
+      quiet = T
     )
   } else {
     message("Please indicate analysis type, 'quan-qual for quantitative and qualitative, 'quan' for quantitative or 'qual' for qualitative")
