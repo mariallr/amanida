@@ -59,6 +59,7 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL,
   }
   
   if(analysis == "quan-qual") {
+    try()
     rmarkdown::render(
       input = system.file("rmd", "amanida_report_quanqual.Rmd", package = "amanida"),
       output_file = "Amanida_report.html",

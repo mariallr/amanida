@@ -1,6 +1,6 @@
 Package: amanida
 Title: Meta-Analysis for Non-Integral Data
-Version: 0.2.2
+Version: 0.2.3
 Authors@R: c(
     person("Maria", "Llambrich", , "maria.llambrich@urv.cat", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8418-0982")),
