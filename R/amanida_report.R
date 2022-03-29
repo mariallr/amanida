@@ -59,6 +59,7 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL,
   }
   
   if(analysis == "quan-qual") {
+    try()
     rmarkdown::render(
       input = system.file("rmd", "amanida_report_quanqual.Rmd", package = "amanida"),
       output_file = "Amanida_report.html",
@@ -73,7 +74,8 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL,
         votecount_lim = votecount_lim,
         comp_inf = comp_inf,
         show_code = FALSE
-      )
+      ), 
+      quiet = T
     )
   } else if(analysis == "quan") {
     rmarkdown::render(
@@ -90,7 +92,8 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL,
         votecount_lim = votecount_lim,
         comp_inf = comp_inf,
         show_code = FALSE
-      )
+      ), 
+      quiet = T
     )
     
   } else if (analysis == "qual") {
@@ -106,7 +109,8 @@ amanida_report <- function(input_file, separator = NULL, analysis_type = NULL,
         votecount_lim = votecount_lim,
         comp_inf = comp_inf,
         show_code = FALSE
-      )
+      ), 
+      quiet = T
     )
   } else {
     message("Please indicate analysis type, 'quan-qual for quantitative and qualitative, 'quan' for quantitative or 'qual' for qualitative")
