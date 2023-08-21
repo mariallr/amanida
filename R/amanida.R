@@ -28,7 +28,7 @@
 #' @importFrom stats qgamma pgamma reorder
 #' @importFrom kableExtra kbl kable_styling scroll_box footnote
 #' 
-#' @docType package
+"_PACKAGE"
 #' 
 
 NULL
