@@ -32,6 +32,8 @@ volcano_plot <- function(mets, cutoff = NULL) {
   #'    volcano_plot(amanida_result)
   #' }
   #'
+  #' @import ggplot2
+  #' @import dplyr
   #' @export
   #' 
   
@@ -163,6 +165,8 @@ vote_plot <- function(mets, counts = NULL) {
   #'     vote_plot(result)
   #' }
   #' 
+  #' @import ggplot2
+  #' @import dplyr
   #' @export
   #' 
   
@@ -255,6 +259,8 @@ explore_plot <- function(data, type = "all", counts = NULL) {
   #' @return a ggplot bar-plot showing the sum of votes for each compound divided by the trend
   #' 
   #' @importFrom stats reorder
+  #' @import ggplot2
+  #' @import dplyr
   #' 
   #' @examples 
   #' data("sample_data")

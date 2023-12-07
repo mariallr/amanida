@@ -24,7 +24,9 @@
 #' @import rmarkdown
 #' @importFrom kableExtra kbl kable_styling scroll_box footnote
 #' @import knitr
-#' @import tidyverse
+#' @import dplyr
+#' @import tidyr
+#' @import ggplot2
 #' 
 #' @examples
 #' \dontrun{
