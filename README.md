@@ -89,7 +89,7 @@ datafile <- amanida_read(input_file, mode = "qual", coln, separator=";")
 **3. Perform adapted meta-analysis: `compute_amanida`**
 
 ```r
-amanida_result <- compute_amanida(datafile)
+amanida_result <- compute_amanida(datafile, comp.inf = F)
 ```
 
 In this step you will obtain an S4 object with two tables:
@@ -97,7 +97,9 @@ In this step you will obtain an S4 object with two tables:
 * adapted meta-analysis acces by `amanida_result@stat`
 * vote-counting acces by `amanida_results@vote`
 
-**4. Perform quanlitative meta-analysis: `amanida_vote`**
+If you select the option `comp.inf = T` the package will retrieve the PubChem ID from the ID using `webchem`. It is only valid for the following ids: chemical name, InChIKey, InChI, and SMILES. Then using PubChem ID duplicates are checked. Results are returned including the following information: PubChem ID, Molecular Formula, Molecular Weight, SMILES, InChIKey, KEGG, ChEBI, HMDB, Drugbank. Harmonization names process is based in *Villalba H, Llambrich M, Gumà J, Brezmes J, Cumeras R. A Metabolites Merging Strategy (MMS): Harmonization to Enable Studies’ Intercomparison. Metabolites. 2023; 13(12):1167. https://doi.org/10.3390/metabo13121167*
+
+**4. Perform qualitative meta-analysis: `amanida_vote`**
 
 
 ```r
@@ -110,7 +112,7 @@ vote_result <- amanida_vote(data_votes)
 
 In this step you will obtain an S4 object with one table:
 
-* vote-counting acces by `vote_results@vote`
+* vote-counting access by `vote_results@vote`
 
 #### Plots
 

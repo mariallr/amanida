@@ -22,9 +22,11 @@ This vignette illustrates `Amanida` R package, which contains a collection of fu
 
 ## Introduction
 
-The widespread of metabolomics as a potential tool for clinical diagno-sis has increased the systematic reviews and meta-analysis on this topic. Meta-analysis is the statistical combination in a single estimate for results from primary studies answering the same question, which is a common practice in medical research. When raw data is not available to perform a meta-analysis, there are different approaches that can be applied but them require the standard deviation, that is used for effect size estimate calculation and weighted methods. Nowadays, there isn’t a tool to perform a weighted meta-analysis which could be applied to a dataset of overall results without the standard deviation. Meta-analysis tools base the study of effect size using the difference of means, but in case of metabolomics we found that the comparison between groups is disclosed using relative change. The purpose of amanida is to perform a weighted meta-analysis combining overall results based on statistical significance, relative change and study size. In Amanida, statistical significance and relative change are combined using weighted methods which do no require standard deviation, weighted Fisher for p-values and weighted average for fold-change, where the weight comes from study size.     
+The widespread of metabolomics as a potential tool for clinical diagno-sis has increased the systematic reviews and meta-analysis on this topic. Meta-analysis is the statistical combination in a single estimate for results from primary studies answering the same question, which is a common practice in medical research. When raw data is not available to perform a meta-analysis, there are different approaches that can be applied but them require the standard deviation, that is used for effect size estimate calculation and weighted methods. Nowadays, there isn’t a tool to perform a weighted meta-analysis which could be applied to a dataset of overall results without the standard deviation. Meta-analysis tools base the study of effect size using the difference of means, but in case of metabolomics we found that the comparison between groups is disclosed using relative change. The purpose of amanida is to perform a weighted meta-analysis combining overall results based on statistical significance, relative change and study size. In Amanida, statistical significance and relative change are combined using weighted methods which do no require standard deviation, weighted Fisher for p-values and weighted average for fold-change, where the weight comes from study size. 
 
 Furthermore, Amanida also computes qualitative meta-analysis performing a vote-counting for compounds, including the option of only using identifier and trend labels.
+
+We have included an automatized id harmonization step based in *Villalba H, Llambrich M, Gumà J, Brezmes J, Cumeras R. A Metabolites Merging Strategy (MMS): Harmonization to Enable Studies’ Intercomparison. Metabolites. 2023; 13(12):1167. https://doi.org/10.3390/metabo13121167*. Briefly, all ids are converted to a unique one, in this case the PubChem ID and then checked for duplicates. It also allows to retrieve multiple descriptors such as Molecular Formula, Molecular Weight or InChIKey. 
 
 ### Installation
 
@@ -75,10 +77,10 @@ In this step will be performed the combination of overall results weightening by
 It is also included a qualitative analysis, the vote-counting, that is computed by the sum of votes assigned as follows: votes are +1 for up-regulation, -1 for down-regulation and 0 if no trend.
 
 ```{r}
-amanida_result <- compute_amanida(datafile)
+amanida_result <- compute_amanida(datafile, comp.inf = F)
 ```
 
-**Note**: The output include compound identifiers from public repositories such as PubChem or the Human Metabolite DataBase, if compounds are not used this could be avoided with `comp.inf = F`.
+If you select the option `comp.inf = T` the package will retrieve the PubChem ID from the ID using `webchem`. It is only valid for the following ids: chemical name, InChIKey, InChI, and SMILES. Then using PubChem ID duplicates are checked. Results are returned including the following information: PubChem ID, Molecular Formula, Molecular Weight, SMILES, InChIKey, KEGG, ChEBI, HMDB, Drugbank.
 
 ### Results and visualization
 
