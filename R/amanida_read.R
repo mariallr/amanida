@@ -60,13 +60,6 @@ amanida_read <- function(file, mode, coln, separator=NULL) {
   misrow <- sum(!complete.cases(datafile))
   
   if (mode == "quan") {
-    ## Check numeric columns: 
-    
-    if(is.numeric(datafile$foldchange) == F | 
-       is.numeric(datafile$pvalue) == F | 
-       is.numeric(datafile$N) == F) {
-      stop("Please check the columns pvalue, foldchange and N, they must contain numeric values")
-    }
     
     datafile <- datafile |>
       # Select columns with data needed

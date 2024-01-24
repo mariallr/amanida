@@ -63,6 +63,10 @@ datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 It creates a tibble which contain the data needed to perform the amanida meta-analysis. 
 **Note**: missing data is ignored and negative values of fold-change are transformed to positive (1/value).
 
+```{r include=FALSE}
+data("sample_data")
+```
+
 ### Analysis
 
 In this step will be performed the combination of overall results weightening by study size. Methods for combine results are:
