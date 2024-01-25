@@ -71,7 +71,7 @@ kbl(data_imp,
 Before the meta-analysis the IDs can be checked using public databases information. The IDs in format chemical name, InChI, InChIKey, and SMILES are searched in PubChem to transform all into a common nomenclature. If comp_inf = T:
 
 ```{r}
-if(params$comp_inf = T) {
+if(params$comp_inf == T) {
   datafile <- check_names(datafile)
 }
 ```

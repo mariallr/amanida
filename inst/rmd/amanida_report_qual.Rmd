@@ -63,7 +63,7 @@ kbl(data_imp,
 Before the meta-analysis the IDs can be checked using public databases information. The IDs in format chemical name, InChI, InChIKey, and SMILES are searched in PubChem to transform all into a common nomenclature. If comp_inf = T:
 
 ```{r}
-if(params$comp_inf = T) {
+if(params$comp_inf == T) {
   datafile <- check_names(datafile)
 }
 ```
@@ -74,7 +74,7 @@ if(params$comp_inf = T) {
 Qualitative analysis is performed by the vote-counting computed as follows: for compounds up-regulated are count as +1 and for down-regulated as -1. Total sum is obtained for each compound. 
 
 ```{r, eval = T}
-vote_results <- amanida_vote(datafile, comp.inf = params$comp_inf)
+vote_results <- amanida_vote(datafile)
 ```
 
 ```{r, eval = F}
