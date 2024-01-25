@@ -103,7 +103,7 @@ In this step you will obtain an S4 object with two tables:
 * adapted meta-analysis acces by `amanida_result@stat`
 * vote-counting acces by `amanida_results@vote`
 
-Selecting the option `comp.inf = T` the package need the previous use of \code{check_names}. Then using PubChem ID duplicates are checked. Results are returned including the following information: PubChem ID, Molecular Formula, Molecular Weight, SMILES, InChIKey, KEGG, ChEBI, HMDB, Drugbank. 
+Selecting the option `comp.inf = T` the package need the previous use of `check_names`. Then using PubChem ID duplicates are checked. Results are returned including the following information: PubChem ID, Molecular Formula, Molecular Weight, SMILES, InChIKey, KEGG, ChEBI, HMDB, Drugbank. 
 
 **4. Perform qualitative meta-analysis: `amanida_vote`**
 
@@ -116,7 +116,7 @@ data_votes <- amanida_read(input_file, mode = "qual", coln, separator = ";")
 vote_result <- amanida_vote(data_votes)
 ```
 
-For qualitative analysis the \code{check_names} can be also used. 
+For qualitative analysis the `check_names` can be also used, following the same procedure explained in Section 2. 
 
 In this step you will obtain an S4 object with one table:
 
