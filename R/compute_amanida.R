@@ -10,7 +10,7 @@
 #' 
 #' Vote-counting is computed based on votes. Punctuation of entries is based on trend, up-regulation gives 1, down-regulation give -1 and equal behavior gives 0. Total sum is divided then by the total number of entries on each compound.
 #'   
-#' @param datafile data imported using amanida_read function
+#' @param datafile data imported using \code{amanida_read} function w/o names checked by \code{check_names}
 #' @param comp.inf include compounds IDs from PubChem, InChIKey, SMILES, KEGG, ChEBI, HMDB, Drugbank, Molecular Mass and Molecular Formula
 #' @return METAtable S4 object with p-value combined, fold-change combined and vote-counting for each compound
 #' 
@@ -48,42 +48,8 @@ compute_amanida <- function(datafile, comp.inf = F) {
     compinf = FALSE
   }
   
-  if (compinf == T) { 
   
-    for(i in 1:length(datafile$id)){
-      a <- get_cid(datafile$id[i], 
-                   from = "name",
-                   domain = c("compound", "substance", "assay"), 
-                   match = "first")
-      if(is.na(a$cid)){
-        a <- get_cid(datafile$id[i], 
-                     from = "inchikey",
-                     domain = c("compound", "substance", "assay"),
-                     match = "first")
-        if(is.na(a$cid)){
-          a <- get_cid(datafile$id[i], 
-                       from = "inchi",
-                       domain = c("compound", "substance", "assay"), 
-                       match = "first")
-          if(is.na(a$cid)){
-            a <- get_cid(datafile$id[i], 
-                         from = "smiles",
-                         domain = c("compound", "substance", "assay"), 
-                         match = "first")
-          }
-        } 
-      } 
-    
-      datafile$cid[i] <- a$cid
-    
-      datafile$id_mod[i] <- pc_synonyms(a$cid, 
-                                        from = "cid", 
-                                        match = "first")
-    }
-  
-    datafile <- datafile |> 
-      mutate("id_mod" = ifelse(is.na(id_mod), id, id_mod))
-  
+  if ("cid" %in% colnames(datafile)) { 
   
     # Statistics grouping by compound identifier
     sta <- datafile |> group_by(id_mod) |>
@@ -101,47 +67,57 @@ compute_amanida <- function(datafile, comp.inf = F) {
       group_by(id_mod) |>
       mutate(trend = case_when(fc < 1 ~ -1, T ~ 1)) |>
       select(c(`id`, `trend`, `pval`, `fc`, `N_total`, `reference`, `cid`))
-  
-    b <- pc_prop(sta$cid, properties = c("MolecularFormula", "MolecularWeight", 
-                                         "InChIKey", "CanonicalSMILES"))
-  
-    sta <- sta |> mutate(cid = as.integer(cid)) |>
-      full_join(b, by = c("cid" = "CID"), relationship = "many-to-many") |>
-      distinct() 
-  
-    if(requireNamespace("metaboliteIDmapping", quietly = TRUE)) {
-      extra <- NULL
-      for (i in 1:nrow(sta)){
-        b <- metaboliteIDmapping::metabolitesMapping |> 
-          mutate(CID = as.character(CID)) |>
-          dplyr::filter(CID %in% sta$cid[i]) |> 
-          slice(1) |>
-          select(c(CID, KEGG, ChEBI, HMDB, Drugbank))
-        extra <- extra |> bind_rows(b)
-      }
     
-      sta <- sta |> mutate(cid = as.character(cid),
-                           id = unlist(id)) |>
-        full_join(extra, by = c("cid" = "CID"), relationship = "many-to-many") |>
-        distinct() |>
-        rename(PubChem_CID = cid) |>
-        select(-reference)
-    
-    } else {
-      msg <- c("metaboliteIDmapping is not installed. amanida can operate without metaboliteIDmapping, unless you want the complete information using comp.inf = F")
-      warning(msg)
+    if(compinf == T) {
+      b <- pc_prop(sta$cid, properties = c("MolecularFormula", "MolecularWeight", 
+                                           "InChIKey", "CanonicalSMILES"))
       
-      sta <- sta |> mutate(cid = as.character(cid)) |>
+      sta <- sta |> mutate(cid = as.integer(cid)) |>
+        full_join(b, by = c("cid" = "CID"), relationship = "many-to-many") |>
+        distinct() 
+      
+      if(requireNamespace("metaboliteIDmapping", quietly = TRUE)) {
+        extra <- NULL
+        for (i in 1:nrow(sta)){
+          b <- metaboliteIDmapping::metabolitesMapping |> 
+            mutate(CID = as.character(CID)) |>
+            dplyr::filter(CID %in% sta$cid[i]) |> 
+            slice(1) |>
+            select(c(CID, KEGG, ChEBI, HMDB, Drugbank))
+          extra <- extra |> bind_rows(b)
+        }
+        
+        sta <- sta |> mutate(cid = as.character(cid),
+                             id = tolower(unlist(id_mod))) |>
+          full_join(extra, by = c("cid" = "CID"), relationship = "many-to-many") |>
+          distinct() |>
+          rename(PubChem_CID = cid) |>
+          select(-reference)
+        
+      } else {
+        msg <- c("metaboliteIDmapping is not installed. amanida can operate without metaboliteIDmapping, unless you want the complete information using comp.inf = F")
+        warning(msg)
+        
+        sta <- sta |> mutate(cid = as.character(cid),
+                             id = tolower(unlist(id_mod))) |>
+          distinct() |>
+          rename(PubChem_CID = cid) |>
+          select(-reference)
+      }
+    } else {
+      sta <- sta |> mutate(cid = as.character(cid),
+                           id = tolower(unlist(id_mod))) |>
         distinct() |>
         rename(PubChem_CID = cid) |>
         select(-reference)
     }
+    
   
   ## Vote-counting per each compound id
     vote <- datafile |>
       dplyr::group_by(`id_mod`) |> 
       reframe(
-        id = id_mod,
+        id = tolower(unlist(id_mod)),
         # Votes per compound
         votes = sum(`trend`),
         # Number of reports

@@ -1,0 +1,395 @@
+
+---
+title: "Quantitative and qualitative meta-analysis results"
+author: "Amanida R package"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: lumen
+params: 
+  file_name: input_file
+  separator: ";"
+  analysis_type: "quan-qual"
+  column_id: coln
+  pvalue_cutoff: 0.05
+  fc_cutoff: 4
+  votecount_lim: 1
+  comp_inf: FALSE
+  show_code: FALSE
+---
+
+```{r setup, echo = F, warning = F, message = F}
+set.seed(123)
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(kableExtra, include.only = c('kbl', 'kable_styling', 'scroll_box', 'footnote'))
+library(amanida)
+```
+
+## Data exploration
+
+Data is loaded using `amanida_read` function:
+
+```{r, eval = F}
+coln = c("Compound Name", "P-value", "Fold-change", "N total", "References")
+input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
+```
+
+Your data:
+
+
+```{r, echo = F}
+datafile <- amanida_read(params$file_name, mode = "quan", params$column_id, params$separator) 
+```
+
+Here is shown the imported table:
+
+```{r, echo = F}
+data_imp <- datafile |> 
+  mutate(foldchange = round(foldchange,2),
+         pvalue = format(pvalue, scientific = T, digits = 3),
+         trend = case_when(trend == -1 ~ "Down-regulated",
+                           T ~ "Up-regulated")) |>
+  rename("ID" = id,
+         "P-value" = pvalue,
+         "Fold-Change" = foldchange,
+         "Number of participants" = N,
+         "Reference" = ref,
+         "Behaviour" = trend)
+
+kbl(data_imp, 
+      booktabs = T, 
+      caption = "Table 1: Data exploration",
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
+  scroll_box(width = "100%", height = "400px")
+```
+
+## Quantitative analysis
+
+Quantitative analysis is done for each different identifier. It combines the statistical significance and the effect size reported on the different studies, as follows:
+
+* Statistical significance (p-value): Fisher's method weigthed by number of participants on the study.
+* Effect size (fold-change): logarithmic transformation for average with weighting by number of participants. 
+
+`compute_amanida` function is used to combine p-values and fold-change. 
+
+```{r}
+amanida_result <- compute_amanida(datafile, comp.inf = params$comp_inf) 
+```
+
+Here are shown your results:
+
+```{r, eval = F}
+amanida_result@stat
+```
+
+```{r, echo = F}
+kbl(amanida_result@stat |>
+      arrange(pval) |> 
+      group_by(id) |>
+      mutate(id = case_when((trend == 1 & fc > params$fc_cutoff & pval < params$pvalue_cutoff)
+                               ~ paste(id, "*"),
+                             (trend == -1 & fc < (1/params$fc_cutoff) &
+                                pval < params$pvalue_cutoff) ~ paste(id, "*"),
+                            T ~ id)) |>
+      ungroup() |>
+      mutate(pval = format(pval, scientific = T, digits = 3),
+             fc = round(fc, 2)) |>
+      rename("ID" = id,
+             "Trend" = trend,
+             "P-value combined" = pval,
+             "Fold-change combined" = fc,
+             "Total sample size" = N_total), 
+      booktabs = T, 
+      caption = "Table 2: Quantitative analysis",
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
+  scroll_box(width = "100%", height = "400px") |>
+  footnote(symbol = c("Value over cut-offs"))
+```
+
+*Note: \* indicates the result is statistical significant* 
+
+### Significant results for quantitative analysis
+
+```{r, echo = F}
+sig_res <- amanida_result@stat |>
+  filter(pval < params$pvalue_cutoff,
+         fc > params$fc_cutoff | fc < 1/params$fc_cutoff)
+```
+
+The cut-off selected by the user for significant results are:
+
+* p-value: `r params$pvalue_cutoff`.
+* fold-change: `r params$fc_cutoff` for up-regulated and `r round(1/params$fc_cutoff, 2)` for down-regulated.
+
+Using indicated cut-offs there are **`r nrow(sig_res)`** compounds significant, `r sum(sig_res$trend == 1)` up-regulated and `r sum(sig_res$trend == -1)` down-regulated compounds.
+
+### Graphical results
+
+To see graphically the results obtained is used `volcano_plot`:
+
+With `r params$file_name` and a p-value cut-off of `r params$pvalue_cutoff` and fold-change cut-off of `r params$fc_cutoff` (up-regulated) or `r round(1/params$fc_cutoff, 2)` (down-regulated):
+
+```{r include=FALSE}
+volcano_plot <- function(mets, cutoff = NULL, names = T) {
+  
+  articles = NULL; pval = NULL; fc = NULL; lfc = NULL; lpval = NULL; . = NULL; 
+  label = NULL; sig = NULL;
+  set.seed(123)
+  
+  col_palette <- amanida_palette()
+  
+  # Search for cutoff argument
+  if (hasArg(cutoff)) { 
+    cuts <- cutoff
+    
+    if (length(cuts) != 2) {
+      stop( "Please indicate one cut-off for p-value and one for fold-change")
+    }
+    cut_pval <- -log10(cuts[1])
+    cut_fc <- log2(cuts[2])
+    
+    # If not cutoff argument convention values are established: 
+  } else {
+    # Alpha < 0.05 
+    cut_pval <- -log10(0.05)
+    # Log(fold-change) = 1.5
+    cut_fc <- log2(2.83)
+  }
+  
+  message(paste("The cut-off used are "), (10^-cut_pval), " for p-value (", round(cut_pval,2), 
+          " in log10 scale) and ", 2^cut_fc, 
+          " for fold-change (", round(cut_fc,2), " in log2 scale).", sep = "")
+  
+  # Compounds with 2 or more reports
+  cont <- as_tibble(mets@vote) |> 
+    mutate(articles = as.numeric(articles)) |> 
+    filter(articles >= 2)
+  
+  cont_ids <- cont |> pull(id)
+  
+  # Function for labels
+  case_character_type <- function(lfc, lpval) {
+    case_when(
+      (lfc < -cut_fc & lpval > cut_pval) ~ paste("p-value < ", 10^-cut_pval, 
+                                                 "& fold-change < ", -2^cut_fc),
+      (lpval > cut_pval & abs(lfc) < cut_fc) ~ paste("p-value < ", 10^-cut_pval),
+      (lfc > cut_fc & lpval > cut_pval) ~ paste("p-value <", 10^-cut_pval, 
+                                                "& fold-change >", 2^cut_fc),
+      T ~ "under cut-offs"
+    )}
+  
+  ## Volcano plot
+  
+  # Scatter plot for logarithmic fold-change vs. -logarithmic p-value
+  dt_p <- as_tibble(mets@stat) |>
+    mutate( 
+      # Format data needed
+      across(c(pval,fc), as.numeric),
+      # Negative logarithm of p-value for plot              
+      lpval = -log10(pval),
+      # Logarithm of fold-change
+      lfc = log2(fc)) |>
+    mutate(sig = case_character_type(lfc, lpval),
+           label = case_when(
+             sig == paste("p-value < ", 10^-cut_pval) ~ "",
+             sig == "under cut-offs" ~ "",
+             T ~ id),
+           reports = case_when(
+             id %in% cont_ids ~ "> 1 report",
+             T ~ "single report" )) |>
+    dplyr::group_by('sig') 
+  if ( names == T) {
+    ggplot(dt_p, aes(lfc, lpval, label = label, colour = sig)) +
+      geom_point(aes(shape = dt_p$reports), size = 2.5) + 
+      scale_shape_manual(values = c(8, 16), name = "") +
+      theme_minimal() +
+      ggrepel::geom_text_repel(size = 4,
+                               fontface = "bold",
+                               segment.size = 0.4,
+                               point.padding = (unit(0.3, "lines")),
+                               box.padding = unit(0.3, "lines"),
+                               colour = "black",
+                               max.overlaps = Inf) +
+      # Axis titles
+      xlab( "log2(Fold-change)") + 
+      ylab(expression(paste("-log10(", italic(p), "-value)"))) + 
+      labs(colour = "", tag = "Created with amanida") +
+      # X axis breaks
+      scale_x_continuous(breaks = seq(round(min(dt_p$lfc),0) - 1, 
+                                      round(max(dt_p$lfc),0) + 1, 1), 
+                         limits = c(min(dt_p$lfc), max(dt_p$lfc))) + 
+      # Cutoff marks
+      geom_hline(yintercept = cut_pval, 
+                 colour = "black", 
+                 linetype = "dashed") + 
+      geom_vline(xintercept = c(cut_fc, -cut_fc),
+                 colour = "black", 
+                 linetype = "dashed") + 
+      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5),
+            legend.text = element_text(size = 10), 
+            plot.tag = element_text(size = 9, colour = "grey"),
+            plot.tag.position = "bottomright") +
+      guides(col = guide_legend(nrow = 2, byrow = T)) + 
+      guides(shape = guide_legend(nrow = 2, byrow = T)) +
+      scale_color_manual(values = col_palette) +
+      ggtitle("Volcano plot of adapated meta-analysis results")
+ } else {
+   ggplot(dt_p, aes(lfc, lpval, colour = sig)) +
+      geom_point(aes(shape = dt_p$reports), size = 2.5) + 
+      scale_shape_manual(values = c(8, 16), name = "") +
+      theme_minimal() +
+      # Axis titles
+      xlab( "log2(Fold-change)") + 
+      ylab(expression(paste("-log10(", italic(p), "-value)"))) + 
+      labs(colour = "", tag = "Created with amanida") +
+      # X axis breaks
+      scale_x_continuous(breaks = seq(round(min(dt_p$lfc),0) - 1, 
+                                    round(max(dt_p$lfc),0) + 1, 1), 
+                       limits = c(min(dt_p$lfc), max(dt_p$lfc))) + 
+      # Cutoff marks
+      geom_hline(yintercept = cut_pval, colour = "black", linetype = "dashed") + 
+      geom_vline(xintercept = c(cut_fc, -cut_fc), colour = "black", linetype = "dashed") + 
+      theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5),
+              legend.text = element_text(size = 10), 
+            plot.tag = element_text(size = 9, colour = "grey"),
+            plot.tag.position = "bottomright") +
+      guides(col = guide_legend(nrow = 2, byrow = T)) + 
+      guides(shape = guide_legend(nrow = 2, byrow = T)) +
+      scale_color_manual(values = col_palette) +
+      ggtitle("Volcano plot of adapated meta-analysis results")
+ }
+}
+```
+
+```{r out.width='100%'}
+volcano_plot(amanida_result, cutoff = c(params$pvalue_cutoff, params$fc_cutoff))
+```
+
+*Note: labeled compounds are the ones found significant for the cut-off indicated*
+
+## Qualitative results
+
+With qualitative analysis can be inspected the behaviour to see if there are discrepancies on the results obtained. This is evaluated comparing the number of articles where an element is found up-regulated and down-regulated. It is also ploted the total results, as vote-counting, obtained by the difference between up-regulated and down-regulated number of reports.  
+
+Here, the explore_plot will only display the relevant identifiers (elements bigger than number of votes specified) or those with discrepancies between studies. 
+
+As dataset is big, on the following plot will be only displayed elements bigger than `r params$votecount_lim` votes and the elements with discrepancies between studies:
+
+```{r pressure, echo=T, message=TRUE}
+explore_plot(datafile, type = "mix", params$votecount_lim)
+```
+
+*Note: Plots are limited to 30 compounds for readability, for complete plot download from ubidi.shinyapps.io/easy-amanida*
+
+It is important to check if our significant compounds have discrepancies on the reports. 
+
+To see the complete results for vote-counting use:
+
+```{r, eval = F}
+amanida_result@vote 
+```
+
+```{r, echo = F}
+kbl(amanida_result@vote |>
+      arrange(desc(abs(votes))) |>
+      select("ID" = id, "Votes" = votes, "Articles reporting" = articles),
+      booktabs = T, 
+      caption = "Table 3: Qualitative analysis",
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
+  scroll_box(width = "100%", height = "400px") 
+```
+
+Qualitative results can be also graphically inspected without trend division. Here the vote_plot is set to show the identifiers with a minimum of a vote-counting of `r params$votecount_lim`
+
+
+```{r include=FALSE}
+vote_plot <- function(mets, counts = NULL) {
+  
+  votes = NULL; . = NULL;
+  set.seed(123)
+  
+  col_palette <- amanida_palette()
+  
+  if (hasArg(counts)) { 
+    cuts <- counts
+    
+    if (length(counts) != 1) {
+      stop( "Please indicate one cut-off only")
+    }
+  } else {
+    cuts <- 1
+  }
+  
+  message("Cut-off for votes is ", cuts, ".", sep = "")
+  
+  # Subset vote-couting data
+  tb <- as_tibble(mets@vote) |> 
+    mutate(
+      votes = as.numeric(votes),
+      test = case_when(
+      votes > 0 ~ 0,
+      T ~ 1)) |>
+    filter (abs(votes) >= cuts)
+  
+   if (nrow(tb) < 1) {
+    stop( "Cut-off value out of limit")
+  }
+  
+  if(nrow(tb) > 30) {
+    message("Too much values, only showing 30 highest values. Please check counts parameter.")
+    
+   tb <- tb  |>
+      slice_max(abs(votes), n = 30, with_ties = FALSE) 
+  }
+  
+  max_p <- max(tb$votes)
+  
+    ggplot(tb, aes(reorder(id, votes), votes, fill = votes)) + 
+        geom_bar(stat = "identity", show.legend = F, width = .5
+        ) +
+        geom_text(aes(label = reorder(id, votes)), vjust = 0.2, size = 3.5, 
+                  hjust = tb$test) +
+        scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
+        theme_light() + 
+        theme(axis.text.y = element_blank(),
+              axis.text.x = element_text(size = 10),
+              axis.title = element_text(size = 10),
+              axis.ticks.y = element_blank(), 
+              plot.title = element_text(size = 12), 
+              panel.grid.minor = element_blank(),
+              panel.grid.major.y = element_blank(), 
+              panel.border = element_blank(), 
+              panel.grid.major.x = element_line(linetype = "dashed"), 
+              plot.tag = element_text(size = 9, colour = "grey"),
+              plot.tag.position = "bottomright") +
+        labs(tag = "Created with amanida") +
+        coord_flip() +
+        ylab("Vote-counting") +
+        xlab('')+
+        ggtitle("Total vote count of compounds behaviour") +
+        scale_y_continuous(expand = c(0.6, 0), 
+                           breaks = seq(max_p*-1, max_p, by = 1),
+                           limits = c(max_p*-1,
+                                      max_p + 1)
+        )
+  
+}
+```
+
+```{r, out.width= '100%', echo = T}
+vote_plot(amanida_result, counts = params$votecount_lim)
+```
+
+*Note: Plots are limited to 30 compounds for readability, for complete plot download from ubidi.shinyapps.io/easy-amanida*
+
+*Qualitative analysis using Amanida R package*
+
+
+

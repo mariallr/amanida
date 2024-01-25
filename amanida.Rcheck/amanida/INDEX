@@ -1,0 +1,14 @@
+METAtables-class        An S4 class to return results from
+                        'compute_amanida' or 'amanida_vote' function
+amanida                 amanida
+amanida_palette         Get nice colour-blind colours
+amanida_read            Import data
+amanida_report          Report
+amanida_vote            Qualitative meta-analysis
+compute_amanida         Combine statistical results and compute
+                        vote-counting
+explore_plot            Plot for compounds divergence in reports
+getsampleDB             Function to sample data path
+sample_data             Example input data for the amanida function
+volcano_plot            Volcano plot of combined results
+vote_plot               Bar-plot for compounds vote-counting
