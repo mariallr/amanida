@@ -7,7 +7,7 @@
 explore_plot(data, type = "all", counts = NULL)
 }
 \arguments{
-\item{data}{an tibble obtained by \code{amanida_read}}
+\item{data}{an tibble obtained by \code{amanida_read} w/o names checked by \code{check_names}}
 
 \item{type}{select the subset of data to plot. Options are:
 \itemize{

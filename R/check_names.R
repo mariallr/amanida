@@ -19,13 +19,13 @@
 #' input_file <- getsampleDB()
 #' datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 #' 
-#' datafile <- check_names(amanida_read)
+#' datafile <- check_names(datafile)
 #' 
 #' @export
 #' 
 check_names <- function(datafile){
   
-  datafile <- datafile |> tibble::add_column(cid = NA, id_mod = NA)
+  datafile <- datafile |> mutate(cid = NA, id_mod = NA)
   
   for(i in 1:length(datafile$id)){
     a <- get_cid(datafile$id[i], 

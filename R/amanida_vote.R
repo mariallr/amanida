@@ -30,7 +30,8 @@
 
 amanida_vote <- function(data) {
     . = NULL; votes = NULL; articles = NULL; vote_counting = NULL; trend = NULL;
-    query = NULL; cid = NULL; CID = NULL; KEGG = NULL; ChEBI = NULL; HMDB = NULL; Drugbank = NULL;
+    id_mod = NULL;query = NULL; cid = NULL; CID = NULL; KEGG = NULL; 
+    ChEBI = NULL; HMDB = NULL; Drugbank = NULL;
     
     set.seed(123)
     
