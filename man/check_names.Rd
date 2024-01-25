@@ -22,10 +22,12 @@ Note that \code{check_names} depends on \code{webchem}package and it slows down 
 Formats compatible are \code{amanida_read} output
 }
 \examples{
+\dontrun{
 coln <-  c("Compound Name", "P-value", "Fold-change", "N total", "References")
 input_file <- getsampleDB()
 datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 
-datafile <- check_names(datafile[1:10,]) #only testing first 10 rows
+data_checked <- check_names(datafile) 
+}
 
 }
