@@ -19,11 +19,12 @@
 #' input_file <- getsampleDB()
 #' datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 #' 
-#' datafile <- check_names(datafile)
+#' datafile <- check_names(datafile[1:10,]) #only testing first 10 rows
 #' 
 #' @export
 #' 
 check_names <- function(datafile){
+  id_mod = NULL;
   
   datafile <- datafile |> mutate(cid = NA, id_mod = NA)
   
