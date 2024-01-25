@@ -38,7 +38,7 @@ amanida_report(
 
 \item{path}{path to the directory where html file is created, otherwise the file will be saved in a temporal folder}
 
-\item{comp_inf}{complete information of compounds from public databases}
+\item{comp_inf}{name checking using information from public databases}
 }
 \value{
 an html document saved in the working directory

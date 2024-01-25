@@ -1,0 +1,179 @@
+
+---
+title: "Qualitative meta-analysis results"
+author: "Amanida R package"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: lumen
+params: 
+  file_name: input_file
+  separator: ";"
+  analysis_type: "qual"
+  column_id: coln
+  votecount_lim: 1
+  comp_inf: FALSE
+  show_code: FALSE
+---
+
+```{r setup, echo=FALSE, warning = F, message = F}
+set.seed(123)
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(kableExtra, include.only = c('kbl', 'kable_styling', 'scroll_box', 'footnote'))
+library(amanida)
+```
+
+## Data exploration
+
+Data is loaded using `amanida_read` function:
+
+```{r, eval = F}
+coln = c("Compound Name", "Behaviour", "References")
+input_file <- system.file("extdata", "dataset2.csv", package = "amanida")
+datafile <- amanida_read(input_file, mode = "qual", coln, separator=";")
+```
+
+Your data:
+
+```{r, echo = F}
+datafile <- amanida_read(params$file_name, params$analysis_type, params$column_id, params$separator) 
+```
+
+Here is shown the imported table:
+
+```{r, echo = F}
+data_imp <- datafile |> 
+  mutate(trend = case_when(trend == -1 ~ "Down-regulated",
+                           T ~ "Up-regulated")) |>
+  rename("ID" = id,
+         "Reference" = ref,
+         "Behaviour" = trend)
+
+kbl(data_imp, 
+      booktabs = T, 
+      caption = "Table 1: Data exploration",
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
+  scroll_box(width = "100%", height = "400px")
+```
+
+## Qualitative analysis
+
+Qualitative analysis is performed by the vote-counting computed as follows: for compounds up-regulated are count as +1 and for down-regulated as -1. Total sum is obtained for each compound. 
+
+```{r, eval = T}
+vote_results <- amanida_vote(datafile, comp.inf = params$comp_inf)
+```
+
+```{r, eval = F}
+vote_results@vote
+```
+
+```{r, echo = F}
+kbl(vote_results@vote |>
+      arrange(desc(abs(votes))) |> 
+      select(-c( "vote_counting")) |> 
+      rename("ID" = id, "Votes" = votes), 
+      booktabs = T, 
+      caption = "Table 3: Qualitative analysis",
+    align = "c") |>
+  kable_styling(latex_options = c("basic", "scale_down")) |>
+  scroll_box(width = "100%", height = "400px") 
+```
+
+Qualitative results can be also graphically inspected without trend division. Here the vote_plot is set to show the identifiers with a minimum of a vote-counting of `r params$votecount_lim`
+
+```{r include=FALSE}
+vote_plot <- function(mets, counts = NULL) {
+  
+  votes = NULL; . = NULL;
+  set.seed(123)
+  
+  col_palette <- amanida_palette()
+  
+  if (hasArg(counts)) { 
+    cuts <- counts
+    
+    if (length(counts) != 1) {
+      stop( "Please indicate one cut-off only")
+    }
+  } else {
+    cuts <- 1
+  }
+  
+  message("Cut-off for votes is ", cuts, ".", sep = "")
+  
+  # Subset vote-couting data
+  tb <- as_tibble(mets@vote) |> 
+    mutate(
+      votes = as.numeric(votes),
+      test = case_when(
+      votes > 0 ~ 0,
+      T ~ 1)) |>
+    filter (abs(votes) >= cuts)
+  
+   if (nrow(tb) < 1) {
+    stop( "Cut-off value out of limit")
+  }
+  
+  if(nrow(tb) > 30) {
+    message("Too much values, only showing 30 highest values. Please check counts parameter.")
+    
+   tb <- tb  |>
+      slice_max(abs(votes), n = 30, with_ties = FALSE) 
+  }
+  
+  max_p <- max(tb$votes)
+  
+      ggplot(tb, aes(reorder(id, votes), votes, fill = votes)) + 
+        geom_bar(stat = "identity", show.legend = F, width = .5
+        ) +
+        geom_text(aes(label = reorder(id, votes)), vjust = 0.2, size = 3.5, 
+                  hjust = tb$test) +
+        scale_fill_gradient(low = col_palette[3], high = col_palette[5]) +
+        theme_light() + 
+        theme(axis.text.y = element_blank(),
+              axis.text.x = element_text(size = 10),
+              axis.title = element_text(size = 10),
+              axis.ticks.y = element_blank(), 
+              plot.title = element_text(size = 12), 
+              panel.grid.minor = element_blank(),
+              panel.grid.major.y = element_blank(), 
+              panel.border = element_blank(), 
+              panel.grid.major.x = element_line(linetype = "dashed"), 
+              plot.tag = element_text(size = 9, colour = "grey"),
+              plot.tag.position = "bottomright") +
+        labs(tag = "Created with amanida") +
+        coord_flip() +
+        ylab("Vote-counting") +
+        xlab('')+
+        ggtitle("Total vote count of compounds behaviour") +
+        scale_y_continuous(expand = c(0.6, 0), 
+                           breaks = seq(max_p*-1, max_p, by = 1),
+                           limits = c(max_p*-1,
+                                      max_p + 1)
+        )
+  
+}
+```
+
+```{r, out.width= '100%', echo = T}
+vote_plot(vote_results, counts = params$votecount_lim)
+```
+
+*Note: Plots are limited to 30 compounds for readability, for complete plot download from ubidi.shinyapps.io/easy-amanida*
+
+Here, the explore_plot will only display the relevant identifiers (elements bigger than 2 votes) or those with discrepancies between studies. 
+
+As dataset is big, on the following plot will be only displayed elements bigger than `r params$votecount_lim` votes and the elements with discrepancies between studies:
+
+```{r pressure, echo=T, message=TRUE}
+explore_plot(datafile, type = "mix", params$votecount_lim)
+```
+
+*Note: Plots are limited to 30 compounds for readability, for complete plot download from ubidi.shinyapps.io/easy-amanida*
+
+*Qualitative analysis using Amanida R package*

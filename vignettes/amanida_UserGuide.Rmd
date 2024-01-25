@@ -63,9 +63,12 @@ datafile <- amanida_read(input_file, mode = "quan", coln, separator=";")
 It creates a tibble which contain the data needed to perform the amanida meta-analysis. 
 **Note**: missing data is ignored and negative values of fold-change are transformed to positive (1/value).
 
-```{r include=FALSE}
-data("sample_data")
+Before the meta-analysis the IDs can be checked using public databases information. The IDs in format chemical name, InChI, InChIKey, and SMILES are searched in PubChem to transform all into a common nomenclature, PubChem ID. Then duplicates are searched. 
+
+```{r, eval = F}
+datafile <- check_names(datafile)
 ```
+
 
 ### Analysis
 
@@ -84,7 +87,7 @@ It is also included a qualitative analysis, the vote-counting, that is computed 
 amanida_result <- compute_amanida(datafile, comp.inf = F)
 ```
 
-If you select the option `comp.inf = T` the package will retrieve the PubChem ID from the ID using `webchem`. It is only valid for the following ids: chemical name, InChIKey, InChI, and SMILES. Then using PubChem ID duplicates are checked. Results are returned including the following information: PubChem ID, Molecular Formula, Molecular Weight, SMILES, InChIKey, KEGG, ChEBI, HMDB, Drugbank.
+If you select the option `comp.inf = T` the package will retrieve the PubChem ID from the ID using `webchem`. Results will return the following information: PubChem ID, Molecular Formula, Molecular Weight, SMILES, InChIKey, KEGG, ChEBI, HMDB, Drugbank.
 
 ### Results and visualization
 

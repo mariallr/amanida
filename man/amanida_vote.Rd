@@ -4,12 +4,10 @@
 \alias{amanida_vote}
 \title{Qualitative meta-analysis}
 \usage{
-amanida_vote(data, comp.inf = F)
+amanida_vote(data)
 }
 \arguments{
-\item{data}{data imported using amanida_read function}
-
-\item{comp.inf}{include compounds IDs from PubChem, InChIKey, SMILES, KEGG, ChEBI, HMDB, Drugbank, Molecular Mass and Molecular Formula.}
+\item{data}{data imported using \code{amanida_read} function w/o names checked by \code{check_names}}
 }
 \value{
 METAtable S4 object with vote-counting for each compound on @slot vote

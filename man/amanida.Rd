@@ -3,9 +3,17 @@
 \docType{package}
 \name{amanida}
 \alias{amanida}
+\alias{amanida-package}
 \title{amanida}
 \description{
 amanida: A package for Meta-Analysis with non-integral data
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/mariallr/amanida}
+}
+
 }
 \author{
 Maria Llambrich, Eudald Correig and Raquel Cumeras

@@ -1,0 +1,272 @@
+Hmm ... looks like a package
+Error in texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  : 
+  Running 'texi2dvi' on 'Rd2.tex' failed.
+Messages:
+/usr/local/bin/texi2dvi: makeindex failed
+Output:
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2020-10-01> patch level 4
+L3 programming layer <2021-02-18>
+(./Rd2.tex
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2020/04/10 v1.4m Standard LaTeX document class
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/tools/bm.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/alltt.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/tools/verbatim.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/url/url.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/textcomp.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/graphics/color.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def))
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty))
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.
+sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty)
+ (/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/auxhook/auxhook.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref-langpatche
+s.def) (/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty
+) (/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/etexcmds/etexcmds.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)
+) (/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilechec
+k.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounte
+r.sty)))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+) (/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/makeidx.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/inputenc.sty)
+Writing index file Rd2.idx
+
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.d
+ef)
+No file Rd2.aux.
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestr
+ing.sty))
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/inconsolata/ot1zi4.fd)
+
+LaTeX Font Warning: Font shape `OML/zi4/m/n' undefined
+(Font)              using `OML/cmm/m/it' instead
+(Font)              for symbol `textless' on input line 44.
+
+[1{/Users/maria/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+[2] [3]
+Overfull \hbox (28.4146pt too wide) in paragraph at lines 190--191
+\OT1/cmr/m/n/10 case of quan-ti-ta-tive anal-y-sis \OT1/zi4/m/n/10 amanida[]rep
+ort \OT1/cmr/m/n/10 uses the func-tions \OT1/zi4/m/n/10 amanida[]read \OT1/cmr/
+m/n/10 and \OT1/zi4/m/n/10 compute[]amanida
+[4] [5] [6]
+Underfull \hbox (badness 3428) in paragraph at lines 366--366
+[]\OT1/cmr/m/it/10 An S4 class to re-turn re-sults from \OT1/zi4/m/n/10 compute
+[]amanida \OT1/cmr/m/it/10 or
+[7] [8]
+No file Rd2.ind.
+[9]
+(/private/var/folders/9f/rs4lds997h17r94xzbf__9r00000gn/T/RtmpkL8SDo/Rd2pdf534b
+565e11f/Rd2.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information) </Users/maria/Library/Tiny
+TeX/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk>{/Users/maria/Library/
+TinyTeX/texmf-dist/fonts/enc/dvips/inconsolata/i4-ot1-0.enc}</Users/maria/Libra
+ry/TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></Use
+rs/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
+/Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.p
+fb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+10.pfb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr10.pfb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr12.pfb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmsl10.pfb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmss12.pfb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmti10.pfb>
+Output written on Rd2.pdf (9 pages, 136673 bytes).
+Transcript written on Rd2.log.
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2020-10-01> patch level 4
+L3 programming layer <2021-02-18>
+(./Rd2.tex
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2020/04/10 v1.4m Standard LaTeX document class
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/tools/bm.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/alltt.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/tools/verbatim.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/url/url.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/textcomp.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/graphics/color.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/U
+
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2020-10-01> patch level 4
+L3 programming layer <2021-02-18>
+(./Rd2.tex
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2020/04/10 v1.4m Standard LaTeX document class
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/tools/bm.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/alltt.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/tools/verbatim.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/url/url.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/textcomp.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/graphics/color.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def))
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty))
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.
+sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty)
+ (/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/auxhook/auxhook.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref-langpatche
+s.def) (/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty
+) (/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/etexcmds/etexcmds.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)
+) (/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilechec
+k.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounte
+r.sty)))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+) (/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/makeidx.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/base/inputenc.sty)
+Writing index file Rd2.idx
+
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.d
+ef)
+(/private/var/folders/9f/rs4lds997h17r94xzbf__9r00000gn/T/RtmpkL8SDo/Rd2pdf534b
+565e11f/Rd2.aux)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestr
+ing.sty))
+(/private/var/folders/9f/rs4lds997h17r94xzbf__9r00000gn/T/RtmpkL8SDo/Rd2pdf534b
+565e11f/Rd2.out)
+(/private/var/folders/9f/rs4lds997h17r94xzbf__9r00000gn/T/RtmpkL8SDo/Rd2pdf534b
+565e11f/Rd2.out)
+(/Users/maria/Library/TinyTeX/texmf-dist/tex/latex/inconsolata/ot1zi4.fd)
+
+LaTeX Font Warning: Font shape `OML/zi4/m/n' undefined
+(Font)              using `OML/cmm/m/it' instead
+(Font)              for symbol `textless' on input line 44.
+
+
+(/private/var/folders/9f/rs4lds997h17r94xzbf__9r00000gn/T/RtmpkL8SDo/Rd2pdf534b
+565e11f/Rd2.toc [1{/Users/maria/Library/TinyTeX/texmf-var/fonts/map/pdftex/updm
+ap/pdftex.map}]) [2] [3]
+Overfull \hbox (28.4146pt too wide) in paragraph at lines 190--191
+\OT1/cmr/m/n/10 case of quan-ti-ta-tive anal-y-sis \OT1/zi4/m/n/10 amanida[]rep
+ort \OT1/cmr/m/n/10 uses the func-tions \OT1/zi4/m/n/10 amanida[]read \OT1/cmr/
+m/n/10 and \OT1/zi4/m/n/10 compute[]amanida
+[4] [5] [6]
+Underfull \hbox (badness 3428) in paragraph at lines 366--366
+[]\OT1/cmr/m/it/10 An S4 class to re-turn re-sults from \OT1/zi4/m/n/10 compute
+[]amanida \OT1/cmr/m/it/10 or
+[7] [8] [9]
+No file Rd2.ind.
+[10]
+(/private/var/folders/9f/rs4lds997h17r94xzbf__9r00000gn/T/RtmpkL8SDo/Rd2pdf534b
+565e11f/Rd2.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ )
+(see the transcript file for additional information) </Users/maria/Library/Tiny
+TeX/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk>{/Users/maria/Library/
+TinyTeX/texmf-dist/fonts/enc/dvips/inconsolata/i4-ot1-0.enc}</Users/maria/Libra
+ry/TinyTeX/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></Use
+rs/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
+/Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.p
+fb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+10.pfb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr10.pfb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr12.pfb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmsl10.pfb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmss12.pfb></Users/maria/Library/TinyTeX/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmti10.pfb>
+Output written on Rd2.pdf (10 pages, 138375 bytes).
+Transcript written on Rd2.log.
+Saving output to ‘amanida-manual.pdf’ ...
+Done
+You may want to clean up by 'rm -Rf /var/folders/9f/rs4lds997h17r94xzbf__9r00000gn/T//RtmpkL8SDo/Rd2pdf534b565e11f'

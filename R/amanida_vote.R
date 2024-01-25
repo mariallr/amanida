@@ -9,8 +9,7 @@
 #'
 #' Formats compatible are csv, xlsx, xls or txt.
 #' 
-#' @param data data imported using amanida_read function
-#' @param comp.inf include compounds IDs from PubChem, InChIKey, SMILES, KEGG, ChEBI, HMDB, Drugbank, Molecular Mass and Molecular Formula. 
+#' @param data data imported using \code{amanida_read} function w/o names checked by \code{check_names}
 #' @return METAtable S4 object with vote-counting for each compound on @slot vote
 #' @export
 #' 
@@ -29,30 +28,17 @@
 #' @export
 #' 
 
-amanida_vote <- function(data, comp.inf = F) {
+amanida_vote <- function(data) {
     . = NULL; votes = NULL; articles = NULL; vote_counting = NULL; trend = NULL;
-    query = NULL; cid = NULL; CID = NULL; KEGG = NULL; ChEBI = NULL; HMDB = NULL; Drugbank = NULL;
+    id_mod = NULL;query = NULL; cid = NULL; CID = NULL; KEGG = NULL; 
+    ChEBI = NULL; HMDB = NULL; Drugbank = NULL;
     
     set.seed(123)
     
-    if (hasArg(comp.inf)) { 
-      compinf <- comp.inf
-      
-    } else {
-      compinf = FALSE
-    }
-    
-  if (comp.inf == T) { 
-    a <- get_cid(data$id, 
-                 from = "name",
-                 domain = c("compound", "substance", "assay"))
-    a <- a |> distinct(query, .keep_all = TRUE)
-    
-    data <- data |> full_join(a, by = c("id" = "query")) |>
-      mutate("id_mod" = ifelse(is.na(cid), id, cid))
+  if ("cid" %in% colnames(data)) { 
     
     vote <- data |>
-      dplyr::group_by(`id`) |>
+      dplyr::group_by(`id_mod`) |>
       summarize(
         # Votes per compound
         votes = sum(trend),
@@ -66,7 +52,7 @@ amanida_vote <- function(data, comp.inf = F) {
       b <- pc_prop(vote$cid, properties = c("MolecularFormula", "MolecularWeight", "InChIKey", "CanonicalSMILES"))
         
       vote <- vote |> mutate(cid = as.integer(cid)) |>
-          full_join(b, by = c("cid" = "CID")) |>
+          full_join(b, by = c("cid" = "CID"), relationship = "many-to-many") |>
           distinct() 
       if(requireNamespace("metaboliteIDmapping", quietly = TRUE)) {
         extra <- NULL
@@ -78,15 +64,17 @@ amanida_vote <- function(data, comp.inf = F) {
             select(c(CID, KEGG, ChEBI, HMDB, Drugbank))
           extra <- extra |> bind_rows(b)
         }
-        vote <- vote |> mutate(cid = as.character(cid)) |>
-          full_join(extra, by = c("cid" = "CID")) |>
+        vote <- vote |> mutate(cid = as.character(cid), 
+                               id = tolower(unlist(id_mod))) |>
+          full_join(extra, by = c("cid" = "CID"), relationship = "many-to-many") |>
           distinct() |>
           rename(PubChem_CID = cid)
       } else {
         msg <- c("metaboliteIDmapping is not installed. amanida can operate without metaboliteIDmapping, unless you want the complete information using comp.inf = F")
         warning(msg)
         
-        vote <- vote |> mutate(cid = as.character(cid)) |>
+        vote <- vote |> mutate(cid = as.character(cid),
+                               id = tolower(unlist(id_mod))) |>
           distinct() |>
           rename(PubChem_CID = cid)
       }

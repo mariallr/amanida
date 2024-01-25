@@ -7,7 +7,7 @@
 compute_amanida(datafile, comp.inf = F)
 }
 \arguments{
-\item{datafile}{data imported using amanida_read function}
+\item{datafile}{data imported using \code{amanida_read} function w/o names checked by \code{check_names}}
 
 \item{comp.inf}{include compounds IDs from PubChem, InChIKey, SMILES, KEGG, ChEBI, HMDB, Drugbank, Molecular Mass and Molecular Formula}
 }

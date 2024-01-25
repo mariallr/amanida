@@ -1,0 +1,162 @@
+﻿Group;Compound Name;P-value;Fold-change;N total;Behaviour;References
+CRC vs control;Citric acid;1,18E-03;3,07;342;UP;[24] Deng 2019
+CRC vs control;Citric acid;7,90E-10;0,53;204;DOWN;[33] Cheng 2012
+CRC vs control;Citric acid;3,66E-05;;248;DOWN;[34] Kim 2019
+CRC pre-/post-surgery;Citric acid;1,90E-03;0,77;123;DOWN;[42] Qiu 2010
+CRC vs control;Citric acid;4,32E-02;0,83;123;DOWN;[42] Qiu 2010
+CRC pre-/post-surgery;Citric acid;1,00E-03;1,471;135;UP;[43] Liesenfeld 2015
+CRC vs control;Hippuric acid;4,42E-04;0,39;342;DOWN;[24] Deng 2019
+CRC vs control;Hippuric acid;5,70E-17;0,09;204;DOWN;[33] Cheng 2012
+CRC vs control;Hippuric acid;4,53E-04;;248;DOWN;[34] Kim 2019
+CRC pre-/post-surgery;Hippuric acid;9,60E-09;0,21;123;DOWN;[42] Qiu 2010
+CRC vs control;Indole-3-acetic acid;2,06E-04;0,21;342;DOWN;[24] Deng 2019
+CRC vs control;Indole-3-acetic acid;1,19E-09;0,34;204;DOWN;[33] Cheng 2012
+CRC pre-/post-surgery;Indole-3-acetic acid;2,00E-03;0,796;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;P-Cresol;6,33E-10;0,28;204;DOWN;[33] Cheng 2012
+CRC pre-/post-surgery;P-Cresol;2,00E-04;0,26;123;DOWN;[42] Qiu 2010
+CRC vs control;P-Cresol;9,61E-02;1,4;123;UP;[42] Qiu 2010
+CRC vs control;2-Aminobutyrate;7,87E-09;1,75;204;UP;[33] Cheng 2012
+CRC pre-/post-surgery;2-Aminobutyrate;9,00E-09;1,295;135;UP;[43] Liesenfeld 2015
+CRC vs control;Guaiacol;4,08E-02;0,4263;60;DOWN;[29] Porto-Figueira 2018
+CRC pre-/post-surgery;Guaiacol;2,80E-04;0,555;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;L-Histidine;0,0601;0,91;123;DOWN;[42] Qiu 2010
+CRC pre-/post-surgery;L-Histidine;3,96E-02;1,3;123;UP;[42] Qiu 2010
+CRC vs control;L-Pyroglutamic acid;0,0203;1,2;123;UP;[42] Qiu 2010
+CRC pre-/post-surgery;L-Pyroglutamic acid;2,40E-03;1,3;123;UP;[42] Qiu 2010
+CRC vs control;L-Threonine;0,00703;;248;DOWN;[34] Kim 2019
+CRC pre-/post-surgery;L-Threonine;2,00E-03;2,3;123;UP;[42] Qiu 2010
+CRC vs control;L-Tryptophan;2,73E-07;0,63;204;DOWN;[33] Cheng 2012
+CRC pre-/post-surgery;L-Tryptophan;1,00E-06;1,6;123;UP;[42] Qiu 2010
+CRC vs control;L-Tryptophan;3,08E-02;1,2;123;UP;[42] Qiu 2010
+CRC vs control;L-Tyrosine;0,000000257;0,64;204;DOWN;[33] Cheng 2012
+CRC pre-/post-surgery;L-Tyrosine;3,90E-03;1,6;123;UP;[42] Qiu 2010
+CRC pre-/post-surgery;L-Tyrosine;1,00E-03;0,521;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;Phenylacetic acid;0,0875;1,2;123;UP;[42] Qiu 2010
+CRC pre-/post-surgery;Phenylacetic acid;3,90E-05;0,48;123;DOWN;[42] Qiu 2010
+CRC vs control;Creatinine;9,87E-06;0,75;204;DOWN;[33] Cheng 2012
+CRC vs control;Creatinine;1,30E-02;;248;DOWN;[34] Kim 2019
+CRC vs control;L-Alanine;3,69E-05;0,73;204;DOWN;[33] Cheng 2012
+CRC vs control;L-Alanine;1,21E-03;;248;UP;[34] Kim 2019
+CRC pre-/post-surgery;L-Asparagine;2,00E-05;1,9;123;UP;[42] Qiu 2010
+CRC pre-/post-surgery;L-Asparagine;8,70E-06;0,801;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;N1,N12-Diacetylspermine;3,60E-31;10,75;342;UP;[24] Deng 2019
+CRC vs control;N1,N12-Diacetylspermine;5,70E-03;;232;UP;[25] Nakajima 2018
+CRC vs control;Phenol;2,16E-03;0,16;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Phenol;2,60E-10;0,32;204;DOWN;[33] Cheng 2012
+CRC vs control;Putrescine;1,36E-05;3,78;342;UP;[24] Deng 2019
+CRC vs control;Putrescine;2,85E-07;1,59;204;UP;[33] Cheng 2012
+CRC pre-/post-surgery;Salicyluric acid;3,80E-06;0,32;123;DOWN;[42] Qiu 2010
+CRC pre-/post-surgery;Salicyluric acid;5,00E-02;0,31;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;Urea;4,34E-08;0,71;204;DOWN;[33] Cheng 2012
+CRC vs control;Urea;7,26E-04;;248;UP;[34] Kim 2019
+CRC vs control;1,1,6-Trimethyl-1,2-dihydronaphthalene;3,91E-04;0,2243;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;1,3-Dithiane;1,89E-02;3,4284;60;UP;[29] Porto-Figueira 2018
+CRC vs control;1,5,5-Trimethyl-6-methylene-cyclohexene;3,42E-02;0,5965;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;1,6,7-Trimethylnaphthalene;1,94E-04;0,3196;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;2,2,6-Trimethylcyclohexanone;2,98E-02;0,3476;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;2,3-Butanediol;9,10E-05;0,271;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;2,3-Dihydroxybutanoic acid;4,70E-02;1,556;135;UP;[43] Liesenfeld 2015
+CRC vs control;2-Aminohexanedioic acid;2,70E-08;0,47;342;DOWN;[24] Deng 2019
+CRC pre-/post-surgery;2-Bromo-4-tert-butylphenol;1,41E-06;0,3488;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;2-Ethyl-5-methylfuran;3,42E-02;0,6389;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;2-Hydroxyestradiol;8,08E-17;0,31;204;DOWN;[33] Cheng 2012
+CRC pre-/post-surgery;2-Hydroxyglutaric acid;4,70E-02;1,27;135;UP;[43] Liesenfeld 2015
+CRC vs control;2-Methyl-1,3-pentadiene;3,97E-02;0,3594;60;DOWN;[29] Porto-Figueira 2018
+CRC pre-/post-surgery;2-Methylfuran;4,06E-03;0,4971;60;DOWN;[29] Porto-Figueira 2018
+CRC pre-/post-surgery;2-O-(alpha-D-glucopyranosyl)glycerol;1,00E-03;0,601;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;3-(3-Hydroxyphenyl)-3-hydroxypropanoic acid;9,44E-11;0,33;342;DOWN;[24] Deng 2019
+CRC vs control;3,3-Dimethyl-6-methylenecyclohexene;3,49E-02;0,4989;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;3,4-Dihydroxybutanoic acid;5,00E-02;0,905;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;3-Aminoisobutyrate;0,00000583;;248;UP;[34] Kim 2019
+CRC pre-/post-surgery;3-Hexanone;3,22E-02;2,2737;60;UP;[29] Porto-Figueira 2018
+CRC pre-/post-surgery;3-Hydroxybutyric acid;2,55E-09;17,56;342;UP;[24] Deng 2019
+CRC vs control;3-Hydroxyhippuric acid;1,00E-03;0,458;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;3-Hydroxyisobutyric acid;2,20E-04;3,083;135;UP;[43] Liesenfeld 2015
+CRC pre-/post-surgery;3-Methylfuran;1,89E-02;0,6046;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;3-Methylhistidine;0,0582;0,77;123;DOWN;[42] Qiu 2010
+CRC pre-/post-surgery;3-Phosphoglycerate;1,00E-03;0,619;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;4-Hydroxybutanoate;1,44E-08;1,95;204;UP;[33] Cheng 2012
+CRC pre-/post-surgery;4-Hydroxyhippuric acid;7,00E-03;0,906;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;4-Hydroxyphenylacetic acid;0,0304;2,6;123;UP;[42] Qiu 2010
+CRC vs control;5-Hydroxyindole-3-acetic acid;0,007;1,5;123;UP;[42] Qiu 2010
+CRC vs control;5-Hydroxy-L-tryptophan;2,23E-08;0,53;204;DOWN;[33] Cheng 2012
+CRC pre-/post-surgery;Aconitic acid;2,40E-03;0,77;123;DOWN;[42] Qiu 2010
+CRC vs control;Allyl methyl disulfide;4,86E-02;2,1396;60;UP;[29] Porto-Figueira 2018
+CRC vs control;Aminohippuric acid;4,66E-09;0,59;204;DOWN;[33] Cheng 2012
+CRC pre-/post-surgery;Aminomalonic acid;8,39E-02;1,15;123;UP;[42] Qiu 2010
+CRC vs control;Ascorbic acid;6,81E-10;;248;DOWN;[34] Kim 2019
+CRC vs control;Butyraldehyde;3,47E-08;0,0031;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Butyric acid;9,72E-03;0,19;342;DOWN;[24] Deng 2019
+CRC vs control;Carbon disulfide;3,84E-03;0,1837;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Chloromethane;3,28E-02;0,2769;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Cyclohexene, 5-methyl-3-(1-methylethenyl)-;4,06E-03;0,3342;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;D-Arabinitol;3,04E-08;0,55;204;DOWN;[33] Cheng 2012
+CRC vs control;D-Glucose;1,90E-22;3,06;342;UP;[24] Deng 2019
+CRC vs control;D-Glucuronic Acid;5,20E-12;0,61;204;DOWN;[33] Cheng 2012
+CRC vs control;D-Xylose;1,89E-08;0,71;204;DOWN;[33] Cheng 2012
+CRC vs control;Ethanone, 1-(2,4,5-triethylphenyl)-;4,86E-02;0,5213;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Ether;2,77E-07;0,1786;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Ethyl methyl disulfide;3,22E-02;1,8549;60;UP;[29] Porto-Figueira 2018
+CRC vs control;Fumaric acid;1,44E-08;1,81;204;UP;[33] Cheng 2012
+CRC vs control;Furan;1,40E-04;0,5047;60;DOWN;[29] Porto-Figueira 2018
+CRC pre-/post-surgery;gamma-Glutamylvaline;1,00E-03;1,368;135;UP;[43] Liesenfeld 2015
+CRC pre-/post-surgery;Gluconic acid;3,20E-02;0,524;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;Glycerol;5,22E-32;;248;DOWN;[34] Kim 2019
+CRC vs control;Glycolic acid;1,56E-20;0,55;204;DOWN;[33] Cheng 2012
+CRC pre-/post-surgery;Glycylproline;2,80E-09;2,4;123;UP;[42] Qiu 2010
+CRC vs control;Hexanal;1,29E-02;0,6358;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Hexane;1,29E-02;;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Homovanillic acid;1,05E-17;0,51;204;DOWN;[33] Cheng 2012
+CRC pre-/post-surgery;Hydroquinone;2,80E-04;0,155;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;Hydroxyproline;1,31E-08;2,53;242;UP;[24] Deng 2019
+CRC pre-/post-surgery;Indole;1,48E-08;0,66;204;DOWN;[33] Cheng 2012
+CRC vs control;Inositol;1,40E-02;0,429;135;DOWN;[43] Liesenfeld 2015
+CRC pre-/post-surgery;Isocitric acid;0,0123;0,77;123;DOWN;[42] Qiu 2010
+CRC vs control;Isoprene;3,22E-02;0,4478;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Kynurenic acid;5,03E-27;0,4;204;DOWN;[33] Cheng 2012
+CRC vs control;L-Acetylcarnitine;0,000000316;3,04;204;UP;[33] Cheng 2012
+CRC vs control;L-Arabinose;2,30E-02;0,831;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;L-Aspartic acid;5,73E-10;0,32;342;DOWN;[24] Deng 2019
+CRC pre-/post-surgery;L-Dopa;5,57E-09;14,63;242;UP;[24] Deng 2019
+CRC vs control;L-Glutamic acid;0,0014;2;123;UP;[42] Qiu 2010
+CRC vs control;L-Histidinol;2,76E-19;12,76;204;UP;[33] Cheng 2012
+CRC pre-/post-surgery;L-Isoleucine;8,00E-04;1,3;123;UP;[42] Qiu 2010
+CRC vs control;L-Kynurenine;6,53E-16;3,5;342;UP;[24] Deng 2019
+CRC vs control;L-Leucine;2,60E-05;1,5;123;UP;[42] Qiu 2010
+CRC pre-/post-surgery;L-Lysine;3,64E-02;1,7;123;UP;[42] Qiu 2010
+CRC pre-/post-surgery;L-Phenylalanine;8,00E-03;0,644;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;L-Proline;4,04E-31;2,53;342;UP;[24] Deng 2019
+CRC pre-/post-surgery;L-Serine;3,00E-04;1,6;123;UP;[42] Qiu 2010
+CRC vs control;L-Sorbose;9,62E-08;0,59;204;DOWN;[33] Cheng 2012
+CRC vs control;L-Valine;0,000000835;;248;UP;[34] Kim 2019
+CRC pre-/post-surgery;Maleamic acid;1,00E-03;0,593;135;DOWN;[43] Liesenfeld 2015
+CRC pre-/post-surgery;Mannitol;1,90E-02;0,593;135;DOWN;[43] Liesenfeld 2015
+CRC pre-/post-surgery;Methanethiol;3,22E-02;0,6111;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Methyl salicylurate;1,00E-03;0,36;123;DOWN;[42] Qiu 2010
+CRC pre-/post-surgery;Myristic acid;6,38E-12;0,33;204;DOWN;[33] Cheng 2012
+CRC vs control;N1,N8-acetylspermidine;1,60E-02;;232;UP;[25] Nakajima 2018
+CRC vs control;N1-acetylspermidine;1,00E-04;;232;DOWN;[25] Nakajima 2018
+CRC vs control;N1-acetylspermine;2,10E-02;;232;DOWN;[25] Nakajima 2018
+CRC vs control;N-Acetyl-L-aspartic acid;0,0000016;1,9;123;UP;[42] Qiu 2010
+CRC vs control;N-alpha-Acetyl-L-lysine;1,25E-11;0,49;204;DOWN;[33] Cheng 2012
+CRC vs control;Oxalic acid;1,70E-02;0,513;135;DOWN;[43] Liesenfeld 2015
+CRC pre-/post-surgery;P-Cresol glucoronide;4,70E-02;1,064;135;UP;[43] Liesenfeld 2015
+CRC vs control;Pentane;1,17E-04;0,345;60;DOWN;[29] Porto-Figueira 2018
+CRC pre-/post-surgery;Pentanedioate;1,23E-02;0,13;123;DOWN;[42] Qiu 2010
+CRC pre-/post-surgery;Phenylacetylglutamine;5,10E-07;0,29;123;DOWN;[42] Qiu 2010
+CRC vs control;Pyridoxal;3,57E-15;0,25;204;DOWN;[33] Cheng 2012
+CRC pre-/post-surgery;Pyrogallol;3,10E-02;0,288;135;DOWN;[43] Liesenfeld 2015
+CRC pre-/post-surgery;Pyrrole-2-carboxylic acid;4,70E-02;0,428;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;Pyruvic acid;5,70E-17;0,09;204;DOWN;[33] Cheng 2012
+CRC vs control;Spermidine;4,30E-02;;232;UP;[25] Nakajima 2018
+CRC vs control;Spermine;2,20E-03;;232;DOWN;[25] Nakajima 2018
+CRC pre-/post-surgery;Tartaric acid;1,00E-03;0,167;135;DOWN;[43] Liesenfeld 2015
+CRC vs control;Taurine;0,000286;;248;UP;[34] Kim 2019
+CRC vs control;Tetradecenoyl carnitine (C14:1);3,19E-22;3,2;342;UP;[24] Deng 2019
+CRC vs control;Thiophene;2,43E-02;0,5183;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Thiophene, 2-methoxy-5-methyl-;4,86E-02;0,4847;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Threonic acid;7,25E-10;0,74;204;DOWN;[33] Cheng 2012
+CRC vs control;Tiglic aldehyde;2,98E-02;0,5551;60;DOWN;[29] Porto-Figueira 2018
+CRC vs control;Trimethylamine oxide;2,84E-20;0,27;204;DOWN;[33] Cheng 2012
+CRC vs control;Uracil;7,78E-10;0,63;204;DOWN;[33] Cheng 2012
+CRC vs control;Uridine;8,14E-16;0,59;204;DOWN;[33] Cheng 2012

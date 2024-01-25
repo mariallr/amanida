@@ -67,6 +67,15 @@ kbl(data_imp,
   scroll_box(width = "100%", height = "400px")
 ```
 
+Before the meta-analysis the IDs can be checked using public databases information. The IDs in format chemical name, InChI, InChIKey, and SMILES are searched in PubChem to transform all into a common nomenclature. If comp_inf = T:
+
+```{r}
+if(params$comp_inf == T) {
+  datafile <- check_names(datafile)
+}
+```
+
+
 ## Quantitative analysis
 
 Quantitative analysis is done for each different identifier. It combines the statistical significance and the effect size reported on the different studies, as follows:
