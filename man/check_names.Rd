@@ -4,13 +4,13 @@
 \alias{check_names}
 \title{Amanida harmonization}
 \usage{
-check_names(datafile)
+check_names(data)
 }
 \arguments{
-\item{datafile}{data imported using \code{amanida_read} function}
+\item{data}{data imported using \code{amanida_read} function}
 }
 \value{
-tibble table with data imported
+tibble table with data imported with PubChem ID retrieved
 }
 \description{
 \code{check_names} check the names to harmonize them to a common nomenclature. Valid names are:
