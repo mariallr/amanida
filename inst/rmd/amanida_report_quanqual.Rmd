@@ -71,7 +71,7 @@ kbl(data_imp,
 Before the meta-analysis the IDs can be checked using public databases information. The IDs in format chemical name, InChI, InChIKey, and SMILES are searched in PubChem to transform all into a common nomenclature. If comp_inf = T:
 
 ```{r}
-if(params$comp_inf == T) {
+if (params$comp_inf == T) {
   datafile <- check_names(datafile)
 }
 ```
@@ -143,7 +143,7 @@ To see graphically the results obtained is used `volcano_plot`:
 
 With `r params$file_name` and a p-value cut-off of `r params$pvalue_cutoff` and fold-change cut-off of `r params$fc_cutoff` (up-regulated) or `r round(1/params$fc_cutoff, 2)` (down-regulated):
 
-```{r include=FALSE}
+```{r include=FALSE, eval = F}
 volcano_plot <- function(mets, cutoff = NULL, names = T) {
   
   articles = NULL; pval = NULL; fc = NULL; lfc = NULL; lpval = NULL; . = NULL; 
@@ -317,7 +317,7 @@ kbl(amanida_result@vote |>
 Qualitative results can be also graphically inspected without trend division. Here the vote_plot is set to show the identifiers with a minimum of a vote-counting of `r params$votecount_lim`
 
 
-```{r include=FALSE}
+```{r include=FALSE, eval = F}
 vote_plot <- function(mets, counts = NULL) {
   
   votes = NULL; . = NULL;
